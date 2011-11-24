@@ -38,7 +38,7 @@
 
 
 import roslib
-roslib.load_manifest('nao_ctrl')
+roslib.load_manifest('nao_driver')
 import rospy
 
 from sensor_msgs.msg import JointState

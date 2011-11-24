@@ -1,7 +1,7 @@
 <stack>
-  <description brief="Some useful ROS nodes for the Nao humanoid robot.">
+  <description brief="ROS integration for the Nao humanoid robot (drivers / wrappers).">
   <p>
-     The nao stack contains some useful ROS nodes for the Nao humanoid robot, 
+     The nao_robot stack contains some useful ROS nodes for the Nao humanoid robot, 
      developed at the <a href="http://hrl.informatik.uni-freiburg.de/">Humanoid Robots Lab</a> 
      at the Albert-Ludwigs-Unversitaet in Freiburg, Germany.
      It provides joystick teleoperation, odometry, joint state,
@@ -18,9 +18,9 @@
   <author>Maintained by Armin Hornung</author>
   <license>BSD</license>  
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/nao</url>
+  <url>http://ros.org/wiki/nao_robot</url>
   <depend stack="common" /> <!-- actionlib -->
-  <depend stack="common_msgs" /> <!-- nav_msgs, sensor_msgs, geometry_msgs -->
+  <depend stack="common_msgs" /> <!-- nav_msgs, sensor_msgs, actionlib_msgs, trajectory_msgs, geometry_msgs -->
   <depend stack="geometry" /> <!-- tf, angles -->
   <depend stack="humanoid_navigation" /> <!-- humanoid_nav_msgs -->
   <depend stack="joystick_drivers" /> <!-- joy -->

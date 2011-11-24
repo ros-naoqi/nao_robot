@@ -39,7 +39,7 @@
 
 import roslib
 
-roslib.load_manifest('nao_ctrl')
+roslib.load_manifest('nao_driver')
 import rospy
 
 import actionlib
