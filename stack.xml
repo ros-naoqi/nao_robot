@@ -1,0 +1,32 @@
+<stack>
+  <description brief="Some useful ROS nodes for the Nao humanoid robot.">
+  <p>
+     The nao stack contains some useful ROS nodes for the Nao humanoid robot, 
+     developed at the <a href="http://hrl.informatik.uni-freiburg.de/">Humanoid Robots Lab</a> 
+     at the Albert-Ludwigs-Unversitaet in Freiburg, Germany.
+     It provides joystick teleoperation, odometry, joint state,
+     and a basic robot model for Nao. The <a href="http://www.ros.org/wiki/humanoid_navigation">
+     humanoid_navigation stack</a> contains some more general packages for 
+     humanoid / biped robots.
+   </p>
+   <p>
+     Files are available at <a href="http://code.google.com/p/alufr-ros-pkg/">http://code.google.com/p/alufr-ros-pkg/</a>, 
+     documentation at <a href="http://www.ros.org/wiki/nao">http://www.ros.org/wiki/nao</a>.
+   </p>
+
+  </description>
+  <author>Maintained by Armin Hornung</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/nao</url>
+  <depend stack="common" /> <!-- actionlib -->
+  <depend stack="common_msgs" /> <!-- nav_msgs, sensor_msgs, geometry_msgs -->
+  <depend stack="geometry" /> <!-- tf, angles -->
+  <depend stack="humanoid_navigation" /> <!-- humanoid_nav_msgs -->
+  <depend stack="joystick_drivers" /> <!-- joy -->
+  <depend stack="navigation" /> <!-- move_base_msgs -->
+  <depend stack="robot_model" /> <!-- robot_state_publisher, urdf -->
+  <depend stack="ros" />
+  <depend stack="ros_comm" /> <!-- std_srvs, std_msgs, roscpp, message_filters, rospy -->
+
+</stack>

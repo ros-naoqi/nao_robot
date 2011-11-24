@@ -1,0 +1,9 @@
+# goal: a joint angle trajectory
+trajectory_msgs/JointTrajectory trajectory
+# flag whether motion is absolute (=0, default) or relative (=1)
+uint8 relative
+---
+# result is the actually reached position
+sensor_msgs/JointState goal_position
+---
+# no feedback currently 

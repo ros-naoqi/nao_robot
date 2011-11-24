@@ -1,0 +1,3 @@
+# Get the current truepose from the simulator environment
+---
+geometry_msgs/PoseWithCovarianceStamped pose

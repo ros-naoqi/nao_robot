@@ -1,0 +1,34 @@
+<package>
+  <description brief="Control package for the Nao humanoid robot.">
+
+     Control package for the Nao robot, providing basic odometry and movement messages.
+     Makes Nao move accordinge to the MotionCommand topic. The most-current version is
+     compatible with the Nao API version 1.6 or newer, connecting to a real or simulated Nao. To include NaoQI for 
+     controlling the robot, the "lib" directory of the Aldebaran SDK needs to be in your PYTHONPATH
+     environment variable.
+
+  </description>
+  <author>Armin Hornung, Stefan Osswald, Daniel Maier</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/nao_ctrl</url>
+
+  <depend package="std_msgs"/>
+  <depend package="std_srvs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="trajectory_msgs"/>
+  <depend package="nao_msgs"/>
+  <depend package="humanoid_nav_msgs"/>
+  <depend package="rospy"/>
+  <depend package="actionlib"/>
+<!--
+  <depend package="robot_state"/>
+-->
+  <!-- If you use Brown University's port of rospy on the Nao, the "rospy"
+      dependency is not properly resolved on the Nao.
+      Solved by appending the system path "../../../pythonModules" in python,
+      and commenting the rospy dependency out when running on the robot. -->
+</package>
+
+
