@@ -41,7 +41,7 @@ import roslib
 roslib.load_manifest('nao_driver')
 import rospy
 
-from nao_ctrl import *
+from nao_driver import *
 
 import math
 from math import fabs

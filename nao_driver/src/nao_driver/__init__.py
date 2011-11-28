@@ -31,4 +31,4 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-from nao_ctrl_naoqi import *
+from nao_driver_naoqi import *

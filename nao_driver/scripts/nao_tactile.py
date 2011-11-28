@@ -44,7 +44,7 @@ import rospy
 from naoqi import *
 from nao_msgs.msg import TactileTouch, Bumper
 from std_msgs.msg import Bool
-from nao_ctrl import *
+from nao_driver import *
 
 #
 # Notes:

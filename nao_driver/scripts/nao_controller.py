@@ -47,7 +47,7 @@ import nao_msgs.msg
 from nao_msgs.msg import JointTrajectoryGoal, JointTrajectoryResult, JointTrajectoryAction, JointAnglesWithSpeed, \
                          JointAnglesWithSpeedGoal, JointAnglesWithSpeedResult, JointAnglesWithSpeedAction   
  
-from nao_ctrl import * 
+from nao_driver import * 
 
 import math
 from math import fabs
