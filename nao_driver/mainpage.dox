@@ -2,7 +2,7 @@
 \mainpage
 \htmlinclude manifest.html
 
-\b nao_ctrl is a control package for the Nao robot, providing basic odometry and movement messages.
+\b nao_driver is a control package for the Nao robot, providing basic odometry and movement messages.
 
 <!-- 
 In addition to providing an overview of your package,

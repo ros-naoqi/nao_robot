@@ -6,7 +6,7 @@ import naoqi
 import motion
 from naoqi import ALProxy
 import roslib
-roslib.load_manifest('nao_ctrl')
+roslib.load_manifest('nao_driver')
 import rospy
 use_robot_state_publisher = False
 if use_robot_state_publisher:

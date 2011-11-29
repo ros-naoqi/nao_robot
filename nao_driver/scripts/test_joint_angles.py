@@ -2,7 +2,7 @@
 
 import roslib
 from rospy.exceptions import ROSException
-roslib.load_manifest('nao_ctrl')
+roslib.load_manifest('nao_driver')
 import rospy
 import roslib.rostime
 from roslib.rostime import Duration
