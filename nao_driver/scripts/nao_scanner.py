@@ -12,7 +12,7 @@ from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import JointState
 
-from nao_ctrl.msg import MotionCommandBtn
+from nao_msgs.msg import MotionCommandBtn
 
 import naoqi
 import motion

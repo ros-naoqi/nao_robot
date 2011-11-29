@@ -14,17 +14,17 @@ is available online at:
 This ROS stack contains two nodes which enable you to teleoperate a Aldebaran
 Nao robot with a joystick and obtain some basic odometry estimate of the torso.
 
-"nao_ctrl" is the control node which needs to be copied on the Nao, "nao_remote"
-controls the Nao remotely. To run nao_ctrl on the Nao, you first need the Nao
+"nao_driver" is the control node which needs to be copied on the Nao, "nao_remote"
+controls the Nao remotely. To run nao_driver on the Nao, you first need the Nao
 ROS driver from Brown University: http://code.google.com/p/brown-ros-pkg/
 
 
 
-After building nao_ctrl, copy the complete package (with the newly created
+After building nao_driver, copy the complete package (with the newly created
 messages) into the "ros" directory of Brown's driver (i.e. naoros/ros). Edit
-nao_ctrl/scripts/naoros.env on the robot appropriately, especially
+nao_driver/scripts/naoros.env on the robot appropriately, especially
 ROS_MASTER_URI. To start the control node, have a ROS master running and execute 
-on the robot (in naoros/ros/nao_ctrl/scripts/):
+on the robot (in naoros/ros/nao_driver/scripts/):
 
 source naoros.env
 ./moveNao.py
