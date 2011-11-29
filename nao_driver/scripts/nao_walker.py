@@ -5,11 +5,11 @@
 
 
 #
-# ROS node to read Nao's sensors and torso odometry through the Aldebaran API.
+# ROS node to control Nao's walking engine (omniwalk and footsteps)
 # This code is currently compatible to NaoQI version 1.6 or newer (latest 
 # tested: 1.10)
 #
-# Copyright 2009-2011 Armin Hornung, University of Freiburg
+# Copyright 2009-2011 Armin Hornung & Stefan Osswald, University of Freiburg
 # http://www.ros.org/wiki/nao
 #
 # Redistribution and use in source and binary forms, with or without
@@ -54,16 +54,12 @@ from std_msgs.msg import Bool
 import std_msgs.msg
 
 from std_srvs.srv import Empty, EmptyResponse
-from nao_msgs.msg import MotionCommandBtn
 from nao_msgs.srv import CmdPoseService, CmdVelService, CmdPoseServiceResponse, CmdVelServiceResponse
 from humanoid_nav_msgs.msg import StepTarget
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
 
 import nao_msgs.srv
 
-from crouch import crouch
-from init_pose import initPose
-from scan_pose import scanPose
 from start_walk_pose import startWalkPose
 
 class NaoWalker(NaoNode):
@@ -119,7 +115,6 @@ class NaoWalker(NaoNode):
         rospy.Subscriber("cmd_vel", Twist, self.handleCmdVel, queue_size=1)
         rospy.Subscriber("cmd_pose", Pose2D, self.handleTargetPose, queue_size=1)
         rospy.Subscriber("cmd_step", StepTarget, self.handleStep, queue_size=50)
-        rospy.Subscriber("motion_command_btn", MotionCommandBtn, self.handleMotionBtn, queue_size=10)
         rospy.Subscriber("speech", String, self.handleSpeech)
         rospy.Subscriber("start_scan", std_msgs.msg.Empty, self.handleStartScan, queue_size=1)
         
@@ -263,27 +258,6 @@ class NaoWalker(NaoNode):
             return EmptyResponse()
         else:
             return None        
-
-    def handleMotionBtn(self,data):
-#		global walkLock
-#		walkLock.acquire()
-            
-        if (data.button == MotionCommandBtn.crouchNoStiff):
-            self.stopWalk()
-            crouch(self.motionProxy)
-            self.motionProxy.stiffnessInterpolation('Body',0.0, 0.5)
-            self.say("Stiffness removed")
-        elif (data.button == MotionCommandBtn.initPose):
-            self.stopWalk()
-            initPose(self.motionProxy)
-            self.needsStartWalkPose = True
-        elif (data.button == MotionCommandBtn.stiffnessOn):
-            self.motionProxy.stiffnessInterpolation('Body',1.0, 0.5)
-        elif (data.button == MotionCommandBtn.stiffnessOff):
-            self.motionProxy.stiffnessInterpolation('Body',0.0, 0.5)
-        elif (data.button == MotionCommandBtn.startScan):
-            self.perform_laser_scan()
-
 
     def gotoStartWalkPose(self):
         if self.useStartWalkPose and self.needsStartWalkPose:
