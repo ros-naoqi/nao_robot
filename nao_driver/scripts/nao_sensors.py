@@ -50,20 +50,20 @@ from nao_driver import *
 import threading
 from threading import Thread
 
-class NaoSensors(NaoNode,Thread):
+class NaoSensors(NaoNode, Thread):
     def __init__(self):
         NaoNode.__init__(self)
         Thread.__init__(self)
-        
+
         # ROS initialization:
         rospy.init_node('nao_sensors')
-        
+
         self.connectNaoQi()
 
         self.stopThread = False
 
         self.odomSleep = 1.0/rospy.get_param('~torso_odom_rate', 20.0)
-        
+
 
         self.dataNamesList = ["DCM/Time",
                                 "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value","Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value",
@@ -82,43 +82,51 @@ class NaoSensors(NaoNode,Thread):
         if not(self.base_frameID[0] == '/'):
             self.base_frameID = self.tf_prefix + '/' + self.base_frameID
 
+        # send cam odom?
+        self.send_cam_odom = rospy.get_param('~send_cam_odom', False)
         # init. messages:
         self.torsoOdom = TorsoOdometry()
+        self.camOdom = TorsoOdometry()
         self.torsoOdom.header.frame_id = rospy.get_param('~odom_frame_id', "odom")
+        self.camOdom.header.frame_id = rospy.get_param('~odom_frame_id', "odom")
         if not(self.torsoOdom.header.frame_id[0] == '/'):
             self.torsoOdom.header.frame_id = self.tf_prefix + '/' + self.torsoOdom.header.frame_id
+        if not(self.camOdom.header.frame_id[0] == '/'):
+            self.camOdom.header.frame_id = self.tf_prefix + '/' + self.camOdom.header.frame_id
         self.torsoIMU = TorsoIMU()
         self.torsoIMU.header.frame_id = self.base_frameID
         self.jointState = JointState()
         self.jointState.name = self.motionProxy.getJointNames('Body')
-        
+
         # simluated model misses some joints, we need to fill:
         if (len(self.jointState.name) == 22):
             self.jointState.name.insert(6,"LWristYaw")
             self.jointState.name.insert(7,"LHand")
             self.jointState.name.append("RWristYaw")
             self.jointState.name.append("RHand")
-        
+
         msg = "Nao joints found: "+ str(self.jointState.name)
         rospy.logdebug(msg)
-        
-        
+
+
+        if self.send_cam_odom:
+            self.camOdomPub = rospy.Publisher("camera_odometry", TorsoOdometry)
         self.torsoOdomPub = rospy.Publisher("torso_odometry", TorsoOdometry)
         self.torsoIMUPub = rospy.Publisher("torso_imu", TorsoIMU)
         self.jointStatePub = rospy.Publisher("joint_states", JointState)
-        
+
         rospy.loginfo("nao_sensors initialized")
 
     # (re-) connect to NaoQI:
     def connectNaoQi(self):
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
-        
+
         self.motionProxy = self.getProxy("ALMotion")
         self.memProxy = self.getProxy("ALMemory")
         # TODO: check self.memProxy.version() for > 1.6
         if self.motionProxy is None or self.memProxy is None:
             exit(1)
-        
+
     def run(self):
         """ Odometry thread code - collects and sends out odometry esimate. """
         while(not self.stopThread):
@@ -130,12 +138,18 @@ class NaoSensors(NaoNode,Thread):
                 memData = self.memProxy.getListData(self.dataNamesList)
                  # odometry data:
                 odomData = self.motionProxy.getPosition('Torso', motion.SPACE_WORLD, True)
-            except RuntimeError,e:
+                # camera data
+                #camData = self.motionProxy.getTransform('CameraTop', motion.SPACE_WORLD, True)
+                if self.send_cam_odom:
+                    camData = self.motionProxy.getPosition('CameraTop', motion.SPACE_WORLD, True)
+                positionData = self.motionProxy.getAngles('Body', True)
+            except RuntimeError, e:
                 print "Error accessing ALMemory, exiting...\n"
                 print e
                 rospy.signal_shutdown("No NaoQI available anymore")
-                        
+
             self.torsoOdom.header.stamp = timestamp
+            self.camOdom.header.stamp = timestamp
             if len(odomData)==2:
                 odomData = odomData[1]
             elif len(odomData)!=6:
@@ -147,22 +161,32 @@ class NaoSensors(NaoNode,Thread):
             self.torsoOdom.wx = odomData[3]
             self.torsoOdom.wy = odomData[4]
             self.torsoOdom.wz = odomData[5]
-            
+
+            if self.send_cam_odom:
+                self.camOdom.x = camData[0]
+                self.camOdom.y = camData[1]
+                self.camOdom.z = camData[2]
+                self.camOdom.wx = camData[3]
+                self.camOdom.wy = camData[4]
+                self.camOdom.wz = camData[5]
+
             self.torsoOdomPub.publish(self.torsoOdom)
-            
+            if self.send_cam_odom:
+                self.camOdomPub.publish(self.camOdom)
+
             # Replace 'None' values with 0
             # (=> consistent behavior in 1.8 / 1.10 with 1.6)
-            for i,m in enumerate(memData):
+            for i, m in enumerate(memData):
                 if m is None:
-		    memData[i] = 0                 
+                    memData[i] = 0
 
-            # IMU data:
             if len(memData) != len(self.dataNamesList):
                 print "memData length does not match expected length"
                 print memData
                 continue
 
 
+            # IMU data:
             self.torsoIMU.header.stamp = timestamp
             self.torsoIMU.angleX = memData[1]
             self.torsoIMU.angleY = memData[2]
@@ -171,38 +195,38 @@ class NaoSensors(NaoNode,Thread):
             self.torsoIMU.accelX = memData[5]
             self.torsoIMU.accelY = memData[6]
             self.torsoIMU.accelZ = memData[7]
-            
+
             self.torsoIMUPub.publish(self.torsoIMU)
-                    
-                    
+
+
             #
             # Send JointState:
             #
             self.jointState.header.stamp = timestamp
             self.jointState.header.frame_id = self.base_frameID
-            self.jointState.position = self.motionProxy.getAngles('Body', True)
-            
+            self.jointState.position = positionData
+
             # simulated model misses some joints, we need to fill:
             if (len(self.jointState.position) == 22):
-                self.jointState.position.insert(6,0.0)
-                self.jointState.position.insert(7,0.0)
+                self.jointState.position.insert(6, 0.0)
+                self.jointState.position.insert(7, 0.0)
                 self.jointState.position.append(0.0)
                 self.jointState.position.append(0.0)
-            
+
             self.jointStatePub.publish(self.jointState)
-                    
+
             rospy.sleep(self.odomSleep)
 
 if __name__ == '__main__':
-    
+
     sensors = NaoSensors()
     sensors.start()
-    
+
     rospy.spin()
-    
+
     rospy.loginfo("Stopping nao_sensors ...")
     sensors.stopThread = True
     sensors.join()
-    
+
     rospy.loginfo("nao_sensors stopped.")
     exit(0)
