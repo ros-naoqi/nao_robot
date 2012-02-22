@@ -172,6 +172,7 @@ class NaoSensors : public NaoNode
       AL::ALValue m_dataNamesList;
       ros::NodeHandle m_nh;
       ros::NodeHandle m_privateNh;
+      bool m_send_cam_odom;
       std::string m_tf_prefix;
       std::string m_odom_frame_id;
       std::string m_base_frame_id;
@@ -216,7 +217,7 @@ bool NaoSensors::connectProxy()
    return true;
 }
 
-NaoSensors::NaoSensors(int argc, char ** argv) : m_rate(50.0), m_privateNh("~"),m_tf_prefix(""),m_odom_frame_id("odom"),m_base_frame_id("Torso_link")
+NaoSensors::NaoSensors(int argc, char ** argv) : m_rate(50.0), m_privateNh("~"), m_send_cam_odom(false), m_tf_prefix(""),m_odom_frame_id("odom"),m_base_frame_id("Torso_link")
 {
    parse_command_line(argc,argv);
    if (   ! connectNaoQi() || !  connectProxy() )
@@ -248,6 +249,8 @@ NaoSensors::NaoSensors(int argc, char ** argv) : m_rate(50.0), m_privateNh("~"),
    if (m_base_frame_id[0] != '/')
       m_base_frame_id = m_tf_prefix + '/' + m_base_frame_id;
 
+   // check if we need to send camera odometry
+   m_privateNh.param("send_cam_odom", m_send_cam_odom, m_send_cam_odom);
    // initialize messages
    /*
       m_torsoOdom = nao_msgs::TorsoOdometry;
@@ -282,7 +285,8 @@ NaoSensors::NaoSensors(int argc, char ** argv) : m_rate(50.0), m_privateNh("~"),
    ROS_INFO("Nao joints found: %s",ss.str().c_str());
 
 
-   m_camOdomPub = m_nh.advertise<nao_msgs::TorsoOdometry>("camera_odometry",5);
+   if (m_send_cam_odom)
+      m_camOdomPub = m_nh.advertise<nao_msgs::TorsoOdometry>("camera_odometry",5);
    m_torsoOdomPub = m_nh.advertise<nao_msgs::TorsoOdometry>("torso_odometry",5);
    m_torsoIMUPub = m_nh.advertise<nao_msgs::TorsoIMU>("torso_imu",5);
    m_jointStatePub = m_nh.advertise<sensor_msgs::JointState>("joint_states",5);
@@ -314,7 +318,8 @@ void NaoSensors::run()
          memData = m_memoryProxy->getListData(m_dataNamesList);
          // {SPACE_TORSO = 0, SPACE_WORLD = 1, SPACE_NAO = 2}. (second argument)
          odomData = m_motionProxy->getPosition("Torso", 1, true);
-         camData = m_motionProxy->getPosition("CameraTop", 1, true);
+         if (m_send_cam_odom)
+            camData = m_motionProxy->getPosition("CameraTop", 1, true);
          positionData = m_motionProxy->getAngles("Body", true);
       }
       catch (const AL::ALError & e)
@@ -333,7 +338,7 @@ void NaoSensors::run()
          ROS_ERROR( "Error getting odom data. length is %u",odomData.size() );
          continue;
       }
-      if (camData.size()!=6)
+      if (m_send_cam_odom && camData.size()!=6)
       {
          ROS_ERROR( "Error getting camera odom data. length is %u",camData.size() );
          continue;
@@ -346,16 +351,20 @@ void NaoSensors::run()
       m_torsoOdom.wy = odomData[4];
       m_torsoOdom.wz = odomData[5];
 
-      m_camOdom.header.stamp = stamp;
-      m_camOdom.x = camData[0];
-      m_camOdom.y = camData[1];
-      m_camOdom.z = camData[2];
-      m_camOdom.wx = camData[3];
-      m_camOdom.wy = camData[4];
-      m_camOdom.wz = camData[5];
+      if (m_send_cam_odom)
+      {
+         m_camOdom.header.stamp = stamp;
+         m_camOdom.x = camData[0];
+         m_camOdom.y = camData[1];
+         m_camOdom.z = camData[2];
+         m_camOdom.wx = camData[3];
+         m_camOdom.wy = camData[4];
+         m_camOdom.wz = camData[5];
+      }
 
       m_torsoOdomPub.publish(m_torsoOdom);
-      m_camOdomPub.publish(m_camOdom);
+      if (m_send_cam_odom)
+         m_camOdomPub.publish(m_camOdom);
 
       // Replace 'None' values with 0
       // (=> consistent behavior in 1.8 / 1.10 with 1.6)
