@@ -83,7 +83,9 @@ class NaoSensors(NaoNode, Thread):
             self.base_frameID = self.tf_prefix + '/' + self.base_frameID
 
         # send cam odom?
-        self.send_cam_odom = rospy.get_param('~send_cam_odom', False)
+        self.sendCamOdom = rospy.get_param('~send_cam_odom', False)
+        # use sensor values or commanded (open-loop) values for joint angles
+        self.useJointSensors = rospy.get_param('~use_joint_sensors', True) # (set to False in simulation!)
         # init. messages:
         self.torsoOdom = TorsoOdometry()
         self.camOdom = TorsoOdometry()
@@ -109,7 +111,7 @@ class NaoSensors(NaoNode, Thread):
         rospy.logdebug(msg)
 
 
-        if self.send_cam_odom:
+        if self.sendCamOdom:
             self.camOdomPub = rospy.Publisher("camera_odometry", TorsoOdometry)
         self.torsoOdomPub = rospy.Publisher("torso_odometry", TorsoOdometry)
         self.torsoIMUPub = rospy.Publisher("torso_imu", TorsoIMU)
@@ -140,9 +142,9 @@ class NaoSensors(NaoNode, Thread):
                 odomData = self.motionProxy.getPosition('Torso', motion.SPACE_WORLD, True)
                 # camera data
                 #camData = self.motionProxy.getTransform('CameraTop', motion.SPACE_WORLD, True)
-                if self.send_cam_odom:
+                if self.sendCamOdom:
                     camData = self.motionProxy.getPosition('CameraTop', motion.SPACE_WORLD, True)
-                positionData = self.motionProxy.getAngles('Body', True)
+                positionData = self.motionProxy.getAngles('Body', self.useJointSensors)
             except RuntimeError, e:
                 print "Error accessing ALMemory, exiting...\n"
                 print e
@@ -162,7 +164,7 @@ class NaoSensors(NaoNode, Thread):
             self.torsoOdom.wy = odomData[4]
             self.torsoOdom.wz = odomData[5]
 
-            if self.send_cam_odom:
+            if self.sendCamOdom:
                 self.camOdom.x = camData[0]
                 self.camOdom.y = camData[1]
                 self.camOdom.z = camData[2]
@@ -171,7 +173,7 @@ class NaoSensors(NaoNode, Thread):
                 self.camOdom.wz = camData[5]
 
             self.torsoOdomPub.publish(self.torsoOdom)
-            if self.send_cam_odom:
+            if self.sendCamOdom:
                 self.camOdomPub.publish(self.camOdom)
 
             # Replace 'None' values with 0
