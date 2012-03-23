@@ -38,6 +38,7 @@
 import roslib
 roslib.load_manifest('nao_driver')
 import rospy
+import time
 
 from nao_driver import *
 
@@ -46,8 +47,6 @@ from math import fabs
 
 from humanoid_nav_msgs.msg import StepTarget
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
-
-import nao_msgs.srv
 
 from start_walk_pose import startWalkPose
 
@@ -70,10 +69,10 @@ class NaoFootsteps(NaoNode):
     
         
         # last: ROS subscriptions (after all vars are initialized)
-        rospy.Subscriber("cmd_step", StepTarget, self.handleStep, queue_size=50)
+        rospy.Subscriber("footstep", StepTarget, self.handleStep, queue_size=50)
         
         # ROS services (blocking functions)
-        self.stepToSrv = rospy.Service("cmd_step_srv", StepTargetService, self.handleStepSrv)
+        self.stepToSrv = rospy.Service("footstep_srv", StepTargetService, self.handleStepSrv)
             
         rospy.loginfo("nao_footsteps initialized")
     
@@ -102,7 +101,7 @@ class NaoFootsteps(NaoNode):
         
     
     def handleStep(self, data):
-        rospy.logdebug("Step leg: %d; target: %f %f %f", data.leg, data.pose.x,
+        rospy.loginfo("Step leg: %d; target: %f %f %f", data.leg, data.pose.x,
                 data.pose.y, data.pose.theta)
         try:
             if data.leg == StepTarget.right:
@@ -114,8 +113,13 @@ class NaoFootsteps(NaoNode):
                 return
                 
             footStep = [[data.pose.x, data.pose.y, data.pose.theta]]
-            timeList = [0.6]
-            self.motionProxy.stepTo(leg, footStep, timeList, True)
+            timeList = [2.5]
+            self.motionProxy.setFootSteps(leg, footStep, timeList, False)
+            time.sleep(0.1)
+            print self.motionProxy.getFootSteps()
+            #self.motionProxy.waitUntilWalkIsFinished()
+            
+            
             return True
         except RuntimeError, e:
             rospy.logerr("Exception caught in handleStep:\n%s", e)
