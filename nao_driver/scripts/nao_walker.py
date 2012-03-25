@@ -64,7 +64,7 @@ from start_walk_pose import startWalkPose
 
 class NaoWalker(NaoNode):
     def __init__(self): 
-        NaoNode.__init__(self)
+	NaoNode.__init__(self)
     
         # ROS initialization:
         rospy.init_node('nao_walker')
@@ -303,7 +303,6 @@ class NaoWalker(NaoNode):
 
 
 if __name__ == '__main__':
-
     walker = NaoWalker()
     rospy.loginfo("nao_walker running...")
     rospy.spin()
