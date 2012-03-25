@@ -85,7 +85,7 @@ class NaoSensors(NaoNode, Thread):
         # send cam odom?
         self.sendCamOdom = rospy.get_param('~send_cam_odom', False)
         # use sensor values or commanded (open-loop) values for joint angles
-        self.useJointSensors = rospy.get_param('~use_joint_sensors', False) # (set to False in simulation!)
+        self.useJointSensors = rospy.get_param('~use_joint_sensors', True) # (set to False in simulation!)
         # init. messages:
         self.torsoOdom = TorsoOdometry()
         self.camOdom = TorsoOdometry()
