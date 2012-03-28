@@ -113,11 +113,11 @@ class NaoFootsteps(NaoNode):
                 return
                 
             footStep = [[data.pose.x, data.pose.y, data.pose.theta]]
-            timeList = [2.5]
+            timeList = [0.5]
             self.motionProxy.setFootSteps(leg, footStep, timeList, False)
             time.sleep(0.1)
             print self.motionProxy.getFootSteps()
-            #self.motionProxy.waitUntilWalkIsFinished()
+            self.motionProxy.waitUntilWalkIsFinished()
             
             
             return True
