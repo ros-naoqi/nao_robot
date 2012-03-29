@@ -47,18 +47,20 @@ from math import fabs
 
 from humanoid_nav_msgs.msg import StepTarget
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
+from humanoid_nav_msgs.srv import ClipFootstepService, ClipFootstepServiceResponse
 
 from start_walk_pose import startWalkPose
+from nao_footstep_clipping import clip_footstep_tuple
 
 class NaoFootsteps(NaoNode):
-    def __init__(self): 
+    def __init__(self):
         NaoNode.__init__(self)
-    
+
         # ROS initialization:
         rospy.init_node('nao_footsteps')
-        
+
         self.connectNaoQi()
-    
+
         # initial stiffness (defaults to 0 so it doesn't strain the robot when no teleoperation is running)
         # set to 1.0 if you want to control the robot immediately
         initStiffness = rospy.get_param('~init_stiffness', 0.0)
@@ -66,16 +68,17 @@ class NaoFootsteps(NaoNode):
         # TODO: parameterize
         if initStiffness > 0.0 and initStiffness <= 1.0:
             self.motionProxy.stiffnessInterpolation('Body', initStiffness, 0.5)
-    
-        
+
+
         # last: ROS subscriptions (after all vars are initialized)
         rospy.Subscriber("footstep", StepTarget, self.handleStep, queue_size=50)
-        
+
         # ROS services (blocking functions)
         self.stepToSrv = rospy.Service("footstep_srv", StepTargetService, self.handleStepSrv)
-            
+        self.clipSrv = rospy.Service("clip_footstep_srv", ClipFootstepService, self.handleClipSrv)
+
         rospy.loginfo("nao_footsteps initialized")
-    
+
     def connectNaoQi(self):
         '''(re-) connect to NaoQI'''
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
@@ -91,15 +94,15 @@ class NaoFootsteps(NaoNode):
             self.motionProxy.setWalkTargetVelocity(0.0, 0.0, 0.0, self.stepFrequency)
             self.motionProxy.waitUntilWalkIsFinished()
 
-                        
+
         except RuntimeError,e:
             print "An error has been caught"
             print e
             return False
-            
+
         return True
-        
-    
+
+
     def handleStep(self, data):
         rospy.loginfo("Step leg: %d; target: %f %f %f", data.leg, data.pose.x,
                 data.pose.y, data.pose.theta)
@@ -111,15 +114,15 @@ class NaoFootsteps(NaoNode):
             else:
                 rospy.logerr("Received a wrong leg constant: %d, ignoring step command", data.leg)
                 return
-                
+
             footStep = [[data.pose.x, data.pose.y, data.pose.theta]]
             timeList = [0.5]
             self.motionProxy.setFootSteps(leg, footStep, timeList, False)
             time.sleep(0.1)
             print self.motionProxy.getFootSteps()
             self.motionProxy.waitUntilWalkIsFinished()
-            
-            
+
+
             return True
         except RuntimeError, e:
             rospy.logerr("Exception caught in handleStep:\n%s", e)
@@ -130,7 +133,22 @@ class NaoFootsteps(NaoNode):
             return StepTargetServiceResponse()
         else:
             return None
-    
+
+    def handleClipping(self, step):
+        is_left_support = step.leg == StepTarget.left
+        unclipped_step = (step.pose.x, step.pose.y, step.pose.theta)
+        step.pose.x, step.pose.y, step.pose.theta = clip_footstep_tuple(
+            unclipped_step, is_left_support)
+        # float comparison
+        clipped = not (fabs(step.pose.x - unclipped_step[0]) < 0.000001 and
+                       fabs(step.pose.y - unclipped_step[1]) < 0.000001 and
+                       fabs(step.pose.theta - unclipped_step[2]) < 0.000001)
+        return clipped, step
+
+    def handleClipSrv(self, req):
+        resp = ClipFootstepServiceResponse()
+        resp.clipped, resp.step_clipped = self.handleClipping(req.step)
+        return resp
 
 
 if __name__ == '__main__':
@@ -140,6 +158,6 @@ if __name__ == '__main__':
     rospy.spin()
     rospy.loginfo("nao_footsteps stopping...")
     walker.stopWalk()
-    
+
     rospy.loginfo("nao_footsteps stopped.")
     exit(0)
