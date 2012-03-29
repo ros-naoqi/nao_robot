@@ -139,15 +139,11 @@ class NaoFootsteps(NaoNode):
         unclipped_step = (step.pose.x, step.pose.y, step.pose.theta)
         step.pose.x, step.pose.y, step.pose.theta = clip_footstep_tuple(
             unclipped_step, is_left_support)
-        # float comparison
-        clipped = not (fabs(step.pose.x - unclipped_step[0]) < 0.000001 and
-                       fabs(step.pose.y - unclipped_step[1]) < 0.000001 and
-                       fabs(step.pose.theta - unclipped_step[2]) < 0.000001)
-        return clipped, step
+        return step
 
     def handleClipSrv(self, req):
         resp = ClipFootstepServiceResponse()
-        resp.clipped, resp.step_clipped = self.handleClipping(req.step)
+        resp.step = self.handleClipping(req.step)
         return resp
 
 
