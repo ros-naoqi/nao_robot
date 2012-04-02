@@ -6,11 +6,11 @@ import almath
 # Struct with clipping params initialized with clipping values for the NAO robot
 class Params(object):
     # Various parameters describing step characteristics.
-    min_step_x = - 0.04
+    min_step_x = -0.04
     min_step_y = 0.088
     max_step_x = 0.08
     max_step_y = 0.16
-    max_step_theta = 0.5
+    max_step_theta = 0.5 # 0.5xxx
     min_step_theta = -max_step_theta
 
     # Bounding boxes of NAO's feet.
@@ -59,7 +59,6 @@ def clip_footstep_on_gait_config(foot, is_left_support):
     else:
         clipped_y = clip_data(-Params.max_step_y, -Params.min_step_y, foot.y)
     foot.y = clipped_y
-
 
     # Clip Theta.
     clipped_theta = clip_data(Params.min_step_theta, Params.max_step_theta, foot.theta)
@@ -121,7 +120,9 @@ def clip_footstep(foot, is_left_support):
 
 def clip_footstep_tuple(foot, is_left_support):
     """
-    Wrapper of clip_footstep to handle foot as geometry_msgs.Pose2D
+    Wrapper of clip_footstep to handle 'foot' as geometry_msgs.Pose2D.
+    'foot' is a tuple (x, y, theta). A tuple (x_clip, y_clip, theta_clip) is
+    returned.
     """
 
     foot = almath.Pose2D(*foot)

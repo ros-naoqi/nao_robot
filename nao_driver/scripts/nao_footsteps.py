@@ -135,7 +135,7 @@ class NaoFootsteps(NaoNode):
             return None
 
     def handleClipping(self, step):
-        is_left_support = step.leg == StepTarget.left
+        is_left_support = step.leg != StepTarget.left
         unclipped_step = (step.pose.x, step.pose.y, step.pose.theta)
         step.pose.x, step.pose.y, step.pose.theta = clip_footstep_tuple(
             unclipped_step, is_left_support)
