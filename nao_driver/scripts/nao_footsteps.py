@@ -47,7 +47,7 @@ from math import fabs
 
 from humanoid_nav_msgs.msg import StepTarget
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
-from humanoid_nav_msgs.srv import ClipFootstepService, ClipFootstepServiceResponse
+from humanoid_nav_msgs.srv import ClipFootstep, ClipFootstepResponse
 
 from start_walk_pose import startWalkPose
 from nao_footstep_clipping import clip_footstep_tuple
@@ -75,7 +75,7 @@ class NaoFootsteps(NaoNode):
 
         # ROS services (blocking functions)
         self.stepToSrv = rospy.Service("footstep_srv", StepTargetService, self.handleStepSrv)
-        self.clipSrv = rospy.Service("clip_footstep_srv", ClipFootstepService, self.handleClipSrv)
+        self.clipSrv = rospy.Service("clip_footstep_srv", ClipFootstep, self.handleClipSrv)
 
         rospy.loginfo("nao_footsteps initialized")
 
@@ -142,7 +142,7 @@ class NaoFootsteps(NaoNode):
         return step
 
     def handleClipSrv(self, req):
-        resp = ClipFootstepServiceResponse()
+        resp = ClipFootstepResponse()
         resp.step = self.handleClipping(req.step)
         return resp
 
