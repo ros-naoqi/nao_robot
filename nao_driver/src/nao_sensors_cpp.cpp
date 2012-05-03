@@ -217,7 +217,12 @@ bool NaoSensors::connectProxy()
    return true;
 }
 
-NaoSensors::NaoSensors(int argc, char ** argv) : m_rate(50.0), m_privateNh("~"), m_send_cam_odom(false), m_tf_prefix(""),m_odom_frame_id("odom"),m_base_frame_id("Torso_link")
+NaoSensors::NaoSensors(int argc, char ** argv)
+ : m_rate(50.0), m_privateNh("~"),
+   m_send_cam_odom(false),
+   m_tf_prefix(""),
+   m_odom_frame_id("odom"),
+   m_base_frame_id("torso")
 {
    parse_command_line(argc,argv);
    if (   ! connectNaoQi() || !  connectProxy() )

@@ -78,7 +78,7 @@ class NaoSensors(NaoNode, Thread):
         else:
             self.tf_prefix = ""
 
-        self.base_frameID = rospy.get_param('~base_frame_id', "Torso_link")
+        self.base_frameID = rospy.get_param('~base_frame_id', "torso")
         if not(self.base_frameID[0] == '/'):
             self.base_frameID = self.tf_prefix + '/' + self.base_frameID
 
