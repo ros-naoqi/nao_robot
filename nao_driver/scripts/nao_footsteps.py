@@ -45,12 +45,29 @@ from nao_driver import *
 import math
 from math import fabs
 
-from humanoid_nav_msgs.msg import StepTarget
+import actionlib
+
+from humanoid_nav_msgs.msg import *
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
 from humanoid_nav_msgs.srv import ClipFootstep, ClipFootstepResponse
 
 from start_walk_pose import startWalkPose
 from nao_footstep_clipping import clip_footstep_tuple
+
+
+LEG_LEFT = "LLeg"
+LEG_RIGHT = "RLeg"
+FLOAT_CMP_THR = 0.000001
+
+
+# redefine StepTarget by inheritance 
+class StepTarget(StepTarget):
+    def __eq__(self, a):
+        return (abs(self.pose.x - a.pose.x) <= FLOAT_CMP_THR and
+                abs(self.pose.y - a.pose.y) <= FLOAT_CMP_THR and
+                abs(self.pose.theta - a.pose.theta) <= FLOAT_CMP_THR and
+                self.leg == a.leg)
+
 
 class NaoFootsteps(NaoNode):
     def __init__(self):
@@ -69,13 +86,18 @@ class NaoFootsteps(NaoNode):
         if initStiffness > 0.0 and initStiffness <= 1.0:
             self.motionProxy.stiffnessInterpolation('Body', initStiffness, 0.5)
 
-
         # last: ROS subscriptions (after all vars are initialized)
         rospy.Subscriber("footstep", StepTarget, self.handleStep, queue_size=50)
 
         # ROS services (blocking functions)
         self.stepToSrv = rospy.Service("footstep_srv", StepTargetService, self.handleStepSrv)
         self.clipSrv = rospy.Service("clip_footstep_srv", ClipFootstep, self.handleClipSrv)
+	
+	# Initialize action server
+	self.actionServer = actionlib.SimpleActionServer("footsteps_execution",
+		ExecFootstepsAction, execute_cb=self.footstepsExecutionCallback,
+		auto_start=False)
+        self.actionServer.start()
 
         rospy.loginfo("nao_footsteps initialized")
 
@@ -94,7 +116,6 @@ class NaoFootsteps(NaoNode):
             self.motionProxy.setWalkTargetVelocity(0.0, 0.0, 0.0, self.stepFrequency)
             self.motionProxy.waitUntilWalkIsFinished()
 
-
         except RuntimeError,e:
             print "An error has been caught"
             print e
@@ -108,9 +129,9 @@ class NaoFootsteps(NaoNode):
                 data.pose.y, data.pose.theta)
         try:
             if data.leg == StepTarget.right:
-                leg = ["RLeg"]
+                leg = [LEG_RIGHT]
             elif data.leg == StepTarget.left:
-                leg = ["LLeg"]
+                leg = [LEG_LEFT]
             else:
                 rospy.logerr("Received a wrong leg constant: %d, ignoring step command", data.leg)
                 return
@@ -121,7 +142,6 @@ class NaoFootsteps(NaoNode):
             time.sleep(0.1)
             print self.motionProxy.getFootSteps()
             self.motionProxy.waitUntilWalkIsFinished()
-
 
             return True
         except RuntimeError, e:
@@ -145,6 +165,62 @@ class NaoFootsteps(NaoNode):
         resp = ClipFootstepResponse()
         resp.step = self.handleClipping(req.step)
         return resp
+    
+    def footstepsExecutionCallback(self, goal): 
+        def get_footsteps_set(footstep_set, executed_footsteps):
+	    step = StepTarget()
+            for leg, time, (x, y, theta) in executed_footsteps:
+                step.pose.x = x
+                step.pose.y = y 
+                step.pose.theta = theta
+                step.leg = StepTarget.right if leg == LEG_RIGHT else StepTarget.left
+                if step not in footstep_set:
+		    footstep_set.append(step)
+
+        legs = []
+        steps = []
+        time_list = []
+        for step in goal.footsteps:
+            if step.leg == StepTarget.right:
+                legs.append(LEG_RIGHT)
+            elif step.leg == StepTarget.left:
+                legs.append(LEG_LEFT)
+            else:
+                rospy.logerr("Received a wrong leg constant: %d, ignoring step "
+                             "command", step.leg)
+                return
+            steps.append([step.pose.x, step.pose.y, step.pose.theta])
+            try:
+                time_list.append(time_list[-1] + 0.5)
+            except IndexError:
+                time_list.append(0.5)
+
+        steps = [[round(x, 4), round(y, 4), round(theta, 4)] for x, y, theta in steps]
+        rospy.loginfo("Start executing footsteps %s", steps)
+        print "List size %i" % len(steps)
+        self.motionProxy.setFootSteps(legs, steps, time_list, True) 
+        
+        feedback_rate = rospy.Rate(goal.feedback_rate)
+        feedback = ExecFootstepsFeedback()
+        result = ExecFootstepsResult()
+	success = True
+        while self.motionProxy.walkIsActive():
+            if self.actionServer.is_preempt_requested():
+                rospy.loginfo("Preempt footstep execution");
+                self.motionProxy.stopWalk()
+                self.actionServer.set_preempted()
+                success = False
+		break
+            
+            _ , executed_footsteps, _ = self.motionProxy.getFootSteps()
+            
+            get_footsteps_set(feedback.executed_footsteps, executed_footsteps)
+            self.actionServer.publish_feedback(feedback)            
+
+            feedback_rate.sleep()
+
+        if success:
+            self.actionServer.set_succeeded(result)
 
 
 if __name__ == '__main__':
