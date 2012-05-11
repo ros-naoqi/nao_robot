@@ -1,0 +1,5 @@
+<launch>
+  <!-- start control script locally -->
+  <param name="nao_sensors/use_joint_sensors" value="False" />
+  <include file="$(find nao_driver)/launch/nao_driver.launch" />
+</launch>
