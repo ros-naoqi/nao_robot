@@ -58,6 +58,7 @@ from nao_footstep_clipping import clip_footstep_tuple
 LEG_LEFT = "LLeg"
 LEG_RIGHT = "RLeg"
 FLOAT_CMP_THR = 0.000001
+STEP_TIME = 0.5
 
 
 def equal(a, b):
@@ -148,7 +149,7 @@ class NaoFootsteps(NaoNode):
                 return
 
             footStep = [[data.pose.x, data.pose.y, data.pose.theta]]
-            timeList = [0.5]
+            timeList = [STEP_TIME]
             self.motionProxy.setFootSteps(leg, footStep, timeList, False)
             time.sleep(0.1)
             print self.motionProxy.getFootSteps()
@@ -183,12 +184,12 @@ class NaoFootsteps(NaoNode):
                 return
             leg, time, (x, y, theta) = executed_footsteps[-1]
             # check if footstep information is up-to-date
-            if not equal(time, 0.5):
+            if not equal(time, STEP_TIME):
                 return
             step = StepTarget()
-            step.pose.x = round(x, 6)
-            step.pose.y = round(y, 6)
-            step.pose.theta = round(theta, 6)
+            step.pose.x = round(x, 4)
+            step.pose.y = round(y, 4)
+            step.pose.theta = round(theta, 4)
             step.leg = (StepTarget.right if leg == LEG_RIGHT else
                         StepTarget.left)
             # if the step equals the last one that was added ignore it
@@ -213,13 +214,15 @@ class NaoFootsteps(NaoNode):
                 return
             steps.append([step.pose.x, step.pose.y, step.pose.theta])
             try:
-                time_list.append(time_list[-1] + 0.5)
+                time_list.append(time_list[-1] + STEP_TIME)
             except IndexError:
-                time_list.append(0.5)
+                time_list.append(STEP_TIME)
 
         steps = [[round(x, 4), round(y, 4), round(theta, 4)]
                  for x, y, theta in steps]
-        rospy.loginfo("Start executing footsteps %s", steps)
+        rospy.loginfo("Start executing footsteps %s",
+                      [[x, y, theta, leg] for (x, y, theta), leg in
+                       zip(steps, legs)])
         self.motionProxy.setFootSteps(legs, steps, time_list, True)
 
         feedback_rate = rospy.Rate(goal.feedback_rate)
@@ -229,9 +232,9 @@ class NaoFootsteps(NaoNode):
         footsteps_set = []
         while self.motionProxy.walkIsActive():
             if self.actionServer.is_preempt_requested():
-                rospy.loginfo("Preempt footstep execution");
                 self.motionProxy.stopWalk()
                 self.actionServer.set_preempted()
+                rospy.loginfo("Preempting footstep execution");
                 success = False
                 break
 
