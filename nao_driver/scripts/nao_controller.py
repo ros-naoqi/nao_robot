@@ -162,6 +162,21 @@ class NaoController(NaoNode):
         else:
             angles = list(list(p.positions[i] for p in goal.trajectory.points) for i in range(0,len(goal.trajectory.points[0].positions)))
         
+        #strip 6,7 and last 2 from angles if the pose was for H25 but we're running an H21
+        if not isinstance(angles, float) and len(angles) > self.collectionSize["Body"]:
+            rospy.loginfo("Stripping angles from %d down to %d", len(angles), self.collectionSize["Body"])
+            angles.pop(6)
+            angles.pop(7)
+            angles.pop()
+            angles.pop()
+            
+        if len(names) > self.collectionSize["Body"]:
+            rospy.loginfo("Stripping names from %d down to %d", len(names), self.collectionSize["Body"])
+            names.pop(6)
+            names.pop(7)
+            names.pop()
+            names.pop()
+        
         times = list(p.time_from_start.to_sec() for p in goal.trajectory.points)
         if len(times) == 1 and len(names) == 1:
             times = times[0]
@@ -175,7 +190,7 @@ class NaoController(NaoNode):
         rospy.loginfo("JointTrajectory action executing");
                     
         names, angles, times = self.jointTrajectoryGoalMsgToAL(goal)
-        
+                
         rospy.logdebug("Received trajectory for joints: %s times: %s", str(names), str(times))     
         rospy.logdebug("Trajectory angles: %s", str(angles))
             
@@ -253,7 +268,6 @@ if __name__ == '__main__':
     controller = NaoController()
     rospy.loginfo("nao_controller running...")
     rospy.spin()
-#    rospy.loginfo("nao_controller stopping...")
     
     rospy.loginfo("nao_controller stopped.")
     exit(0)
