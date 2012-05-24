@@ -67,14 +67,27 @@ def equal(a, b):
 
 # redefine StepTarget by inheritance
 class StepTarget(StepTarget):
+    def __init__(self, x=0.0, y=0.0, theta=0.0, leg=0.0):
+        super(StepTarget, self).__init__()
+        self.pose.x = round(x, 4)
+        self.pose.y = round(y, 4)
+        self.pose.theta = round(theta, 4)
+        self.leg = leg
+
     def __eq__(self, a):
         return (equal(self.pose.x, a.pose.x) and
                 equal(self.pose.y, a.pose.y) and
                 equal(self.pose.theta, a.pose.theta) and
                 self.leg == a.leg)
 
+    def __ne__(self, a):
+        return not (self == a)
+
     def __str__(self):
         return "(%f, %f, %f, %i)" % (self.pose.x, self.pose.y, self.pose.theta, self.leg)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class NaoFootsteps(NaoNode):
@@ -179,26 +192,41 @@ class NaoFootsteps(NaoNode):
         return resp
 
     def footstepsExecutionCallback(self, goal):
-        def extend_footsteps_set(footstep_set, executed_footsteps):
+        def update_feedback(feedback, executed_footsteps, executable_footsteps, 
+                            robot_feet):
+            # important: update pose before updating the footsteps
+            feedback.robot_pose = [
+                StepTarget(*robot_feet[0], leg=StepTarget.left),
+                StepTarget(*robot_feet[1], leg=StepTarget.right)]
+
+            # naoqi sends the complete executable footsteps list, so the 
+            # feedback's list can simply be replaced and updated
+            feedback.executable_footsteps = []
+            for leg, time, (x, y, theta) in executable_footsteps:
+                leg = (StepTarget.right if leg == LEG_RIGHT else
+                       StepTarget.left)
+                step = StepTarget(x, y, theta, leg)
+                feedback.executable_footsteps.append(step)
+
+            # check if an footstep has been performed
             if not len(executed_footsteps):
                 return
+            # use the last footstep in the list since this might be the new one
+            # (NOTE: if one step is missed here, increase the feedback rate)
             leg, time, (x, y, theta) = executed_footsteps[-1]
             # check if footstep information is up-to-date
             if not equal(time, STEP_TIME):
                 return
-            step = StepTarget()
-            step.pose.x = round(x, 4)
-            step.pose.y = round(y, 4)
-            step.pose.theta = round(theta, 4)
-            step.leg = (StepTarget.right if leg == LEG_RIGHT else
-                        StepTarget.left)
-            # if the step equals the last one that was added ignore it
+            leg = (StepTarget.right if leg == LEG_RIGHT else
+                   StepTarget.left)
+            step = StepTarget(x, y, theta, leg)
+            # add the footstep only if it does not equal the last one added
             try:
-                if footstep_set[-1] == step:
+                if feedback.executed_footsteps[-1] == step:
                     return
             except IndexError:
                 pass
-            footstep_set.append(step)
+            feedback.executed_footsteps.append(step)
 
         legs = []
         steps = []
@@ -229,7 +257,6 @@ class NaoFootsteps(NaoNode):
         feedback = ExecFootstepsFeedback()
         result = ExecFootstepsResult()
         success = True
-        footsteps_set = []
         while self.motionProxy.walkIsActive():
             if self.actionServer.is_preempt_requested():
                 self.motionProxy.stopWalk()
@@ -238,16 +265,24 @@ class NaoFootsteps(NaoNode):
                 success = False
                 break
 
-            _ , executed_footsteps, _ = self.motionProxy.getFootSteps()
-            extend_footsteps_set(footsteps_set, executed_footsteps)
-            feedback.executed_footsteps = footsteps_set
+            (robot_feet, 
+             executed_footsteps, 
+             executable_footsteps) = self.motionProxy.getFootSteps()
+            update_feedback(feedback, executed_footsteps, executable_footsteps,
+                            robot_feet)
             self.actionServer.publish_feedback(feedback)
+
+            rospy.loginfo("Robot left foot: %s, robot right foot: %s", 
+                          *robot_feet)
 
             feedback_rate.sleep()
 
         if success:
-            rospy.loginfo("Num. executed footsteps: %i", len(footsteps_set))
-            result.executed_footsteps = footsteps_set
+            rospy.loginfo("Num. executed footsteps: %i", 
+                          len(feedback.executed_footsteps))
+            rospy.loginfo("Robot left foot: %s, robot right foot: %s", 
+                          *(feedback.robot_pose))
+            result.executed_footsteps = feedback.executed_footsteps
             self.actionServer.set_succeeded(result)
 
 
