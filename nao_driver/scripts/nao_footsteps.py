@@ -7,7 +7,7 @@
 #
 # ROS node to control Nao's footsteps (testing for NaoQI 1.12)
 #
-# Copyright 2012 Armin Hornung, University of Freiburg
+# Copyright 2012 Armin Hornung and Johannes Garimort, University of Freiburg
 # http://www.ros.org/wiki/nao_driver
 #
 # Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,7 @@ FLOAT_CMP_THR = 0.000001
 STEP_TIME = 0.5
 
 
-def equal(a, b):
+def float_equ(a, b):
     return abs(a - b) <= FLOAT_CMP_THR
 
 
@@ -75,16 +75,17 @@ class StepTarget(StepTarget):
         self.leg = leg
 
     def __eq__(self, a):
-        return (equal(self.pose.x, a.pose.x) and
-                equal(self.pose.y, a.pose.y) and
-                equal(self.pose.theta, a.pose.theta) and
+        return (float_equ(self.pose.x, a.pose.x) and
+                float_equ(self.pose.y, a.pose.y) and
+                float_equ(self.pose.theta, a.pose.theta) and
                 self.leg == a.leg)
 
     def __ne__(self, a):
         return not (self == a)
 
     def __str__(self):
-        return "(%f, %f, %f, %i)" % (self.pose.x, self.pose.y, self.pose.theta, self.leg)
+        return "(%f, %f, %f, %i)" % (self.pose.x, self.pose.y, self.pose.theta,
+                                     self.leg)
 
     def __repr__(self):
         return self.__str__()
@@ -99,7 +100,8 @@ class NaoFootsteps(NaoNode):
 
         self.connectNaoQi()
 
-        # initial stiffness (defaults to 0 so it doesn't strain the robot when no teleoperation is running)
+        # initial stiffness (defaults to 0 so it doesn't strain the robot when
+        # no teleoperation is running)
         # set to 1.0 if you want to control the robot immediately
         initStiffness = rospy.get_param('~init_stiffness', 0.0)
 
@@ -127,7 +129,7 @@ class NaoFootsteps(NaoNode):
         rospy.loginfo("nao_footsteps initialized")
 
     def connectNaoQi(self):
-        '''(re-) connect to NaoQI'''
+        """(re-) connect to NaoQI"""
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
 
         self.motionProxy = self.getProxy("ALMotion")
@@ -136,7 +138,10 @@ class NaoFootsteps(NaoNode):
 
 
     def stopWalk(self):
-        """ Stops the current walking bahavior and blocks until the clearing is complete. """
+        """
+        Stops the current walking bahavior and blocks until the clearing is
+        complete.
+        """
         try:
             self.motionProxy.setWalkTargetVelocity(0.0, 0.0, 0.0, self.stepFrequency)
             self.motionProxy.waitUntilWalkIsFinished()
@@ -158,7 +163,8 @@ class NaoFootsteps(NaoNode):
             elif data.leg == StepTarget.left:
                 leg = [LEG_LEFT]
             else:
-                rospy.logerr("Received a wrong leg constant: %d, ignoring step command", data.leg)
+                rospy.logerr("Received a wrong leg constant: %d, ignoring step",
+                             " command", data.leg)
                 return
 
             footStep = [[data.pose.x, data.pose.y, data.pose.theta]]
@@ -192,41 +198,40 @@ class NaoFootsteps(NaoNode):
         return resp
 
     def footstepsExecutionCallback(self, goal):
-        def update_feedback(feedback, executed_footsteps, executable_footsteps, 
-                            robot_feet):
-            # important: update pose before updating the footsteps
-            feedback.robot_pose = [
-                StepTarget(*robot_feet[0], leg=StepTarget.left),
-                StepTarget(*robot_feet[1], leg=StepTarget.right)]
+        """
+        Initializes the execution of the footsteps and generates an execution
+        feedback when the robot's current supporting leg is supposed to stand
+        still. In this way it is safe to receive the correct pose of the support
+        foot in the action client controlling the performance. (The feedback
+        frequence is supposed to be sufficiently high (0.1 <= freq <= 0.01).)
 
-            # naoqi sends the complete executable footsteps list, so the 
-            # feedback's list can simply be replaced and updated
-            feedback.executable_footsteps = []
-            for leg, time, (x, y, theta) in executable_footsteps:
-                leg = (StepTarget.right if leg == LEG_RIGHT else
-                       StepTarget.left)
-                step = StepTarget(x, y, theta, leg)
-                feedback.executable_footsteps.append(step)
+        The  method is blocking until all footsteps are executed or an preempt
+        request is received.
 
+        goal contains the footsteps and the feedback frequency, i.e. how often
+        information from the robot is requested.
+        """
+        def update_feedback(feedback, executed_footsteps, num_equal_steps):
             # check if an footstep has been performed
             if not len(executed_footsteps):
-                return
+                return num_equal_steps
             # use the last footstep in the list since this might be the new one
             # (NOTE: if one step is missed here, increase the feedback rate)
             leg, time, (x, y, theta) = executed_footsteps[-1]
             # check if footstep information is up-to-date
-            if not equal(time, STEP_TIME):
-                return
+            if not float_equ(time, STEP_TIME):
+                return num_equal_steps
             leg = (StepTarget.right if leg == LEG_RIGHT else
                    StepTarget.left)
             step = StepTarget(x, y, theta, leg)
-            # add the footstep only if it does not equal the last one added
+            # add the footstep only if it is a new one
             try:
                 if feedback.executed_footsteps[-1] == step:
-                    return
+                    return num_equal_steps + 1
             except IndexError:
                 pass
             feedback.executed_footsteps.append(step)
+            return 1
 
         legs = []
         steps = []
@@ -240,24 +245,27 @@ class NaoFootsteps(NaoNode):
                 rospy.logerr("Received a wrong leg constant: %d, ignoring step "
                              "command", step.leg)
                 return
-            steps.append([step.pose.x, step.pose.y, step.pose.theta])
+            steps.append([round(step.pose.x, 4),
+                          round(step.pose.y, 4),
+                          round(step.pose.theta, 4)])
             try:
                 time_list.append(time_list[-1] + STEP_TIME)
             except IndexError:
                 time_list.append(STEP_TIME)
 
-        steps = [[round(x, 4), round(y, 4), round(theta, 4)]
-                 for x, y, theta in steps]
         rospy.loginfo("Start executing footsteps %s",
                       [[x, y, theta, leg] for (x, y, theta), leg in
                        zip(steps, legs)])
-        self.motionProxy.setFootSteps(legs, steps, time_list, True)
 
-        feedback_rate = rospy.Rate(goal.feedback_rate)
         feedback = ExecFootstepsFeedback()
         result = ExecFootstepsResult()
         success = True
+        equal_steps_thr = int((STEP_TIME / goal.feedback_frequence) * 0.6)
+        num_equal_steps = 0
+
+        self.motionProxy.setFootSteps(legs, steps, time_list, True)
         while self.motionProxy.walkIsActive():
+            # handle preempt requests
             if self.actionServer.is_preempt_requested():
                 self.motionProxy.stopWalk()
                 self.actionServer.set_preempted()
@@ -265,23 +273,19 @@ class NaoFootsteps(NaoNode):
                 success = False
                 break
 
-            (robot_feet, 
-             executed_footsteps, 
-             executable_footsteps) = self.motionProxy.getFootSteps()
-            update_feedback(feedback, executed_footsteps, executable_footsteps,
-                            robot_feet)
-            self.actionServer.publish_feedback(feedback)
+            # get execution information from the robot and update the feedback
+            (_, executed_footsteps, _) = self.motionProxy.getFootSteps()
+            num_equal_steps = update_feedback(feedback, executed_footsteps,
+                                              num_equal_steps)
 
-            rospy.loginfo("Robot left foot: %s, robot right foot: %s", 
-                          *robot_feet)
+            # if the new step has been k times received (k=equal_steps_thr) send
+            # the feedback
+            if num_equal_steps == equal_steps_thr:
+                self.actionServer.publish_feedback(feedback)
 
-            feedback_rate.sleep()
+            rospy.sleep(goal.feedback_frequence)
 
         if success:
-            rospy.loginfo("Num. executed footsteps: %i", 
-                          len(feedback.executed_footsteps))
-            rospy.loginfo("Robot left foot: %s, robot right foot: %s", 
-                          *(feedback.robot_pose))
             result.executed_footsteps = feedback.executed_footsteps
             self.actionServer.set_succeeded(result)
 
