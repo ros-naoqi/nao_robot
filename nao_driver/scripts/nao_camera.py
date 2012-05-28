@@ -5,6 +5,7 @@ roslib.load_manifest('nao_driver')
 import rospy
 from sensor_msgs.msg import Image, CameraInfo
 from nao_driver import NaoNode
+from sensor_msgs.srv import SetCameraInfo
 
 
 from naoqi import ALProxy
@@ -22,8 +23,12 @@ class NaoCam (NaoNode):
         # ROS pub/sub
         self.pub_img_ = rospy.Publisher('image_raw', Image)
         self.pub_info_ = rospy.Publisher('camera_info', CameraInfo)
+        self.set_camera_info_service_ = rospy.Service('set_camera_info', SetCameraInfo, self.set_camera_info)
+        # Messages
+        self.info_ = CameraInfo()
+        self.set_default_params_qvga(self.info_) #default params should be overwritten by service call
         # parameters
-        self.camera_switch = rospy.get_param('~camera_switch', 0)
+        self.camera_switch = rospy.get_param('~camera_switch', 1)
         if self.camera_switch == 0:
             self.frame_id = "/CameraTop_frame"
         elif self.camera_switch == 1:
@@ -31,6 +36,8 @@ class NaoCam (NaoNode):
         else:
             rospy.logerr('Invalid camera_switch. Must be 0 or 1')
             exit(1)
+        print "Using namespace ", rospy.get_namespace()
+        print "using camera: ", self.camera_switch
         #TODO: parameters
         self.resolution = kQVGA
         self.colorSpace = kBGRColorSpace
@@ -45,9 +52,16 @@ class NaoCam (NaoNode):
 
         # subscribe
         self.nameId = self.camProxy.subscribe("rospy_gvm", self.resolution, self.colorSpace, self.fps)
-        print "subscriber name is ", self.nameId
+        #print "subscriber name is ", self.nameId
 
+        # set params
+        rospy.sleep(1)
+        self.camProxy.setParam(kCameraSelectID, 1)
+        self.camProxy.setResolution(self.nameId, self.resolution)
 
+    def set_camera_info(self, cameraInfoMsg):
+        print "Received new camera info"
+        self.info_ = cameraInfoMsg.camera_info
 
 
 
@@ -66,11 +80,7 @@ class NaoCam (NaoNode):
         cam_info.P[11] = 0.0
 
     def main_loop(self):
-        self.camProxy.setParam(kCameraSelectID, self.camera_switch)
-        self.camProxy.setResolution(self.nameId, self.resolution)
         img = Image()
-        info = CameraInfo()
-        self.set_default_params_qvga(info)
         while not rospy.is_shutdown():
             #print "getting image..",
             image = self.camProxy.getImageRemote(self.nameId)
@@ -94,11 +104,11 @@ class NaoCam (NaoNode):
             img.encoding = encoding
             img.step = img.width * nbLayers
             img.data = image[6]
-            info.width = img.width
-            info.height = img.height
-            info.header = img.header
+            self.info_.width = img.width
+            self.info_.height = img.height
+            self.info_.header = img.header
             self.pub_img_.publish(img)
-            self.pub_info_.publish(info)
+            self.pub_info_.publish(self.info_)
             rospy.sleep(0.0001)# TODO: is this necessary?
 
 
