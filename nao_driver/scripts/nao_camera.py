@@ -28,7 +28,7 @@ class NaoCam (NaoNode):
         self.info_ = CameraInfo()
         self.set_default_params_qvga(self.info_) #default params should be overwritten by service call
         # parameters
-        self.camera_switch = rospy.get_param('~camera_switch', 1)
+        self.camera_switch = rospy.get_param('~camera_switch', 0)
         if self.camera_switch == 0:
             self.frame_id = "/CameraTop_frame"
         elif self.camera_switch == 1:
@@ -56,7 +56,7 @@ class NaoCam (NaoNode):
 
         # set params
         rospy.sleep(1)
-        self.camProxy.setParam(kCameraSelectID, 1)
+        self.camProxy.setParam(kCameraSelectID, self.camera_switch)
         self.camProxy.setResolution(self.nameId, self.resolution)
 
     def set_camera_info(self, cameraInfoMsg):
