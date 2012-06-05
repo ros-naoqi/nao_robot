@@ -198,40 +198,26 @@ class NaoFootsteps(NaoNode):
         return resp
 
     def footstepsExecutionCallback(self, goal):
-        """
-        Initializes the execution of the footsteps and generates an execution
-        feedback when the robot's current supporting leg is supposed to stand
-        still. In this way it is safe to receive the correct pose of the support
-        foot in the action client controlling the performance. (The feedback
-        frequence is supposed to be sufficiently high (0.1 <= freq <= 0.01).)
-
-        The  method is blocking until all footsteps are executed or an preempt
-        request is received.
-
-        goal contains the footsteps and the feedback frequency, i.e. how often
-        information from the robot is requested.
-        """
-        def update_feedback(feedback, executed_footsteps, num_equal_steps):
+        def update_feedback(feedback, executed_footsteps):
             # check if an footstep has been performed
             if not len(executed_footsteps):
-                return num_equal_steps
+                return
             # use the last footstep in the list since this might be the new one
             # (NOTE: if one step is missed here, increase the feedback rate)
             leg, time, (x, y, theta) = executed_footsteps[-1]
             # check if footstep information is up-to-date
             if not float_equ(time, STEP_TIME):
-                return num_equal_steps
+                return
             leg = (StepTarget.right if leg == LEG_RIGHT else
                    StepTarget.left)
             step = StepTarget(x, y, theta, leg)
             # add the footstep only if it is a new one
             try:
                 if feedback.executed_footsteps[-1] == step:
-                    return num_equal_steps + 1
+                    return
             except IndexError:
                 pass
             feedback.executed_footsteps.append(step)
-            return 1
 
         legs = []
         steps = []
@@ -260,9 +246,6 @@ class NaoFootsteps(NaoNode):
         feedback = ExecFootstepsFeedback()
         result = ExecFootstepsResult()
         success = True
-        equal_steps_thr = int((STEP_TIME / goal.feedback_frequence) * 0.6)
-        num_equal_steps = 0
-
         self.motionProxy.setFootSteps(legs, steps, time_list, True)
         while self.motionProxy.walkIsActive():
             # handle preempt requests
@@ -275,13 +258,8 @@ class NaoFootsteps(NaoNode):
 
             # get execution information from the robot and update the feedback
             (_, executed_footsteps, _) = self.motionProxy.getFootSteps()
-            num_equal_steps = update_feedback(feedback, executed_footsteps,
-                                              num_equal_steps)
-
-            # if the new step has been k times received (k=equal_steps_thr) send
-            # the feedback
-            if num_equal_steps == equal_steps_thr:
-                self.actionServer.publish_feedback(feedback)
+            update_feedback(feedback, executed_footsteps)
+            self.actionServer.publish_feedback(feedback)
 
             rospy.sleep(goal.feedback_frequence)
 
