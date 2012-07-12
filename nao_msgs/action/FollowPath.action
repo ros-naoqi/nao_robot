@@ -1,0 +1,7 @@
+# goal: a path to follow
+nav_msgs/Path path
+---
+# no result currently
+---
+# feedback: index of current subgoal in path
+uint32 index

@@ -6,7 +6,7 @@
 
 #
 # ROS node to control Nao's walking engine (omniwalk and footsteps)
-# This code is currently compatible to NaoQI version 1.6 or newer (latest 
+# This code is currently compatible to NaoQI version 1.6 or newer (latest
 # tested: 1.10)
 #
 # Copyright 2009-2011 Armin Hornung & Stefan Osswald, University of Freiburg
@@ -63,22 +63,22 @@ import nao_msgs.srv
 from start_walk_pose import startWalkPose
 
 class NaoWalker(NaoNode):
-    def __init__(self): 
-	NaoNode.__init__(self)
-    
+    def __init__(self):
+        NaoNode.__init__(self)
+
         # ROS initialization:
         rospy.init_node('nao_walker')
-        
+
         self.connectNaoQi()
-    
+
         # head scan is not active
-        self.scan_active = False;
+        self.scan_active = False
         # walking pattern params:
         self.stepFrequency = rospy.get_param('~step_frequency', 0.5)
-        
+
         self.useStartWalkPose = rospy.get_param('~use_walk_pose', False)
         self.needsStartWalkPose = True
-        
+
         # other params
         self.maxHeadSpeed = rospy.get_param('~max_head_speed', 0.2)
         # initial stiffness (defaults to 0 so it doesn't strain the robot when no teleoperation is running)
@@ -94,12 +94,12 @@ class NaoWalker(NaoNode):
             self.scanInfoPub = rospy.Publisher("scan_info", Bool, latch=True)
             scanInfo = Bool(False)
             self.scanInfoPub.publish(scanInfo)
-      
-        
+
+
         # TODO: parameterize
         if initStiffness > 0.0 and initStiffness <= 1.0:
             self.motionProxy.stiffnessInterpolation('Body', initStiffness, 0.5)
-    
+
         try:
             enableFootContactProtection = rospy.get_param('~enable_foot_contact_protection')
             self.motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", enableFootContactProtection]])
@@ -109,15 +109,15 @@ class NaoWalker(NaoNode):
                 rospy.loginfo("Disabled foot contact protection")
         except KeyError:
             # do not change foot contact protection
-            pass        
-        
+            pass
+
         # last: ROS subscriptions (after all vars are initialized)
         rospy.Subscriber("cmd_vel", Twist, self.handleCmdVel, queue_size=1)
         rospy.Subscriber("cmd_pose", Pose2D, self.handleTargetPose, queue_size=1)
         rospy.Subscriber("cmd_step", StepTarget, self.handleStep, queue_size=50)
         rospy.Subscriber("speech", String, self.handleSpeech)
         rospy.Subscriber("start_scan", std_msgs.msg.Empty, self.handleStartScan, queue_size=1)
-        
+
         # ROS services (blocking functions)
         self.cmdPoseSrv = rospy.Service("cmd_pose_srv", CmdPoseService, self.handleTargetPoseService)
         self.cmdVelSrv = rospy.Service("cmd_vel_srv", CmdVelService, self.handleCmdVelService)
@@ -125,11 +125,11 @@ class NaoWalker(NaoNode):
         self.headScanSrv = rospy.Service("head_scan_srv", Empty, self.handleHeadScanSrv)
         self.stopWalkSrv = rospy.Service("stop_walk_srv", Empty, self.handleStopWalkSrv)
         self.needsStartWalkPoseSrv = rospy.Service("needs_start_walk_pose_srv", Empty, self.handleNeedsStartWalkPoseSrv)
-    
+
         self.say("Walker online")
-            
+
         rospy.loginfo("nao_walker initialized")
-    
+
     def connectNaoQi(self):
         '''(re-) connect to NaoQI'''
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
@@ -137,7 +137,7 @@ class NaoWalker(NaoNode):
         self.motionProxy = self.getProxy("ALMotion")
         if self.motionProxy is None:
             exit(1)
-                            
+
         self.ttsProxy = self.getProxy("ALTextToSpeech", warn=False)
         if self.ttsProxy is None:
             rospy.logwarn("No Proxy to TTS available, disabling speech output.")
@@ -149,18 +149,18 @@ class NaoWalker(NaoNode):
             self.motionProxy.setWalkTargetVelocity(0.0, 0.0, 0.0, self.stepFrequency)
             self.motionProxy.waitUntilWalkIsFinished()
 
-                        
+
         except RuntimeError,e:
             print "An error has been caught"
             print e
             return False
-            
+
         return True
-            
-    
+
+
     def handleSpeech(self,data):
         self.say(data.data)
-        
+
     def say(self, text):
         if (not self.ttsProxy is None):
             try:
@@ -176,33 +176,34 @@ class NaoWalker(NaoNode):
     def handleCmdVel(self, data):
         rospy.logdebug("Walk cmd_vel: %f %f %f, frequency %f", data.linear.x, data.linear.y, data.angular.z, self.stepFrequency)
         if data.linear.x != 0 or data.linear.y != 0 or data.angular.z != 0:
-            self.gotoStartWalkPose()        
-        try:        
+            self.gotoStartWalkPose()
+        try:
             eps = 1e-3 # maybe 0,0,0 is a special command in motionProxy...
             if abs(data.linear.x)<eps and abs(data.linear.y)<eps and abs(data.angular.z)<eps:
-               self.motionProxy.setWalkTargetVelocity(0,0,0,0.5)
-            self.motionProxy.setWalkTargetVelocity(data.linear.x, data.linear.y, data.angular.z, self.stepFrequency)
+                self.motionProxy.setWalkTargetVelocity(0,0,0,0.5)
+            else:
+                self.motionProxy.setWalkTargetVelocity(data.linear.x, data.linear.y, data.angular.z, self.stepFrequency)
         except RuntimeError,e:
             # We have to assume there's no NaoQI running anymore => exit!
             rospy.logerr("Exception caught in handleCmdVel:\n%s", e)
             rospy.signal_shutdown("No NaoQI available anymore")
-            
-            
+
+
 
     def handleCmdVelService(self, req):
         self.handleCmdVel(req.twist)
         return CmdVelServiceResponse()
-        
+
     def handleTargetPose(self, data, post=True):
         """handles cmd_pose requests, walks to (x,y,theta) in robot coordinate system"""
         if self.scan_active:
-            return False;
+            return False
 
         rospy.logdebug("Walk target_pose: %f %f %f", data.x,
                 data.y, data.theta)
-                
+
         self.gotoStartWalkPose()
-                        
+
         try:
             if post:
                 self.motionProxy.post.walkTo(data.x, data.y, data.theta )
@@ -212,8 +213,8 @@ class NaoWalker(NaoNode):
         except RuntimeError,e:
             rospy.logerr("Exception caught in handleTargetPose:\n%s", e)
             return False
-        
-    
+
+
     def handleStep(self, data):
         rospy.logdebug("Step leg: %d; target: %f %f %f", data.leg, data.pose.x,
                 data.pose.y, data.pose.theta)
@@ -236,34 +237,34 @@ class NaoWalker(NaoNode):
             return StepTargetServiceResponse()
         else:
             return None
-    
+
     def handleTargetPoseService(self, req):
         """ do NOT use post"""
         if self.handleTargetPose(req.pose, False):
             return CmdPoseServiceResponse()
         else:
             return None
-    
+
     def handleHeadScanSrv(self, req):
         if self.perform_laser_scan():
             return EmptyResponse()
         else:
             return None
-        
+
     def handleStartScan(self, msg):
         self.perform_laser_scan()
-        
+
     def handleStopWalkSrv(self, req):
         if self.stopWalk():
             return EmptyResponse()
         else:
-            return None        
+            return None
 
     def gotoStartWalkPose(self):
         if self.useStartWalkPose and self.needsStartWalkPose:
             startWalkPose(self.motionProxy)
             self.needsStartWalkPose = False
-            
+
     def handleNeedsStartWalkPoseSrv(self, data):
         self.needsStartWalkPose = True
         return EmptyResponse()
@@ -280,7 +281,7 @@ class NaoWalker(NaoNode):
             head_scan(self.motionProxy,self.ttsProxy, 28.0, -36.0, 1.0, 10.0, True)
             if self.doubleScan:
                 head_scan(self.motionProxy, self.ttsProxy, self.doubleScanFrom, self.doubleScanTo, 1.0, 10.0, False)
-                self.motionProxy.angleInterpolation('HeadPitch', 0.0, 2.5, True)        
+                self.motionProxy.angleInterpolation('HeadPitch', 0.0, 2.5, True)
         else:
             # todo: remove sleeps
             #from headscan import head_scan
@@ -291,14 +292,14 @@ class NaoWalker(NaoNode):
                 rospy.loginfo("Starting scan")
             # max angle, min angle (pitch), scan freq, resolution, use squat
             rospy.sleep(2)
-            #head_scan(self.motionProxy,26.0,-5.0,10.0,0.5,True) 
+            #head_scan(self.motionProxy,26.0,-5.0,10.0,0.5,True)
             head_scan(self.motionProxy,28.0, -35.0, 1.0, 10.0, True)
             if (not self.ttsProxy is None):
                 self.say("Scan complete")
             else:
                 rospy.loginfo("Scan complete")
-        self.scan_active = False;
-        self.needsStartWalkPose = True;
+        self.scan_active = False
+        self.needsStartWalkPose = True
         return True
 
 
@@ -308,6 +309,6 @@ if __name__ == '__main__':
     rospy.spin()
     rospy.loginfo("nao_walker stopping...")
     walker.stopWalk()
-    
+
     rospy.loginfo("nao_walker stopped.")
     exit(0)
