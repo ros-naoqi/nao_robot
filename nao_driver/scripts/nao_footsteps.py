@@ -261,7 +261,7 @@ class NaoFootsteps(NaoNode):
             update_feedback(feedback, executed_footsteps)
             self.actionServer.publish_feedback(feedback)
 
-            rospy.sleep(goal.feedback_frequence)
+            rospy.Rate(goal.feedback_frequency).sleep()
 
         if success:
             result.executed_footsteps = feedback.executed_footsteps
