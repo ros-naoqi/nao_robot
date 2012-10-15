@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import roslib
-from rospy.exceptions import ROSException
+#from rospy.exceptions import ROSException
 roslib.load_manifest('nao_driver')
 import rospy
 import roslib.rostime
@@ -16,8 +16,8 @@ import std_srvs.srv
 
 # go to crouching position
 def joint_angle_client():
-	inhibitWalkSrv = rospy.ServiceProxy("inhibit_walk", std_srvs.srv.Empty)
-	uninhibitWalkSrv = rospy.ServiceProxy("uninhibit_walk", std_srvs.srv.Empty)		
+	#inhibitWalkSrv = rospy.ServiceProxy("inhibit_walk", std_srvs.srv.Empty)
+	#uninhibitWalkSrv = rospy.ServiceProxy("uninhibit_walk", std_srvs.srv.Empty)
 	
 	client = actionlib.SimpleActionClient("joint_trajectory", nao_msgs.msg.JointTrajectoryAction)
 	stiffness_client = actionlib.SimpleActionClient("joint_stiffness_trajectory", nao_msgs.msg.JointTrajectoryAction)
@@ -29,7 +29,7 @@ def joint_angle_client():
 	angle_client.wait_for_server()
 	rospy.loginfo("Done.")
 	
-	self.inhibitWalkSrv()
+	#inhibitWalkSrv()
 	try:	
 		goal = nao_msgs.msg.JointTrajectoryGoal()
 		
@@ -116,7 +116,7 @@ def joint_angle_client():
 		rospy.loginfo("Stiffness results: %s", str(result.goal_position.position))
 		
 	finally:
-		self.uninhibitWalkSrv()
+		uninhibitWalkSrv()
 	
 	
 	
