@@ -1,0 +1,12 @@
+# Goal: colours to use for blinking, plus blinking rate mean and sd
+# Result: true if robot is still blinking (call was pre-empted by another user)
+# Feedback: last blinked colour
+std_msgs/ColorRGBA[] colors
+std_msgs/ColorRGBA bg_color
+duration blink_duration
+float32 blink_rate_mean
+float32 blink_rate_sd
+---
+bool still_blinking
+---
+std_msgs/ColorRGBA last_color
