@@ -33,7 +33,6 @@
 #
 
 
-import thread
 import roslib
 
 roslib.load_manifest('nao_driver')
@@ -73,12 +72,12 @@ class NaoBehaviors(NaoNode):
         self.getInstalledBehaviorsService = rospy.Service(
             self.NODE_NAME + "/get_installed_behaviors",
             GetInstalledBehaviors,
-            self.getIntalledBehaviors
+            self.getInstalledBehaviors
             )
         
         #Prepare and start actionlib server
         self.actionlibServer = actionlib.SimpleActionServer(
-            self.NODE_NAME,
+            self.NODE_NAME + "/run_behavior",
             RunBehaviorAction,
             self.runBehavior,
             False
@@ -88,7 +87,7 @@ class NaoBehaviors(NaoNode):
         
         self.actionlibServer.start()
     
-    def getIntalledBehaviors( self, request ):
+    def getInstalledBehaviors( self, request ):
         result = self.behaviorProxy.getInstalledBehaviors()
         return GetInstalledBehaviorsResponse( result )
     
@@ -103,14 +102,15 @@ class NaoBehaviors(NaoNode):
         
         if not self.behaviorProxy.isBehaviorInstalled( self.behavior ) :
             result.noErrors = False
+            self.actionlibServer.set_aborted(
+                result,
+                "Unknown behavior: " + str(self.behavior) 
+            )
             self.behavior = ""
-            self.actionlibServer.set_succeded( result )
             return
         
-        #Get a new proxy (so that class proxy can be used for other tasks)
-        newProxy = self.getProxy( "ALBehaviorManager" )
-        #Execute behavior
-        newProxy.runBehavior( self.behavior )
+        #Execute behavior (risky if ALBehavior is not thread-safe!)
+        self.behaviorProxy.runBehavior( self.behavior )
         
         # If we exited prematurely due to a call to stop behavior (which was
         # activated by a actionlib preemption signal) then set as preempted
@@ -131,7 +131,7 @@ class NaoBehaviors(NaoNode):
 
 if __name__ == '__main__':
     node = NaoBehaviors()
-    rospy.loginfo( rospy.get_name() + " running..." )
+    rospy.loginfo( node.NODE_NAME + " running..." )
     rospy.spin()
-    rospy.loginfo( rospy.get_name() + " stopped." )
+    rospy.loginfo( node.NODE_NAME + " stopped." )
     exit(0)
