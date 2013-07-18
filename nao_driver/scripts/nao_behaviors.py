@@ -4,7 +4,7 @@
 # ROS node to control NAO's built-in and user-installed behaviors using NaoQI
 # Tested with NaoQI: 1.12
 #
-# Copyright (c) 2012, Miguel Sarabia
+# Copyright (c) 2012, 2013 Miguel Sarabia
 # Imperial College London
 #
 # Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-
+import threading
 import roslib
 
 roslib.load_manifest('nao_driver')
@@ -63,21 +63,22 @@ class NaoBehaviors(NaoNode):
         rospy.init_node( self.NODE_NAME )
         
         #We need this variable to be able to call stop behavior when preempted
-        self.behavior = ""
+        self.behavior = None
+        self.lock = threading.RLock()
         
         #Proxy for listingBehaviors and stopping them
         self.behaviorProxy = self.getProxy( "ALBehaviorManager" )
         
         # Register ROS services
         self.getInstalledBehaviorsService = rospy.Service(
-            self.NODE_NAME + "/get_installed_behaviors",
+            "get_installed_behaviors",
             GetInstalledBehaviors,
             self.getInstalledBehaviors
             )
         
         #Prepare and start actionlib server
         self.actionlibServer = actionlib.SimpleActionServer(
-            self.NODE_NAME + "/run_behavior",
+            "run_behavior",
             RunBehaviorAction,
             self.runBehavior,
             False
@@ -93,40 +94,49 @@ class NaoBehaviors(NaoNode):
     
     
     def runBehavior( self, request ):
-        #Note that this function is executed on a different thread
+        #Note this function is executed from a different thread
+        rospy.loginfo(
+            "Execution of behavior: '{}' requested".format(request.behavior))
         
-        #Save name of behavior to be run
-        self.behavior = request.behavior
-        result = RunBehaviorResult()
-        result.noErrors = True
-        
-        if not self.behaviorProxy.isBehaviorInstalled( self.behavior ) :
-            result.noErrors = False
-            self.actionlibServer.set_aborted(
-                result,
-                "Unknown behavior: " + str(self.behavior) 
-            )
-            self.behavior = ""
+        #Check requested behavior is valid
+        if not request.behavior in self.behaviorProxy.getInstalledBehaviors():
+            error_msg = "Behavior '{}' not installed".format(request.behavior)
+            self.actionlibServer.set_aborted(text = error_msg)
+            rospy.loginfo(error_msg)
             return
         
-        #Execute behavior (risky if ALBehavior is not thread-safe!)
-        self.behaviorProxy.runBehavior( self.behavior )
+        with self.lock:
+            # Check first if we're already preempted, and return if so
+            if self.actionlibServer.is_preempt_requested():                
+                self.actionlibServer.set_preempted()
+                rospy.loginfo("Behavior execution preempted before it started")
+                return
+            
+            #Save name of behavior to be run
+            self.behavior = request.behavior
+            #Execute behavior (on another thread so we can release lock)
+            taskID = self.behaviorProxy.post.runBehavior( self.behavior )
+            
+        rospy.loginfo("Waiting for behavior execution to complete")
+        # Wait for task to complete (or be preempted)
+        self.behaviorProxy.wait( taskID, 0 )
         
-        # If we exited prematurely due to a call to stop behavior (which was
-        # activated by a actionlib preemption signal) then set as preempted
-        if self.actionlibServer.is_preempt_requested() :
-            self.currentBehavior = ""
-            self.actionlibServer.set_preempted()
-            return
-        
-        #Everything went fine, finished normally
-        self.behavior = ""
-        self.actionlibServer.set_succeeded( result )
-        return
-
+        #Evaluate results
+        with self.lock:
+            self.behavior = None
+            # If preempted, report so
+            if self.actionlibServer.is_preempt_requested() :
+                self.actionlibServer.set_preempted()
+                rospy.loginfo("Behavior execution preempted")
+            # Otherwise, set as succeeded
+            else:
+                self.actionlibServer.set_succeeded()
+                rospy.loginfo("Behavior execution succeeded")
+    
     def stopBehavior( self ):
-        if self.behavior != "" and self.actionlibServer.is_active() :
-            self.behaviorProxy.stopBehavior( self.behavior )  
+        with self.lock:
+            if self.behavior and self.actionlibServer.is_active() :
+                self.behaviorProxy.stopBehavior( self.behavior )  
 
 
 if __name__ == '__main__':
