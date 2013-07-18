@@ -1,7 +1,6 @@
 # Goal [behavior]: name of the behavior to be executed
-# Result [noErrors]: true if behavior finished executing correctly, false otherwise
+# Result: none, will be set to aborted or preempted
 # Feedback: none as NaoQI API cannot be queried in this respect
 string behavior
 ---
-bool noErrors
 ---
