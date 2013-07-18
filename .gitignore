@@ -33,3 +33,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+#Specific ignores for nao_robot
+nao_msgs/src
+msg_gen
+srv_gen
+
