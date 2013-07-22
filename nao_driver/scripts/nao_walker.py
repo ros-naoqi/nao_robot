@@ -41,6 +41,9 @@ import roslib
 roslib.load_manifest('nao_driver')
 import rospy
 
+import logging
+logging.basicConfig()
+
 from nao_driver import *
 
 import math
@@ -95,6 +98,10 @@ class NaoWalker(NaoNode):
             scanInfo = Bool(False)
             self.scanInfoPub.publish(scanInfo)
 
+        self.useFootGaitConfig = rospy.get_param('~use_foot_gait_config', False)
+        rospy.loginfo("useFootGaitConfig = %d" % self.useFootGaitConfig)
+        if self.useFootGaitConfig:
+            self.footGaitConfig = rospy.get_param('~foot_gait_config', self.motionProxy.getFootGaitConfig("Default"))
 
         # TODO: parameterize
         if initStiffness > 0.0 and initStiffness <= 1.0:
@@ -125,6 +132,7 @@ class NaoWalker(NaoNode):
         self.headScanSrv = rospy.Service("head_scan_srv", Empty, self.handleHeadScanSrv)
         self.stopWalkSrv = rospy.Service("stop_walk_srv", Empty, self.handleStopWalkSrv)
         self.needsStartWalkPoseSrv = rospy.Service("needs_start_walk_pose_srv", Empty, self.handleNeedsStartWalkPoseSrv)
+        self.readFootGaitConfigSrv = rospy.Service("read_foot_gait_config_srv", Empty, self.handleReadFootGaitConfigSrv)
 
         self.say("Walker online")
 
@@ -181,6 +189,8 @@ class NaoWalker(NaoNode):
             eps = 1e-3 # maybe 0,0,0 is a special command in motionProxy...
             if abs(data.linear.x)<eps and abs(data.linear.y)<eps and abs(data.angular.z)<eps:
                 self.motionProxy.setWalkTargetVelocity(0,0,0,0.5)
+            elif self.useFootGaitConfig:
+                self.motionProxy.setWalkTargetVelocity(data.linear.x, data.linear.y, data.angular.z, self.stepFrequency, self.footGaitConfig)
             else:
                 self.motionProxy.setWalkTargetVelocity(data.linear.x, data.linear.y, data.angular.z, self.stepFrequency)
         except RuntimeError,e:
@@ -206,9 +216,15 @@ class NaoWalker(NaoNode):
 
         try:
             if post:
-                self.motionProxy.post.walkTo(data.x, data.y, data.theta )
+                if self.useFootGaitConfig:
+                    self.motionProxy.post.walkTo(data.x, data.y, data.theta, self.footGaitConfig )
+                else:
+                    self.motionProxy.post.walkTo(data.x, data.y, data.theta )
             else:
-                self.motionProxy.walkTo(data.x, data.y, data.theta )
+                if self.useFootGaitConfig:
+                    self.motionProxy.walkTo(data.x, data.y, data.theta, self.footGaitConfig )
+                else:
+                    self.motionProxy.walkTo(data.x, data.y, data.theta )
             return True
         except RuntimeError,e:
             rospy.logerr("Exception caught in handleTargetPose:\n%s", e)
@@ -269,6 +285,12 @@ class NaoWalker(NaoNode):
         self.needsStartWalkPose = True
         return EmptyResponse()
 
+    def handleReadFootGaitConfigSrv(self, data):
+        self.useFootGaitConfig = rospy.get_param('~use_foot_gait_config', False)
+        rospy.loginfo("useFootGaitConfig = %d" % self.useFootGaitConfig)
+        if self.useFootGaitConfig:
+            self.footGaitConfig = rospy.get_param('~foot_gait_config', self.motionProxy.getFootGaitConfig("Default"))
+        return EmptyResponse()
 
     def perform_laser_scan(self):
         if self.scan_active:
