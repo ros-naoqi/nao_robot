@@ -37,6 +37,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+import threading
 import roslib
 
 roslib.load_manifest('nao_driver')
@@ -71,6 +72,10 @@ class NaoController(NaoNode):
             self.collectionSize[collectionName] = len(self.motionProxy.getJointNames(collectionName));
     
 
+        # Get poll rate for actionlib (ie. how often to check whether currently running task has been preempted)
+        # Defaults to 200ms
+        self.poll_rate = int(rospy.get_param("~poll_rate", 0.2)*1000)
+        
         # initial stiffness (defaults to 0 so it doesn't strain the robot when no teleoperation is running)
         # set to 1.0 if you want to control the robot immediately
         initStiffness = rospy.get_param('~init_stiffness', 0.0)
@@ -78,7 +83,14 @@ class NaoController(NaoNode):
         # TODO: parameterize
         if initStiffness > 0.0 and initStiffness <= 1.0:
             self.motionProxy.stiffnessInterpolation('Body', initStiffness, 0.5)
-            
+
+
+        # start services / actions:
+        self.enableStiffnessSrv = rospy.Service("body_stiffness/enable", Empty, self.handleStiffnessSrv)
+        self.disableStiffnessSrv = rospy.Service("body_stiffness/disable", Empty, self.handleStiffnessOffSrv)
+
+
+        #Start simple action servers
         self.jointTrajectoryServer = actionlib.SimpleActionServer("joint_trajectory", JointTrajectoryAction, 
                                                                   execute_cb=self.executeJointTrajectoryAction,
                                                                   auto_start=False)
@@ -91,21 +103,17 @@ class NaoController(NaoNode):
                                                                   execute_cb=self.executeJointAnglesWithSpeedAction,
                                                                   auto_start=False)
 
-        
-        # start services / actions:
-        self.enableStiffnessSrv = rospy.Service("body_stiffness/enable", Empty, self.handleStiffnessSrv)
-        self.disableStiffnessSrv = rospy.Service("body_stiffness/disable", Empty, self.handleStiffnessOffSrv)
-        
+        #Start action servers
         self.jointTrajectoryServer.start()
         self.jointStiffnessServer.start()
         self.jointAnglesServer.start()
-        
+
         # subsribers last:
         rospy.Subscriber("joint_angles", JointAnglesWithSpeed, self.handleJointAngles, queue_size=10)
         rospy.Subscriber("joint_stiffness", JointState, self.handleJointStiffness, queue_size=10)
-        
+
         rospy.loginfo("nao_controller initialized")
-    
+
     def connectNaoQi(self):
         '''(re-) connect to NaoQI'''
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
@@ -184,7 +192,7 @@ class NaoController(NaoNode):
             times = [times]*len(names)
             
         return (names, angles, times)
-        
+    
 
     def executeJointTrajectoryAction(self, goal):
         rospy.loginfo("JointTrajectory action executing");
@@ -193,21 +201,41 @@ class NaoController(NaoNode):
                 
         rospy.logdebug("Received trajectory for joints: %s times: %s", str(names), str(times))     
         rospy.logdebug("Trajectory angles: %s", str(angles))
+
+        task_id = None
+        running = True
+        #Wait for task to complete
+        while running and not self.jointTrajectoryServer.is_preempt_requested() and not rospy.is_shutdown():
+            #If we haven't started the task already...
+            if task_id is None:
+                # ...Start it in another thread (thanks to motionProxy.post)
+                task_id = self.motionProxy.post.angleInterpolation(names, angles, times, (goal.relative==0))
             
-        # exceptions will be thrown in simple_action_server's execute loop
-        self.motionProxy.angleInterpolation(names, angles, times, (goal.relative==0))
+            #Wait for a bit to complete, otherwise check we can keep running
+            running = self.motionProxy.wait(task_id, self.poll_rate)
+        
+        # If still running at this point, stop the task
+        if running and task_id:
+            self.motionProxy.stop( task_id )
         
         jointTrajectoryResult = JointTrajectoryResult()
         jointTrajectoryResult.goal_position.header.stamp = rospy.Time.now()
         jointTrajectoryResult.goal_position.position = self.motionProxy.getAngles(names, True)
         jointTrajectoryResult.goal_position.name = names
-        
+
         if not self.checkJointsLen(jointTrajectoryResult.goal_position):
+            self.jointTrajectoryServer.set_aborted(jointTrajectoryResult)
             rospy.logerr("JointTrajectory action error in result: sizes mismatch")
-                    
-        self.jointTrajectoryServer.set_succeeded(jointTrajectoryResult)
-        rospy.loginfo("JointTrajectory action done");
         
+        elif running:
+            self.jointTrajectoryServer.set_preempted(jointTrajectoryResult)
+            rospy.logdebug("JointTrajectory preempted")
+        
+        else:
+            self.jointTrajectoryServer.set_succeeded(jointTrajectoryResult)
+            rospy.loginfo("JointTrajectory action done")
+
+
     def executeJointStiffnessAction(self, goal):
         rospy.loginfo("JointStiffness action executing");
                     
@@ -215,21 +243,41 @@ class NaoController(NaoNode):
         
         rospy.logdebug("Received stiffness trajectory for joints: %s times: %s", str(names), str(times))     
         rospy.logdebug("stiffness values: %s", str(angles))
+
+        task_id = None
+        running = True
+        #Wait for task to complete
+        while running and not self.jointStiffnessServer.is_preempt_requested() and not rospy.is_shutdown():
+            #If we haven't started the task already...
+            if task_id is None:
+                # ...Start it in another thread (thanks to motionProxy.post)
+                task_id = self.motionProxy.post.stiffnessInterpolation(names, angles, times)
             
-        # exceptions will be thrown in simple_action_server's execute loop
-        self.motionProxy.stiffnessInterpolation(names, angles, times)     
+            #Wait for a bit to complete, otherwise check we can keep running
+            running = self.motionProxy.wait(task_id, self.poll_rate)
+
+        # If still running at this point, stop the task
+        if running and task_id:
+            self.motionProxy.stop( task_id )
             
         jointStiffnessResult = JointTrajectoryResult()
         jointStiffnessResult.goal_position.header.stamp = rospy.Time.now()
         jointStiffnessResult.goal_position.position = self.motionProxy.getStiffnesses(names)
         jointStiffnessResult.goal_position.name = names
-        
+
         if not self.checkJointsLen(jointStiffnessResult.goal_position):
-            rospy.logerr("JointTrajectory action error in result: sizes mismatch")
-            
-        self.jointStiffnessServer.set_succeeded(jointStiffnessResult)
-        rospy.loginfo("JointStiffness action done");
+            self.jointStiffnessServer.set_aborted(jointStiffnessResult)
+            rospy.logerr("JointStiffness action error in result: sizes mismatch")
         
+        elif running:
+            self.jointStiffnessServer.set_preempted(jointStiffnessResult)
+            rospy.logdebug("JointStiffness preempted")
+        
+        else:
+            self.jointStiffnessServer.set_succeeded(jointStiffnessResult)
+            rospy.loginfo("JointStiffness action done")
+            
+
     def executeJointAnglesWithSpeedAction(self, goal):           
         
         names = list(goal.joint_angles.joint_names)
@@ -240,28 +288,45 @@ class NaoController(NaoNode):
             # TODO: this uses the current angles instead of the angles at the given timestamp
             currentAngles = self.motionProxy.getAngles(names, True)
             angles = list(map(lambda x,y: x+y, angles, currentAngles))            
+
+        task_id = None
+        running = True
+        #Wait for task to complete
+        while running and not self.jointAnglesServer.is_preempt_requested() and not rospy.is_shutdown():
+            #If we haven't started the task already...
+            if task_id is None:
+                # ...Start it in another thread (thanks to motionProxy.post)
+                task_id = self.motionProxy.post.angleInterpolationWithSpeed(names, angles, goal.joint_angles.speed)
+            
+            #Wait for a bit to complete, otherwise check we can keep running
+            running = self.motionProxy.wait(task_id, self.poll_rate)
         
-        # exceptions will be thrown in simple_action_server's execute loop
-        self.motionProxy.angleInterpolationWithSpeed(names, angles, goal.joint_angles.speed)
+        # If still running at this point, stop the task
+        if running and task_id:
+            self.motionProxy.stop( task_id )
             
         jointAnglesWithSpeedResult = JointAnglesWithSpeedResult()
         jointAnglesWithSpeedResult.goal_position.header.stamp = rospy.Time.now()
         jointAnglesWithSpeedResult.goal_position.position = self.motionProxy.getAngles(names, True)
         jointAnglesWithSpeedResult.goal_position.name = names
-        
+
         if not self.checkJointsLen(jointAnglesWithSpeedResult.goal_position):
+            self.jointAnglesServer.set_aborted(jointAnglesWithSpeedResult)
             rospy.logerr("JointAnglesWithSpeed action error in result: sizes mismatch")
-                    
-        self.jointAnglesServer.set_succeeded(jointAnglesWithSpeedResult)
-        rospy.loginfo("JointAnglesWithSpeed action done");        
-        
+
+        elif running:
+            self.jointAnglesServer.set_preempted(jointAnglesWithSpeedResult)
+            rospy.logdebug("JointAnglesWithSpeed preempted")
+
+        else:
+            self.jointAnglesServer.set_succeeded(jointAnglesWithSpeedResult)
+            rospy.loginfo("JointAnglesWithSpeed action done")
+
     def checkJointsLen(self, goal_position):      
         if len(goal_position.name) == 1 and self.collectionSize.has_key(goal_position.name[0]):
             return len(goal_position.position) == self.collectionSize[goal_position.name[0]] 
         else:
             return len(goal_position.position) ==  len(goal_position.name)
-            
-
 
 if __name__ == '__main__':
 
