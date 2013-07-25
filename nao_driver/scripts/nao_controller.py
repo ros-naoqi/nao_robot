@@ -37,7 +37,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-import threading
 import roslib
 
 roslib.load_manifest('nao_driver')
