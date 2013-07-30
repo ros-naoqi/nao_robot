@@ -38,4 +38,9 @@ nosetests.xml
 nao_msgs/src
 msg_gen
 srv_gen
+# Actionlib:
+nao_msgs/msg/*Action.msg
+nao_msgs/msg/*Feedback.msg
+nao_msgs/msg/*Goal.msg
+nao_msgs/msg/*Result.msg
 
