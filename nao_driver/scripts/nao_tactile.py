@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-# SVN $HeadURL$
-# SVN $Id$
-
-
 #
 # ROS node to read Nao's bumpers and tactile sensors
 # This code is currently compatible to NaoQI version 1.6

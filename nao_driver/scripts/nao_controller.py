@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 
-# SVN $HeadURL$
-# SVN $Id$
-
-
 #
 # ROS node to provide joint angle control to Nao by wrapping NaoQI
 # This code is currently compatible to NaoQI version 1.6 or newer (latest 
-# tested: 1.10)
+# tested: 1.12)
 #
 # Copyright 2011 Armin Hornung, University of Freiburg
 # http://www.ros.org/wiki/nao
