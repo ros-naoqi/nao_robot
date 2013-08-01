@@ -4,7 +4,7 @@
 # ROS node to control NAO's LEDs using NaoQI
 # Tested with NaoQI: 1.12
 #
-# Copyright (c) 2012, Miguel Sarabia
+# Copyright (c) 2012, 2013 Miguel Sarabia
 # Imperial College London
 #
 # Redistribution and use in source and binary forms, with or without
@@ -69,13 +69,13 @@ class NaoLeds(NaoNode):
         
         #Create a subscriber for the fade_rgb topic
         self.subscriber = rospy.Subscriber( 
-            self.NODE_NAME+ "/fade_rgb",
+            "fade_rgb",
             FadeRGB,
             self.fade_rgb)
 
         #Prepare and start actionlib server
         self.actionlib = actionlib.SimpleActionServer(
-            self.NODE_NAME + "/blink",
+            "blink",
             BlinkAction,
             self.run_blink,
             False
@@ -85,9 +85,9 @@ class NaoLeds(NaoNode):
     
     def fade_rgb(self, request) :
         hexColor =  int(
-            int(request.color.r) << 16 | 
-            int(request.color.g) << 8 |
-            int(request.color.b)
+            int(request.color.r*255) << 16 | 
+            int(request.color.g*255) << 8 |
+            int(request.color.b*255)
             )
 
         self.proxy.fadeRGB(
@@ -129,7 +129,7 @@ class NaoLeds(NaoNode):
             reason = "Invalid parameter for blink rate"
         
         if bad_request:
-            rospy.logwarn("Bad Blink request: " + reason)
+            rospy.logwarn("Bad Blink request: {}".format(reason))
             self.actionlib.set_aborted(result, reason)
             return
         
@@ -139,11 +139,8 @@ class NaoLeds(NaoNode):
         max_sleep_time = sleep_mean + 3* sleep_sd #This is highly unlikely
         
         #Main blinking loop
-        while (
-            self.actionlib.is_active() and 
-            not self.actionlib.is_new_goal_available() and
-            not rospy.is_shutdown()
-            ) :
+        while ( not self.actionlib.is_preempt_requested() and 
+            not rospy.is_shutdown() ) :
             
             #Chose a blinking color at random
             blink_msg.color = random.choice( request.colors )

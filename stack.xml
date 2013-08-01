@@ -11,8 +11,8 @@
      humanoid / biped robots.
    </p>
    <p>
-     Files are available at <a href="http://code.google.com/p/alufr-ros-pkg/">http://code.google.com/p/alufr-ros-pkg/</a>, 
-     documentation at <a href="http://www.ros.org/wiki/nao_robot">http://www.ros.org/wiki/nao</a>.
+     File downloads and development are at GitHub: <a href="https://github.com/ahornung/nao_robot">https://github.com/ahornung/nao_robot</a>, 
+     documentation at <a href="http://www.ros.org/wiki/nao_robot">http://www.ros.org/wiki/nao_robot</a>.
    </p>
 
   </description>

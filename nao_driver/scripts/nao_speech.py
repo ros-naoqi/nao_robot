@@ -74,18 +74,18 @@ class NaoSpeech(NaoNode):
         
         # Register ROS services
         self.reconfigure_srv = rospy.Service(
-            self.NODE_NAME + "/reconfigure",
+            "reconfigure",
             Empty,
             self.reconfigure
             )
             
         self.start_srv = rospy.Service(
-            self.NODE_NAME + "/start_recognition",
+            "start_recognition",
             Empty,
             self.start )
         
         self.stop_srv = rospy.Service(
-            self.NODE_NAME + "/stop_recognition",
+            "stop_recognition",
             Empty,
             self.stop )
 

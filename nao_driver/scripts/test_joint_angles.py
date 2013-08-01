@@ -4,11 +4,11 @@ import roslib
 #from rospy.exceptions import ROSException
 roslib.load_manifest('nao_driver')
 import rospy
-import roslib.rostime
-from roslib.rostime import Duration
+from rospy import Duration
 
 
 import actionlib
+from actionlib_msgs.msg import GoalStatus
 import nao_msgs.msg
 import trajectory_msgs.msg
 from trajectory_msgs.msg import JointTrajectoryPoint
@@ -46,6 +46,18 @@ def joint_angle_client():
 		result = client.get_result()
 		rospy.loginfo("Results: %s", str(result.goal_position.position))
 		
+		# Test for preemption
+		rospy.loginfo("Sending goal again...")
+		client.send_goal(goal)
+		rospy.sleep(0.5)
+		rospy.loginfo("Preempting goal...")
+		client.cancel_goal()
+		client.wait_for_result()
+		if client.get_state() != GoalStatus.PREEMPTED or client.get_result() == result:
+		    rospy.logwarn("Preemption does not seem to be working")
+		else:
+		    rospy.loginfo("Preemption seems okay")
+
 		# crouching pose: single keypoint, multiple joints:
 		goal.trajectory.joint_names = ["Body"]
 		point = JointTrajectoryPoint()
@@ -97,15 +109,32 @@ def joint_angle_client():
 		print "Result:", ', '.join([str(n) for n in result.goal_position.position])
 		
 		
+		# Control of joints with relative speed
 		angle_goal = nao_msgs.msg.JointAnglesWithSpeedGoal()
 		angle_goal.joint_angles.relative = False
 		angle_goal.joint_angles.joint_names = ["HeadYaw", "HeadPitch"]
 		angle_goal.joint_angles.joint_angles = [1.0, 0.0]
 		angle_goal.joint_angles.speed = 0.2
+		rospy.loginfo("Sending joint angles goal...")
 		angle_client.send_goal_and_wait(angle_goal)
 		result = angle_client.get_result()
 		rospy.loginfo("Angle results: %s", str(result.goal_position.position))
 		
+		# Test for preemption
+		angle_goal.joint_angles.joint_angles = [-1.0, 0.0]
+		angle_goal.joint_angles.speed = 0.05
+		rospy.loginfo("Sending goal again...")
+		angle_client.send_goal(angle_goal)
+		rospy.sleep(0.5)
+		rospy.loginfo("Preempting goal...")
+		angle_client.cancel_goal()
+		angle_client.wait_for_result()
+		if angle_client.get_state() != GoalStatus.PREEMPTED or angle_client.get_result() == result:
+		    rospy.logwarn("Preemption does not seem to be working")
+		else:
+		    rospy.loginfo("Preemption seems okay")
+
+		# Test stiffness actionlib
 		stiffness_goal = nao_msgs.msg.JointTrajectoryGoal()
 		stiffness_goal.trajectory.joint_names = ["Body"]
 		stiffness_goal.trajectory.points.append(JointTrajectoryPoint(time_from_start = Duration(0.5), positions = [1.0]))
@@ -115,8 +144,21 @@ def joint_angle_client():
 		result = stiffness_client.get_result()
 		rospy.loginfo("Stiffness results: %s", str(result.goal_position.position))
 		
+		# Test for preemption
+		stiffness_goal.trajectory.points = [JointTrajectoryPoint(time_from_start = Duration(0.5), positions = [0.0])]
+		rospy.loginfo("Sending goal again...")
+		stiffness_client.send_goal(stiffness_goal)
+		rospy.sleep(0.25)
+		rospy.loginfo("Preempting goal...")
+		stiffness_client.cancel_goal()
+		stiffness_client.wait_for_result()
+		if stiffness_client.get_state() != GoalStatus.PREEMPTED or stiffness_client.get_result() == result:
+		    rospy.logwarn("Preemption does not seem to be working")
+		else:
+		    rospy.loginfo("Preemption seems okay")
+
 	finally:
-		uninhibitWalkSrv()
+		pass #uninhibitWalkSrv()
 	
 	
 	
@@ -127,4 +169,4 @@ if __name__ == '__main__':
 		
 	except rospy.ROSInterruptException:
   		print "program interrupted before completion"
-  		
+
