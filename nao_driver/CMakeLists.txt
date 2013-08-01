@@ -16,45 +16,33 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
 
-#common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
-
+# Crosscompile nao_sensors to run as CPP binary on the robot (more efficient)
+# Not needed for remote connection (use Python nodes).
 IF(OE_CROSS_BUILD)
- include_directories(
-#     ..
-     $ENV{AL_DIR}/include
-     $ENV{AL_DIR}/include/alcommon
-     $ENV{AL_DIR}/include/alvision
-     $ENV{AL_DIR}/include/alcore
-     $ENV{AL_DIR}/include/alproxies
-     $ENV{AL_DIR}/include/alvalue
-     $ENV{AL_DIR}/include/altools
-     $ENV{AL_DIR}/include/alfactory
-     $ENV{AL_DIR}/include/libthread
-     $ENV{AL_DIR}/include/alvision
-)
+  include_directories(
+    $ENV{AL_DIR}/include
+    $ENV{AL_DIR}/include/alcommon
+    $ENV{AL_DIR}/include/alvision
+    $ENV{AL_DIR}/include/alcore
+    $ENV{AL_DIR}/include/alproxies
+    $ENV{AL_DIR}/include/alvalue
+    $ENV{AL_DIR}/include/altools
+    $ENV{AL_DIR}/include/alfactory
+    $ENV{AL_DIR}/include/libthread
+    $ENV{AL_DIR}/include/alvision
+  )
 
-link_directories(
-$ENV{AL_DIR}/lib
-)
+  link_directories($ENV{AL_DIR}/lib)
 
-   #if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    # Host is 64 bit machine, Aldebaran SDK is 32 bit
-    # --> force 32 bit compilation mode by setting compiler switch
-    #	set(CMAKE_C_FLAGS -m32) 
-    #	set(CMAKE_CXX_FLAGS -m32)
-    #endif ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+  #if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+  # Host is 64 bit machine, Aldebaran SDK is 32 bit
+  # --> force 32 bit compilation mode by setting compiler switch
+  #	set(CMAKE_C_FLAGS -m32)
+  #	set(CMAKE_CXX_FLAGS -m32)
+  #endif ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
-rosbuild_add_executable(nao_sensors_cpp src/nao_sensors_cpp.cpp)
-target_link_libraries(nao_sensors_cpp alcommon alvision alvalue )
+  rosbuild_add_executable(nao_sensors_cpp src/nao_sensors_cpp.cpp)
+  target_link_libraries(nao_sensors_cpp alcommon alvision alvalue )
+  
 ENDIF(OE_CROSS_BUILD)
