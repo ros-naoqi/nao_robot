@@ -70,8 +70,6 @@ class NaoWalker(NaoNode):
 
         self.connectNaoQi()
 
-        # head scan is not active
-        self.scan_active = False
         # walking pattern params:
         self.stepFrequency = rospy.get_param('~step_frequency', 0.5)
 
@@ -83,16 +81,6 @@ class NaoWalker(NaoNode):
         # initial stiffness (defaults to 0 so it doesn't strain the robot when no teleoperation is running)
         # set to 1.0 if you want to control the robot immediately
         initStiffness = rospy.get_param('~init_stiffness', 0.0)
-
-        self.for_iros2011 = rospy.get_param('~for_iros2011', False)
-        rospy.loginfo("for_iros2011 = %d" % self.for_iros2011)
-        if self.for_iros2011:
-            self.doubleScan = rospy.get_param('~double_scan', False)
-            self.doubleScanFrom = rospy.get_param('~double_scan_from', 0.0)
-            self.doubleScanTo = rospy.get_param('~double_scan_to', -30.0)
-            self.scanInfoPub = rospy.Publisher("scan_info", Bool, latch=True)
-            scanInfo = Bool(False)
-            self.scanInfoPub.publish(scanInfo)
 
         self.useFootGaitConfig = rospy.get_param('~use_foot_gait_config', False)
         rospy.loginfo("useFootGaitConfig = %d" % self.useFootGaitConfig)
@@ -121,13 +109,11 @@ class NaoWalker(NaoNode):
         rospy.Subscriber("cmd_pose", Pose2D, self.handleTargetPose, queue_size=1)
         rospy.Subscriber("cmd_step", StepTarget, self.handleStep, queue_size=50)
         rospy.Subscriber("speech", String, self.handleSpeech)
-        rospy.Subscriber("start_scan", std_msgs.msg.Empty, self.handleStartScan, queue_size=1)
 
         # ROS services (blocking functions)
         self.cmdPoseSrv = rospy.Service("cmd_pose_srv", CmdPoseService, self.handleTargetPoseService)
         self.cmdVelSrv = rospy.Service("cmd_vel_srv", CmdVelService, self.handleCmdVelService)
         self.stepToSrv = rospy.Service("cmd_step_srv", StepTargetService, self.handleStepSrv)
-        self.headScanSrv = rospy.Service("head_scan_srv", Empty, self.handleHeadScanSrv)
         self.stopWalkSrv = rospy.Service("stop_walk_srv", Empty, self.handleStopWalkSrv)
         self.needsStartWalkPoseSrv = rospy.Service("needs_start_walk_pose_srv", Empty, self.handleNeedsStartWalkPoseSrv)
         self.readFootGaitConfigSrv = rospy.Service("read_foot_gait_config_srv", Empty, self.handleReadFootGaitConfigSrv)
@@ -202,8 +188,6 @@ class NaoWalker(NaoNode):
 
     def handleTargetPose(self, data, post=True):
         """handles cmd_pose requests, walks to (x,y,theta) in robot coordinate system"""
-        if self.scan_active:
-            return False
 
         rospy.logdebug("Walk target_pose: %f %f %f", data.x,
                 data.y, data.theta)
@@ -251,15 +235,6 @@ class NaoWalker(NaoNode):
         else:
             return None
 
-    def handleHeadScanSrv(self, req):
-        if self.perform_laser_scan():
-            return EmptyResponse()
-        else:
-            return None
-
-    def handleStartScan(self, msg):
-        self.perform_laser_scan()
-
     def handleStopWalkSrv(self, req):
         if self.stopWalk():
             return EmptyResponse()
@@ -283,38 +258,6 @@ class NaoWalker(NaoNode):
         else:
             self.footGaitConfig = self.motionProxy.getFootGaitConfig("Default")
         return EmptyResponse()
-
-    def perform_laser_scan(self):
-        if self.scan_active:
-            print "ignoring button press because I'm already scanning"
-            return False
-        self.scan_active = True
-        self.stopWalk()
-        if self.for_iros2011:
-            from iros2011_scan import head_scan
-            head_scan(self.motionProxy,self.ttsProxy, 28.0, -36.0, 1.0, 10.0, True)
-            if self.doubleScan:
-                head_scan(self.motionProxy, self.ttsProxy, self.doubleScanFrom, self.doubleScanTo, 1.0, 10.0, False)
-                self.motionProxy.angleInterpolation('HeadPitch', 0.0, 2.5, True)
-        else:
-            # todo: remove sleeps
-            #from headscan import head_scan
-            from headscanTop import head_scan
-            if (not self.ttsProxy is None):
-                self.say("Starting scan")
-            else:
-                rospy.loginfo("Starting scan")
-            # max angle, min angle (pitch), scan freq, resolution, use squat
-            rospy.sleep(2)
-            #head_scan(self.motionProxy,26.0,-5.0,10.0,0.5,True)
-            head_scan(self.motionProxy,28.0, -35.0, 1.0, 10.0, True)
-            if (not self.ttsProxy is None):
-                self.say("Scan complete")
-            else:
-                rospy.loginfo("Scan complete")
-        self.scan_active = False
-        self.needsStartWalkPose = True
-        return True
 
 
 if __name__ == '__main__':
