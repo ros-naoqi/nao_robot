@@ -36,12 +36,12 @@
 #include <nao_msgs/TorsoIMU.h>
 #include <iostream>
 // Aldebaran includes
-#include <almemoryproxy.h>
-#include <almotionproxy.h>
-#include <alvisiondefinitions.h>
-#include <alerror.h>
-#include <alvalue.h>
-#include <altoolsmain.h>
+#include <alproxies/almemoryproxy.h>
+#include <alproxies/almotionproxy.h>
+#include <alvision/alvisiondefinitions.h>
+#include <alerror/alerror.h>
+#include <alvalue/alvalue.h>
+#include <alcommon/altoolsmain.h>
 #include <alproxies/alvideodeviceproxy.h>
 #include <alcommon/albroker.h>
 #include <alcommon/albrokermanager.h>
