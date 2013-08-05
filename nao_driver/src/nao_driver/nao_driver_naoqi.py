@@ -1,8 +1,3 @@
-
-# SVN $HeadURL$
-# SVN $Id$
-
-
 # Copyright 2009-2011 Armin Hornung, University of Freiburg
 # http://www.ros.org/wiki/nao
 #
@@ -81,3 +76,4 @@ class NaoNode():
 				rospy.logerr("Could not create Proxy to \"%s\". \nException message:\n%s",name, e)
 		
 		return proxy
+

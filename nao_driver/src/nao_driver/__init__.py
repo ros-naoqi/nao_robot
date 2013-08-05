@@ -1,8 +1,3 @@
-
-# SVN $HeadURL$
-# SVN $Id$
-
-
 # Copyright 2009 Armin Hornung, University of Freiburg
 # http://www.ros.org/wiki/nao
 #
@@ -32,3 +27,4 @@
 #
 
 from nao_driver_naoqi import *
+
