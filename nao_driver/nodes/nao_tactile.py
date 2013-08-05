@@ -32,9 +32,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-
-import roslib
-roslib.load_manifest('nao_driver')
 import rospy
 
 from naoqi import *

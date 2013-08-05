@@ -32,8 +32,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-import roslib
-roslib.load_manifest('nao_driver')
 import rospy
 from sensor_msgs.msg import Image, CameraInfo
 from nao_driver import NaoNode

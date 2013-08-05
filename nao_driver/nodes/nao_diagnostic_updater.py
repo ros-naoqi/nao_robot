@@ -39,8 +39,6 @@
 #
 
 
-import roslib
-roslib.load_manifest('nao_diagnostic')
 import rospy
 
 import dbus

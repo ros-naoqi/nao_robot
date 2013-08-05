@@ -33,15 +33,18 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-import roslib
 
-roslib.load_manifest('nao_driver')
 import rospy
-
 import actionlib
 import nao_msgs.msg
-from nao_msgs.msg import JointTrajectoryGoal, JointTrajectoryResult, JointTrajectoryAction, JointAnglesWithSpeed, \
-                         JointAnglesWithSpeedGoal, JointAnglesWithSpeedResult, JointAnglesWithSpeedAction   
+from nao_msgs.msg import(
+    JointTrajectoryGoal,
+    JointTrajectoryResult,
+    JointTrajectoryAction,
+    JointAnglesWithSpeed,
+    JointAnglesWithSpeedGoal,
+    JointAnglesWithSpeedResult,
+    JointAnglesWithSpeedAction)
  
 from nao_driver import * 
 

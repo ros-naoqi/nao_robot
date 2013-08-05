@@ -1,9 +1,4 @@
 #!/usr/bin/env python
-
-# SVN $HeadURL$
-# SVN $Id$
-
-
 #
 # ROS node to control Nao's footsteps (testing for NaoQI 1.12)
 #
@@ -35,8 +30,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-import roslib
-roslib.load_manifest('nao_driver')
 import rospy
 import time
 

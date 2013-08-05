@@ -33,10 +33,6 @@
 #
 
 
-import roslib
-
-roslib.load_manifest('nao_driver')
-
 import rospy
 import actionlib
 import random
