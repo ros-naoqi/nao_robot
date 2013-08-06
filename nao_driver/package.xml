@@ -24,7 +24,7 @@
 
   <run_depend>actionlib</run_depend>
   <run_depend>rospy</run_depend>
-  <run_depend>python-dbus</run_depend>
+  <!--<run_depend>python-dbus</run_depend>-->
   <run_depend>roslaunch</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>std_srvs</run_depend>
