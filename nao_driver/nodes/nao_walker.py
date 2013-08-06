@@ -35,9 +35,6 @@
 
 import rospy
 
-import logging
-logging.basicConfig()
-
 from nao_driver import NaoNode
 
 import math
