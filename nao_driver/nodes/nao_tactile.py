@@ -34,10 +34,11 @@
 
 import rospy
 
-from naoqi import *
+import naoqi
 from nao_msgs.msg import TactileTouch, Bumper
 from std_msgs.msg import Bool
-from nao_driver import *
+from nao_driver import NaoNode
+from naoqi import ( ALModule, ALBroker, ALProxy )
 
 #
 # Notes:

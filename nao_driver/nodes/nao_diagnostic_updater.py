@@ -44,7 +44,7 @@ import rospy
 import dbus
 from dbus.exceptions import DBusException
 
-from nao_driver import *
+from nao_driver import NaoNode
 import threading
 from threading import Thread
 

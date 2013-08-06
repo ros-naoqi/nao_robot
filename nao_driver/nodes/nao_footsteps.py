@@ -33,7 +33,7 @@
 import rospy
 import time
 
-from nao_driver import *
+from nao_driver import NaoNode
 
 import math
 from math import fabs
@@ -44,8 +44,7 @@ from humanoid_nav_msgs.msg import *
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
 from humanoid_nav_msgs.srv import ClipFootstep, ClipFootstepResponse
 
-from start_walk_pose import startWalkPose
-from nao_footstep_clipping import clip_footstep_tuple
+from nao_driver.util import ( startWalkPose, clip_footstep_tuple )
 
 
 LEG_LEFT = "LLeg"

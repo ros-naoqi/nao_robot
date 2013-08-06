@@ -38,7 +38,7 @@ import rospy
 import logging
 logging.basicConfig()
 
-from nao_driver import *
+from nao_driver import NaoNode
 
 import math
 from math import fabs
@@ -57,7 +57,7 @@ from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
 
 import nao_msgs.srv
 
-from start_walk_pose import startWalkPose
+from nao_driver.util import startWalkPose
 
 class NaoWalker(NaoNode):
     def __init__(self):

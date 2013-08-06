@@ -36,7 +36,7 @@ import threading
 import rospy
 import actionlib
 
-from nao_driver import *
+from nao_driver import NaoNode
 
 from nao_msgs.msg import(
     RunBehaviorAction,

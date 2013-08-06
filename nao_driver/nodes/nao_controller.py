@@ -46,7 +46,7 @@ from nao_msgs.msg import(
     JointAnglesWithSpeedResult,
     JointAnglesWithSpeedAction)
  
-from nao_driver import * 
+from nao_driver import NaoNode
 
 import math
 from math import fabs

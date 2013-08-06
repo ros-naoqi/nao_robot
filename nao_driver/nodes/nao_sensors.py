@@ -43,7 +43,7 @@ from sensor_msgs.msg import JointState
 
 from nao_msgs.msg import TorsoOdometry, TorsoIMU
 
-from nao_driver import *
+from nao_driver import (NaoNode, motion)
 
 import threading
 from threading import Thread
