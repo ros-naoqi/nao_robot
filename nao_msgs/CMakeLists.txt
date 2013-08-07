@@ -50,6 +50,5 @@ add_action_files(DIRECTORY action
 generate_messages(DEPENDENCIES ${MESSAGE_DEPENDENCIES})
 
 #Declare package run-time dependencies
-catkin_package(
-    CATKIN_DEPENDS message_runtime ${MESSAGE_DEPENDENCIES})
+catkin_package( CATKIN_DEPENDS message_runtime ${MESSAGE_DEPENDENCIES})
 

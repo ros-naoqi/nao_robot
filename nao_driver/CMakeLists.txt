@@ -2,13 +2,16 @@ cmake_minimum_required(VERSION 2.8.3)
 project(nao_driver)
 
 # We need to find catkin for the rest of the script to work
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS dynamic_reconfigure)
 
 # This will install python libraries
 catkin_python_setup()
 
-# At the moment, there's no C++ information to export
-catkin_package()
+# Generate dynamic reconfigure files
+generate_dynamic_reconfigure_options( cfg/nao_speech.cfg )
+
+# Information for other packages to import this module
+catkin_package( CATKIN_DEPENDS dynamic_reconfigure )
 
 #And this will install python nodes
 install(DIRECTORY nodes/
@@ -49,5 +52,5 @@ install(DIRECTORY launch/
 
 #  rosbuild_add_executable(nao_sensors_cpp src/nao_sensors_cpp.cpp)
 #  target_link_libraries(nao_sensors_cpp alcommon alvision alvalue )
-  
+
 #ENDIF(OE_CROSS_BUILD)
