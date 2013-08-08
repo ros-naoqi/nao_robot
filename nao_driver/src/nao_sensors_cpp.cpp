@@ -144,7 +144,7 @@ bool NaoNode::connectNaoQi()
    {
       m_broker = AL::ALBroker::createBroker(m_brokerName, m_ip, m_port, m_pip, m_pport, false);
    }
-   catch(const AL::ALError& e) 
+   catch(const AL::ALError& e)
    {
       ROS_ERROR( "Failed to connect broker to: %s:%d",m_pip.c_str(),m_port);
       //AL::ALBrokerManager::getInstance()->killAllBroker();
@@ -198,7 +198,7 @@ bool NaoSensors::connectProxy()
       //m_motionProxy = boost::shared_ptr<AL::ALProxy>(m_broker->getProxy("ALMotion"));
       m_motionProxy = boost::shared_ptr<AL::ALMotionProxy>(new AL::ALMotionProxy(m_broker));
    }
-   catch (const AL::ALError& e) 
+   catch (const AL::ALError& e)
    {
       ROS_ERROR("Could not create ALMotionProxy.");
       return false;
@@ -285,8 +285,8 @@ NaoSensors::NaoSensors(int argc, char ** argv)
 
    std::stringstream ss;
    ss << "Nao joints found: " ;
-   std::copy(m_jointState.name.begin(), m_jointState.name.end()-1, std::ostream_iterator<std::string>(ss,",")); 
-   std::copy(m_jointState.name.end()-1, m_jointState.name.end(), std::ostream_iterator<std::string>(ss)); 
+   std::copy(m_jointState.name.begin(), m_jointState.name.end()-1, std::ostream_iterator<std::string>(ss,","));
+   std::copy(m_jointState.name.end()-1, m_jointState.name.end(), std::ostream_iterator<std::string>(ss));
    ROS_INFO("Nao joints found: %s",ss.str().c_str());
 
 
@@ -340,12 +340,12 @@ void NaoSensors::run()
 
       if (odomData.size()!=6)
       {
-         ROS_ERROR( "Error getting odom data. length is %u",odomData.size() );
+         ROS_ERROR( "Error getting odom data. length is %zu",odomData.size() );
          continue;
       }
       if (m_send_cam_odom && camData.size()!=6)
       {
-         ROS_ERROR( "Error getting camera odom data. length is %u",camData.size() );
+         ROS_ERROR( "Error getting camera odom data. length is %zu",camData.size() );
          continue;
       }
       m_torsoOdom.header.stamp = stamp;
@@ -383,7 +383,7 @@ void NaoSensors::run()
       */
       if (memData.size() != m_dataNamesList.getSize())
       {
-         ROS_ERROR("memData length %u does not match expected length %u",memData.size(),m_dataNamesList.getSize() );
+         ROS_ERROR("memData length %zu does not match expected length %u",memData.size(),m_dataNamesList.getSize() );
          continue;
       }
       // IMU data:
