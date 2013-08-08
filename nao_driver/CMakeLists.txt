@@ -1,14 +1,40 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(nao_driver)
 
+# Tell CMake where to find "FindNAOqi.cmake"
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 # We need to find catkin for the rest of the script to work
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS roscpp sensor_msgs nao_msgs)
+find_package(NAOqi QUIET COMPONENTS alcommon alvision alerror alvalue )
+find_package(Boost QUIET COMPONENTS program_options)
 
 # This will install python libraries
 catkin_python_setup()
 
 # At the moment, there's no C++ information to export
 catkin_package()
+
+
+if( ${NAOqi_FOUND} AND ${Boost_FOUND} )
+    message(STATUS "NAOqi C++ SDK found; C++ nodes will be built")
+    include_directories(
+        ${catkin_INCLUDE_DIRS}
+        ${NAOqi_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS})
+
+    add_executable(nao_sensors_cpp src/nao_sensors_cpp.cpp)
+    target_link_libraries(nao_sensors_cpp
+        ${catkin_LIBRARIES}
+        ${NAOqi_LIBRARIES}
+        ${Boost_LIBRARIES})
+    add_dependencies(nao_sensors_cpp ${catkin_EXPORTED_TARGETS})
+
+    install(TARGETS nao_sensors_cpp
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )
+else()
+    message(STATUS "Cannot find NAOqi C++ sdk; C++ nodes will NOT be built")
+endif()
 
 #And this will install python nodes
 install(DIRECTORY nodes/
@@ -18,36 +44,3 @@ install(DIRECTORY nodes/
 # Instructions to install launch files
 install(DIRECTORY launch/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch )
-
-
-# TODO Catkinize code to compile nao_sensors cpp binary (see old code below)
-
-# Crosscompile nao_sensors to run as CPP binary on the robot (more efficient)
-# Not needed for remote connection (use Python nodes).
-#IF(OE_CROSS_BUILD)
-#  include_directories(
-#    $ENV{AL_DIR}/include
-#    $ENV{AL_DIR}/include/alcommon
-#    $ENV{AL_DIR}/include/alvision
-#    $ENV{AL_DIR}/include/alcore
-#    $ENV{AL_DIR}/include/alproxies
-#    $ENV{AL_DIR}/include/alvalue
-#    $ENV{AL_DIR}/include/altools
-#    $ENV{AL_DIR}/include/alfactory
-#    $ENV{AL_DIR}/include/libthread
-#    $ENV{AL_DIR}/include/alvision
-#  )
-
-#  link_directories($ENV{AL_DIR}/lib)
-
-  #if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-  # Host is 64 bit machine, Aldebaran SDK is 32 bit
-  # --> force 32 bit compilation mode by setting compiler switch
-  #	set(CMAKE_C_FLAGS -m32)
-  #	set(CMAKE_CXX_FLAGS -m32)
-  #endif ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-
-#  rosbuild_add_executable(nao_sensors_cpp src/nao_sensors_cpp.cpp)
-#  target_link_libraries(nao_sensors_cpp alcommon alvision alvalue )
-  
-#ENDIF(OE_CROSS_BUILD)

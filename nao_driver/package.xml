@@ -3,10 +3,10 @@
   <version>0.1.1</version>
   <description>
     <p>
-      Driver package for the Nao robot, providing access to walking commands, 
-      joint angles, and sensor data (odometry, IMU, camera, ...). The 
+      Driver package for the Nao robot, providing access to walking commands,
+      joint angles, and sensor data (odometry, IMU, camera, ...). The
       most-current version is compatible with the Nao API version 1.6 or newer,
-      connecting to a real or simulated Nao by wrapping Aldebaran Robotics' 
+      connecting to a real or simulated Nao by wrapping Aldebaran Robotics'
       NaoQI API in Python. This requires the "lib" directory of the Aldebaran
       SDK to be in your PYTHONPATH environment variable.
     </p>
@@ -19,11 +19,16 @@
   <author>Stefan Osswald</author>
   <author>Daniel Maier</author>
   <author>Miguel Sarabia</author>
-  
+
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>nao_msgs</build_depend>
+  <build_depend>boost</build_depend>
 
   <run_depend>actionlib</run_depend>
   <run_depend>rospy</run_depend>
+  <run_depend>roscpp</run_depend>
   <!--<run_depend>python-dbus</run_depend>-->
   <run_depend>roslaunch</run_depend>
   <run_depend>std_msgs</run_depend>
