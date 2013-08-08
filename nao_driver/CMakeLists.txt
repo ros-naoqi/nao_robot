@@ -4,16 +4,29 @@ project(nao_driver)
 # Tell CMake where to find "FindNAOqi.cmake"
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-# We need to find catkin for the rest of the script to work
-find_package(catkin REQUIRED COMPONENTS roscpp sensor_msgs nao_msgs)
-find_package(NAOqi QUIET COMPONENTS alcommon alvision alerror alvalue )
+# Find all required modules for compilation
+find_package(catkin REQUIRED COMPONENTS 
+    roscpp
+    sensor_msgs
+    nao_msgs
+    dynamic_reconfigure)
+
+find_package(NAOqi QUIET COMPONENTS
+    alcommon
+    alvision
+    alerror
+    alvalue)
+
 find_package(Boost QUIET COMPONENTS program_options)
 
 # This will install python libraries
 catkin_python_setup()
 
-# At the moment, there's no C++ information to export
-catkin_package()
+# Generate dynamic reconfigure files
+generate_dynamic_reconfigure_options( cfg/nao_speech.cfg )
+
+# Information for other packages to import this module
+catkin_package( CATKIN_DEPENDS dynamic_reconfigure )
 
 
 if( ${NAOqi_FOUND} AND ${Boost_FOUND} )

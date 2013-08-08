@@ -103,7 +103,9 @@ class NaoWalker(NaoNode):
         rospy.Subscriber("cmd_vel", Twist, self.handleCmdVel, queue_size=1)
         rospy.Subscriber("cmd_pose", Pose2D, self.handleTargetPose, queue_size=1)
         rospy.Subscriber("cmd_step", StepTarget, self.handleStep, queue_size=50)
-        rospy.Subscriber("speech", String, self.handleSpeech)
+
+        # Create ROS publisher for speech
+        self.pub = rospy.Publisher("speech", String, latch = True)
 
         # ROS services (blocking functions)
         self.cmdPoseSrv = rospy.Service("cmd_pose_srv", CmdPoseService, self.handleTargetPoseService)
@@ -125,11 +127,6 @@ class NaoWalker(NaoNode):
         if self.motionProxy is None:
             exit(1)
 
-        self.ttsProxy = self.getProxy("ALTextToSpeech", warn=False)
-        if self.ttsProxy is None:
-            rospy.logwarn("No Proxy to TTS available, disabling speech output.")
-
-
     def stopWalk(self):
         """ Stops the current walking bahavior and blocks until the clearing is complete. """
         try:
@@ -145,20 +142,8 @@ class NaoWalker(NaoNode):
         return True
 
 
-    def handleSpeech(self,data):
-        self.say(data.data)
-
     def say(self, text):
-        if (not self.ttsProxy is None):
-            try:
-                # self.ttsProxy.say() sometimes causes deadlocks
-                # see http://users.aldebaran-robotics.com/index.php?option=com_kunena&Itemid=14&func=view&catid=68&id=3857&limit=6&limitstart=6#6251
-                print("say %s ..." % str(text))
-                ttsid = self.ttsProxy.post.say(str(text))
-                #self.ttsProxy.wait(ttsid, 0)
-                print("...done")
-            except RuntimeError,e:
-                rospy.logerr("Exception caught:\n%s", e)
+        self.pub.publish(text)
 
     def handleCmdVel(self, data):
         rospy.logdebug("Walk cmd_vel: %f %f %f, frequency %f", data.linear.x, data.linear.y, data.angular.z, self.stepFrequency)

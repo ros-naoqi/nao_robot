@@ -26,6 +26,8 @@
   <build_depend>nao_msgs</build_depend>
   <build_depend>boost</build_depend>
 
+  <build_depend>dynamic_reconfigure</build_depend>
+
   <run_depend>actionlib</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>roscpp</run_depend>
@@ -38,5 +40,6 @@
   <run_depend>diagnostic_msgs</run_depend>
   <run_depend>nao_msgs</run_depend>
   <run_depend>humanoid_nav_msgs</run_depend>
+  <run_depend>dynamic_reconfigure</run_depend>
 
 </package>
