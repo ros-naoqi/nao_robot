@@ -1,0 +1,23 @@
+<package>
+  <name>nao_bringup</name>
+  <version>0.1.0</version>
+  
+  <description>
+      Launch files and scripts needed to bring ROS interfaces for Nao up into a
+      running state.
+  </description>
+  
+  <maintainer email="severin.lemaignan@epfl.ch">Séverin Lemaignan</maintainer>
+  <license>BSD</license>
+
+  <url>http://www.ros.org/wiki/nao_robot</url>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>nao_description</run_depend>
+  <run_depend>nao_driver</run_depend>
+  <run_depend>nao_remote</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>diagnostic_aggregator</run_depend>
+
+</package>

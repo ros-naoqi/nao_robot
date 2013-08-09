@@ -1,0 +1,42 @@
+# nao_dashboard/NaoJointsAnalyzer extends diagnostic_aggregator/AnalyzerGroup
+# by providing overall stiffness value and a list of hot joints for nao_dashboard. 
+#
+
+analyzers:
+  nao:
+    type: diagnostic_aggregator/AnalyzerGroup
+    path: Nao
+    analyzers:
+      CPU:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: CPU
+        find_and_remove_prefix: nao_cpu
+      Power:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: Battery
+        find_and_remove_prefix: nao_power
+#      Joints:
+#        type: nao_dashboard/NaoJointsAnalyzer
+#        path: Joints
+#        find_and_remove_prefix: nao_joint
+      Laser:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: Laser
+        find_and_remove_prefix: hokuyo
+      Camera:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: Camera
+        find_and_remove_prefix: nao_camera
+      WLAN:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: WLAN
+        find_and_remove_prefix: nao_wlan
+      Ethernet:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: Ethernet
+        find_and_remove_prefix: nao_ethernet
+      Relays:
+        type: diagnostic_aggregator/GenericAnalyzer
+        path: Relays
+        find_and_remove_prefix: relay_
+

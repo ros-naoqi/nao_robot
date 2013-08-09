@@ -1,0 +1,23 @@
+<launch>
+  <!--<env name="PYTHONPATH" value="$(env PYTHONPATH)" />
+  -->
+  <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)" />
+  <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
+    
+  <node pkg="diagnostic_aggregator" type="aggregator_node" name="diag_agg" clear_params="true">
+    <rosparam command="load" file="$(find nao_bringup)/config/nao_analysers.yaml" />
+  </node>
+
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find nao_description)/urdf/nao_robot_v4.urdf.xacro" />
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
+  <node pkg="nao_driver" type="nao_sensors_cpp" name="nao_sensors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_driver" type="nao_controller.py" name="nao_controller" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+
+  <!--<node pkg="nao_driver" type="nao_walker.py" name="nao_walker" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  -->
+
+  <node pkg="nao_remote" type="remap_odometry" name="remap_odometry"/>
+  <node pkg="nao_remote" type="nao_imu_conversion.py" name="nao_imu_conversion"/>
+
+</launch>
