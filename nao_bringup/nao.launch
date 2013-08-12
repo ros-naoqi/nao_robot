@@ -14,9 +14,6 @@
   <node pkg="nao_driver" type="nao_sensors_cpp" name="nao_sensors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
   <node pkg="nao_driver" type="nao_controller.py" name="nao_controller" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
 
-  <!--<node pkg="nao_driver" type="nao_walker.py" name="nao_walker" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
-  -->
-
   <node pkg="nao_remote" type="remap_odometry" name="remap_odometry"/>
   <node pkg="nao_remote" type="nao_imu_conversion.py" name="nao_imu_conversion"/>
 
