@@ -6,6 +6,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Find all required modules for compilation
 find_package(catkin REQUIRED COMPONENTS 
+    tf
     roscpp
     sensor_msgs
     nao_msgs

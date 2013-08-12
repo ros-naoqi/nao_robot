@@ -24,7 +24,6 @@ add_message_files(DIRECTORY msg
     JointAnglesWithSpeed.msg
     JointAngleTrajectory.msg
     TactileTouch.msg
-    TorsoIMU.msg
     TorsoOdometry.msg
     WordRecognized.msg )
 

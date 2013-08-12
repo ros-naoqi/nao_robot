@@ -33,8 +33,12 @@
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <nao_msgs/TorsoOdometry.h>
-#include <nao_msgs/TorsoIMU.h>
+#include <sensor_msgs/Imu.h>
 #include <iostream>
+
+
+#include <tf/transform_datatypes.h>
+
 // Aldebaran includes
 #include <alproxies/almemoryproxy.h>
 #include <alproxies/almotionproxy.h>
@@ -178,7 +182,7 @@ class NaoSensors : public NaoNode
       std::string m_base_frame_id;
       nao_msgs::TorsoOdometry m_torsoOdom;
       nao_msgs::TorsoOdometry m_camOdom;
-      nao_msgs::TorsoIMU m_torsoIMU;
+      sensor_msgs::Imu m_torsoIMU;
       sensor_msgs::JointState m_jointState;
       ros::Publisher m_torsoOdomPub;
       ros::Publisher m_camOdomPub;
@@ -232,9 +236,11 @@ NaoSensors::NaoSensors(int argc, char ** argv)
    }
    m_dataNamesList = AL::ALValue::array("DCM/Time",
          "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value","Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value",
-         "Device/SubDeviceList/InertialSensor/GyrX/Sensor/Value", "Device/SubDeviceList/InertialSensor/GyrY/Sensor/Value",
-         "Device/SubDeviceList/InertialSensor/AccX/Sensor/Value", "Device/SubDeviceList/InertialSensor/AccY/Sensor/Value",
-         "Device/SubDeviceList/InertialSensor/AccZ/Sensor/Value");
+         "Device/SubDeviceList/InertialSensor/AngleZ/Sensor/Value",
+         "Device/SubDeviceList/InertialSensor/GyroscopeX/Sensor/Value", "Device/SubDeviceList/InertialSensor/GyroscopeY/Sensor/Value", 
+         "Device/SubDeviceList/InertialSensor/GyroscopeZ/Sensor/Value",
+         "Device/SubDeviceList/InertialSensor/AccelerometerX/Sensor/Value", "Device/SubDeviceList/InertialSensor/AccelerometerY/Sensor/Value",
+         "Device/SubDeviceList/InertialSensor/AccelerometerZ/Sensor/Value");
 
 
    // get update frequency
@@ -260,7 +266,7 @@ NaoSensors::NaoSensors(int argc, char ** argv)
    /*
       m_torsoOdom = nao_msgs::TorsoOdometry;
       m_camOdom = nao_msgs::TorsoOdometry;
-      m_torsoIMU = nao_msgs::TorsoIMU;
+      m_torsoIMU = sensors_msgs::Imu;
       m_jointState = nao_msgs::JointState;
       */
    m_privateNh.param("odom_frame_id", m_odom_frame_id, m_odom_frame_id);
@@ -293,7 +299,7 @@ NaoSensors::NaoSensors(int argc, char ** argv)
    if (m_send_cam_odom)
       m_camOdomPub = m_nh.advertise<nao_msgs::TorsoOdometry>("camera_odometry",5);
    m_torsoOdomPub = m_nh.advertise<nao_msgs::TorsoOdometry>("torso_odometry",5);
-   m_torsoIMUPub = m_nh.advertise<nao_msgs::TorsoIMU>("torso_imu",5);
+   m_torsoIMUPub = m_nh.advertise<sensor_msgs::Imu>("imu",5);
    m_jointStatePub = m_nh.advertise<sensor_msgs::JointState>("joint_states",5);
 
    ROS_INFO("nao_sensors initialized");
@@ -388,13 +394,25 @@ void NaoSensors::run()
       }
       // IMU data:
       m_torsoIMU.header.stamp = stamp;
-      m_torsoIMU.angleX = memData[1];
-      m_torsoIMU.angleY = memData[2];
-      m_torsoIMU.gyroX = memData[3];
-      m_torsoIMU.gyroY = memData[4];
-      m_torsoIMU.accelX = memData[5];
-      m_torsoIMU.accelY = memData[6];
-      m_torsoIMU.accelZ = memData[7];
+
+      m_torsoIMU.orientation = tf::createQuaternionMsgFromRollPitchYaw(
+                                memData[1], 
+                                memData[2], 
+                                memData[3]); // yaw currently always 0
+
+      m_torsoIMU.angular_velocity.x = memData[4];
+      m_torsoIMU.angular_velocity.y = memData[5];
+      m_torsoIMU.angular_velocity.z = memData[6]; // currently always 0
+
+      m_torsoIMU.linear_acceleration.x = memData[7];
+      m_torsoIMU.linear_acceleration.y = memData[8];
+      m_torsoIMU.linear_acceleration.z = memData[9];
+
+      // covariances unknown
+      // cf http://www.ros.org/doc/api/sensor_msgs/html/msg/Imu.html
+      m_torsoIMU.orientation_covariance[0] = -1;
+      m_torsoIMU.angular_velocity_covariance[0] = -1;
+      m_torsoIMU.linear_acceleration_covariance[0] = -1;
 
       m_torsoIMUPub.publish(m_torsoIMU);
 

@@ -40,10 +40,13 @@
 import rospy
 
 from sensor_msgs.msg import JointState
+from sensor_msgs.msg import Imu
 
-from nao_msgs.msg import TorsoOdometry, TorsoIMU
+from nao_msgs.msg import TorsoOdometry
 
 from nao_driver import (NaoNode, motion)
+
+from tf import transformations
 
 import threading
 from threading import Thread
@@ -65,9 +68,11 @@ class NaoSensors(NaoNode, Thread):
 
         self.dataNamesList = ["DCM/Time",
                                 "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value","Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value",
-                                "Device/SubDeviceList/InertialSensor/GyrX/Sensor/Value", "Device/SubDeviceList/InertialSensor/GyrY/Sensor/Value",
-                                "Device/SubDeviceList/InertialSensor/AccX/Sensor/Value", "Device/SubDeviceList/InertialSensor/AccY/Sensor/Value",
-                                "Device/SubDeviceList/InertialSensor/AccZ/Sensor/Value"]
+                                "Device/SubDeviceList/InertialSensor/AngleZ/Sensor/Value",
+                                "Device/SubDeviceList/InertialSensor/GyroscopeX/Sensor/Value", "Device/SubDeviceList/InertialSensor/GyroscopeY/Sensor/Value",
+                                "Device/SubDeviceList/InertialSensor/GyroscopeZ/Sensor/Value",
+                                "Device/SubDeviceList/InertialSensor/AccelerometerX/Sensor/Value", "Device/SubDeviceList/InertialSensor/AccelerometerY/Sensor/Value",
+                                "Device/SubDeviceList/InertialSensor/AccelerometerZ/Sensor/Value"]
 
 
         tf_prefix_param_name = rospy.search_param('tf_prefix')
@@ -93,7 +98,7 @@ class NaoSensors(NaoNode, Thread):
             self.torsoOdom.header.frame_id = self.tf_prefix + '/' + self.torsoOdom.header.frame_id
         if not(self.camOdom.header.frame_id[0] == '/'):
             self.camOdom.header.frame_id = self.tf_prefix + '/' + self.camOdom.header.frame_id
-        self.torsoIMU = TorsoIMU()
+        self.torsoIMU = Imu()
         self.torsoIMU.header.frame_id = self.base_frameID
         self.jointState = JointState()
         self.jointState.name = self.motionProxy.getJointNames('Body')
@@ -112,7 +117,7 @@ class NaoSensors(NaoNode, Thread):
         if self.sendCamOdom:
             self.camOdomPub = rospy.Publisher("camera_odometry", TorsoOdometry)
         self.torsoOdomPub = rospy.Publisher("torso_odometry", TorsoOdometry)
-        self.torsoIMUPub = rospy.Publisher("torso_imu", TorsoIMU)
+        self.torsoIMUPub = rospy.Publisher("imu", Imu)
         self.jointStatePub = rospy.Publisher("joint_states", JointState)
 
         rospy.loginfo("nao_sensors initialized")
@@ -188,16 +193,27 @@ class NaoSensors(NaoNode, Thread):
 
             # IMU data:
             self.torsoIMU.header.stamp = timestamp
-            self.torsoIMU.angleX = memData[1]
-            self.torsoIMU.angleY = memData[2]
-            self.torsoIMU.gyroX = memData[3]
-            self.torsoIMU.gyroY = memData[4]
-            self.torsoIMU.accelX = memData[5]
-            self.torsoIMU.accelY = memData[6]
-            self.torsoIMU.accelZ = memData[7]
+            q = transformations.quaternion_from_euler(memData[1], memData[2], memData[3])
+            self.torsoIMU.orientation.x = q[0]
+            self.torsoIMU.orientation.y = q[1]
+            self.torsoIMU.orientation.z = q[2]
+            self.torsoIMU.orientation.w = q[3]
+
+            self.torsoIMU.angular_velocity.x = memData[4]
+            self.torsoIMU.angular_velocity.y = memData[5]
+            self.torsoIMU.angular_velocity.z = memData[6] # currently always 0
+      
+            self.torsoIMU.linear_acceleration.x = memData[7]
+            self.torsoIMU.linear_acceleration.y = memData[8]
+            self.torsoIMU.linear_acceleration.z = memData[9]
+      
+            # covariances unknown
+            # cf http://www.ros.org/doc/api/sensor_msgs/html/msg/Imu.html
+            self.torsoIMU.orientation_covariance[0] = -1
+            self.torsoIMU.angular_velocity_covariance[0] = -1
+            self.torsoIMU.linear_acceleration_covariance[0] = -1
 
             self.torsoIMUPub.publish(self.torsoIMU)
-
 
             #
             # Send JointState:
