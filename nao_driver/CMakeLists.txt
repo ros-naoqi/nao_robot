@@ -6,9 +6,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Find all required modules for compilation
 find_package(catkin REQUIRED COMPONENTS 
-    tf
     roscpp
+    tf
     sensor_msgs
+    geometry_msgs
     nao_msgs
     dynamic_reconfigure)
 
@@ -19,7 +20,7 @@ find_package(NAOqi QUIET COMPONENTS
     alerror
     alvalue)
 
-find_package(Boost QUIET COMPONENTS program_options)
+find_package(Boost REQUIRED COMPONENTS program_options signals)
 
 # This will install python libraries
 catkin_python_setup()
@@ -33,10 +34,10 @@ catkin_package( CATKIN_DEPENDS dynamic_reconfigure )
 
 if( ${NAOqi_FOUND} AND ${Boost_FOUND} )
     message(STATUS "NAOqi C++ SDK found; C++ nodes will be built")
-    include_directories(
+    include_directories(include 
         ${catkin_INCLUDE_DIRS}
-        ${NAOqi_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS})
+        ${Boost_INCLUDE_DIRS}
+        ${NAOqi_INCLUDE_DIRS})
 
     add_executable(nao_sensors_cpp src/nao_sensors_cpp.cpp)
     target_link_libraries(nao_sensors_cpp

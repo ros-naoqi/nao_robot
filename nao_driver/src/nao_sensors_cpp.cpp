@@ -32,11 +32,13 @@
 
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
-#include <nao_msgs/TorsoOdometry.h>
+#include <geometry_msgs/Transform.h>
+#include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
 #include <iostream>
 
 
+#include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
 
 // Aldebaran includes
@@ -161,30 +163,53 @@ bool NaoNode::connectNaoQi()
 
 class NaoSensors : public NaoNode
 {
-   public:
-      //NaoSensors()  ;
-      NaoSensors(int argc, char ** argv);
-      ~NaoSensors();
+public:
 
-      bool connectProxy();
-      void run();
-   protected:
+    NaoSensors(int argc, char ** argv);
+    ~NaoSensors();
 
-      double m_rate;
-      boost::shared_ptr<AL::ALMotionProxy> m_motionProxy;
-      boost::shared_ptr<AL::ALMemoryProxy> m_memoryProxy;
-      AL::ALValue m_dataNamesList;
-      ros::NodeHandle m_nh;
-      ros::NodeHandle m_privateNh;
-      std::string m_tf_prefix;
-      std::string m_odom_frame_id;
-      std::string m_base_frame_id;
-      nao_msgs::TorsoOdometry m_torsoOdom;
-      sensor_msgs::Imu m_torsoIMU;
-      sensor_msgs::JointState m_jointState;
-      ros::Publisher m_torsoOdomPub;
-      ros::Publisher m_torsoIMUPub;
-      ros::Publisher m_jointStatePub;
+    bool connectProxy();
+    void run();
+
+protected:
+
+    double m_rate;
+
+    // NAOqi
+    boost::shared_ptr<AL::ALMotionProxy> m_motionProxy;
+    boost::shared_ptr<AL::ALMemoryProxy> m_memoryProxy;
+    AL::ALValue m_dataNamesList;
+
+    // ROS
+    ros::NodeHandle m_nh;
+    ros::NodeHandle m_privateNh;
+
+    std::string m_odomFrameId;
+    std::string m_baseFrameId;
+
+    nav_msgs::Odometry m_odom;
+    sensor_msgs::Imu m_torsoIMU;
+    sensor_msgs::JointState m_jointState;
+
+    ros::Publisher m_odomPub;
+    tf::TransformBroadcaster m_transformBroadcaster;
+    ros::Publisher m_torsoIMUPub;
+    ros::Publisher m_jointStatePub;
+
+    // Odometry-specific members
+    geometry_msgs::TransformStamped m_odomTransformMsg;
+    tf::Pose m_odomPose; // current "real" odometry pose in original (Nao) odom frame
+    tf::Transform m_odomOffset; // offset on odometry origin
+
+    bool m_useIMUAngles;
+
+    double m_lastOdomTime;
+
+    tf::Pose m_targetPose;
+    bool m_mustUpdateOffset;
+    bool m_initializeFromIMU;
+    bool m_initializeFromOdometry;
+    bool m_isInitialized;
 };
 
 bool NaoSensors::connectProxy()
@@ -220,17 +245,20 @@ bool NaoSensors::connectProxy()
 
 NaoSensors::NaoSensors(int argc, char ** argv)
  : m_rate(50.0), m_privateNh("~"),
-   m_tf_prefix(""),
-   m_odom_frame_id("odom"),
-   m_base_frame_id("torso")
+   m_odomFrameId("odom"),
+   m_baseFrameId("base_link"),
+   m_useIMUAngles(false),
+   m_lastOdomTime(0.0),
+   m_mustUpdateOffset(false), m_initializeFromIMU(false),
+   m_initializeFromOdometry(false), m_isInitialized(false)
 {
-   parse_command_line(argc,argv);
-   if (   ! connectNaoQi() || !  connectProxy() )
-   {
+    parse_command_line(argc,argv);
+    if (   ! connectNaoQi() || !  connectProxy() )
+    {
       ROS_ERROR("Gosh! Throwsing exception");
       throw std::exception();
-   }
-   m_dataNamesList = AL::ALValue::array("DCM/Time",
+    }
+    m_dataNamesList = AL::ALValue::array("DCM/Time",
          "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value","Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value",
          "Device/SubDeviceList/InertialSensor/AngleZ/Sensor/Value",
          "Device/SubDeviceList/InertialSensor/GyroscopeX/Sensor/Value", "Device/SubDeviceList/InertialSensor/GyroscopeY/Sensor/Value", 
@@ -239,60 +267,50 @@ NaoSensors::NaoSensors(int argc, char ** argv)
          "Device/SubDeviceList/InertialSensor/AccelerometerZ/Sensor/Value");
 
 
-   // get update frequency
-   m_privateNh.param("torso_odom_rate", m_rate,m_rate);
-   // get tf prefix
-   std::string tf_prefix_param_name;
-   if ( m_nh.searchParam("tf_prefix", tf_prefix_param_name) )
-   {
-      m_nh.param(tf_prefix_param_name,m_tf_prefix,m_tf_prefix);
-   }
-   else
-   {
-      ROS_WARN("Could not find tf_prefix, using \"%s\" instead",m_tf_prefix.c_str());
-   }
-   // get base_frame_id (and fix prefixi f necessary)
-   m_privateNh.param("base_frame_id", m_base_frame_id, m_base_frame_id);
-   if (m_base_frame_id[0] != '/')
-      m_base_frame_id = m_tf_prefix + '/' + m_base_frame_id;
+    // get update frequency
+    m_privateNh.param("torso_odom_rate", m_rate,m_rate);
 
-   // initialize messages
-   /*
-      m_torsoOdom = nao_msgs::TorsoOdometry;
-      m_torsoIMU = sensors_msgs::Imu;
-      m_jointState = nao_msgs::JointState;
-      */
-   m_privateNh.param("odom_frame_id", m_odom_frame_id, m_odom_frame_id);
-   if (m_odom_frame_id[0] != '/')
-   {
-      m_odom_frame_id = m_tf_prefix + '/' + m_odom_frame_id;
-   }
-   m_torsoOdom.header.frame_id = m_odom_frame_id;
-   m_torsoIMU.header.frame_id = m_base_frame_id;
-   m_jointState.name = m_motionProxy->getJointNames("Body");
+    // get base_frame_id (and fix prefixi f necessary)
+    m_privateNh.param("base_frame_id", m_baseFrameId, m_baseFrameId);
+    m_privateNh.param("odom_frame_id", m_odomFrameId, m_odomFrameId);
+    m_privateNh.param("use_imu_angles", m_useIMUAngles, m_useIMUAngles);
 
-   // simluated model misses some joints, we need to fill:
-   if (m_jointState.name.size() == 22)
-   {
+    m_odom.header.frame_id = m_odomFrameId;
+    m_torsoIMU.header.frame_id = m_baseFrameId;
+    m_jointState.name = m_motionProxy->getJointNames("Body");
+
+    // simluated model misses some joints, we need to fill:
+    if (m_jointState.name.size() == 22)
+    {
       // TODO: Check this!
       m_jointState.name.insert(m_jointState.name.begin()+6,"LWristYaw");
       m_jointState.name.insert(m_jointState.name.begin()+7,"LHand");
       m_jointState.name.push_back("RWristYaw");
       m_jointState.name.push_back("RHand");
-   }
+    }
 
-   std::stringstream ss;
-   ss << "Nao joints found: " ;
-   std::copy(m_jointState.name.begin(), m_jointState.name.end()-1, std::ostream_iterator<std::string>(ss,","));
-   std::copy(m_jointState.name.end()-1, m_jointState.name.end(), std::ostream_iterator<std::string>(ss));
-   ROS_INFO("Nao joints found: %s",ss.str().c_str());
+    std::stringstream ss;
+    ss << "Nao joints found: " ;
+    std::copy(m_jointState.name.begin(), m_jointState.name.end()-1, std::ostream_iterator<std::string>(ss,","));
+    std::copy(m_jointState.name.end()-1, m_jointState.name.end(), std::ostream_iterator<std::string>(ss));
+    ROS_INFO("Nao joints found: %s",ss.str().c_str());
+
+    if (m_useIMUAngles)
+        ROS_INFO("Using IMU for odometry roll & pitch");
 
 
-   m_torsoOdomPub = m_nh.advertise<nao_msgs::TorsoOdometry>("torso_odometry",5);
-   m_torsoIMUPub = m_nh.advertise<sensor_msgs::Imu>("imu",5);
-   m_jointStatePub = m_nh.advertise<sensor_msgs::JointState>("joint_states",5);
+    // default values of transforms:
+    m_odomTransformMsg.header.frame_id = m_odomFrameId;
+    m_odomTransformMsg.child_frame_id = m_baseFrameId;
 
-   ROS_INFO("nao_sensors initialized");
+    m_odomOffset = tf::Transform(tf::createIdentityQuaternion());
+    m_odomPose = tf::Transform(tf::createIdentityQuaternion());
+
+    m_odomPub = m_nh.advertise<nav_msgs::Odometry>("odom",5);
+    m_torsoIMUPub = m_nh.advertise<sensor_msgs::Imu>("imu",5);
+    m_jointStatePub = m_nh.advertise<sensor_msgs::JointState>("joint_states",5);
+
+    ROS_INFO("nao_sensors initialized");
 
 }
 NaoSensors::~NaoSensors()
@@ -304,9 +322,14 @@ void NaoSensors::run()
    ros::Time stamp1;
    ros::Time stamp2;
    ros::Time stamp;
+
    std::vector<float> odomData;
+   float odomX, odomY, odomZ, odomWX, odomWY, odomWZ;
+   
    std::vector<float> memData;
+   
    std::vector<float> positionData;
+
    ROS_INFO("Staring main loop. ros::ok() is %d nh.ok() is %d",ros::ok(),m_nh.ok());
    while(ros::ok() )
    {
@@ -331,31 +354,9 @@ void NaoSensors::run()
       // TODO: Something smarter than this..
       stamp = stamp1 + ros::Duration((stamp2-stamp1).toSec()/2.0);
 
-      if (odomData.size()!=6)
-      {
-         ROS_ERROR( "Error getting odom data. length is %zu",odomData.size() );
-         continue;
-      }
-      m_torsoOdom.header.stamp = stamp;
-      m_torsoOdom.x = odomData[0];
-      m_torsoOdom.y = odomData[1];
-      m_torsoOdom.z = odomData[2];
-      m_torsoOdom.wx = odomData[3];
-      m_torsoOdom.wy = odomData[4];
-      m_torsoOdom.wz = odomData[5];
-
-      m_torsoOdomPub.publish(m_torsoOdom);
-
-      // Replace 'None' values with 0
-      // (=> consistent behavior in 1.8 / 1.10 with 1.6)
-      // Should not be necessary because NULL==0, but I'll leave it here..
-      /*
-      for (unsigned i = 0; i<memData.size(); ++i)
-      {
-         if (memData[i]==NULL)
-            memData[i] = 0;
-      }
-      */
+      /******************************************************************
+       *                              IMU
+       *****************************************************************/
       if (memData.size() != m_dataNamesList.getSize())
       {
          ROS_ERROR("memData length %zu does not match expected length %u",memData.size(),m_dataNamesList.getSize() );
@@ -364,18 +365,28 @@ void NaoSensors::run()
       // IMU data:
       m_torsoIMU.header.stamp = stamp;
 
+      float angleX = memData[1];
+      float angleY = memData[2];
+      float angleZ = memData[3];
+      float gyroX = memData[4];
+      float gyroY = memData[5];
+      float gyroZ = memData[6];
+      float accX = memData[7];
+      float accY = memData[8];
+      float accZ = memData[9];
+
       m_torsoIMU.orientation = tf::createQuaternionMsgFromRollPitchYaw(
-                                memData[1], 
-                                memData[2], 
-                                memData[3]); // yaw currently always 0
+                                angleX,
+                                angleY,
+                                angleZ); // yaw currently always 0
 
-      m_torsoIMU.angular_velocity.x = memData[4];
-      m_torsoIMU.angular_velocity.y = memData[5];
-      m_torsoIMU.angular_velocity.z = memData[6]; // currently always 0
+      m_torsoIMU.angular_velocity.x = gyroX;
+      m_torsoIMU.angular_velocity.y = gyroY;
+      m_torsoIMU.angular_velocity.z = gyroZ; // currently always 0
 
-      m_torsoIMU.linear_acceleration.x = memData[7];
-      m_torsoIMU.linear_acceleration.y = memData[8];
-      m_torsoIMU.linear_acceleration.z = memData[9];
+      m_torsoIMU.linear_acceleration.x = accX;
+      m_torsoIMU.linear_acceleration.y = accY;
+      m_torsoIMU.linear_acceleration.z = accZ;
 
       // covariances unknown
       // cf http://www.ros.org/doc/api/sensor_msgs/html/msg/Imu.html
@@ -385,9 +396,12 @@ void NaoSensors::run()
 
       m_torsoIMUPub.publish(m_torsoIMU);
 
-      // Joint States:
+
+      /******************************************************************
+       *                            Joint state
+       *****************************************************************/
       m_jointState.header.stamp = stamp;
-      m_jointState.header.frame_id = m_base_frame_id;
+      m_jointState.header.frame_id = m_baseFrameId;
       m_jointState.position.resize(positionData.size());
       for(unsigned i = 0; i<positionData.size(); ++i)
       {
@@ -405,8 +419,100 @@ void NaoSensors::run()
 
       m_jointStatePub.publish(m_jointState);
 
-   }
-   ROS_INFO("nao_sensors stopped.");
+
+        /******************************************************************
+        *                            Odometry
+        *****************************************************************/
+
+        // apply offset transformation:
+        tf::Pose transformedPose;
+
+
+        if (odomData.size()!=6)
+        {
+            ROS_ERROR( "Error getting odom data. length is %zu",odomData.size() );
+            continue;
+        }
+
+        double dt = (stamp.toSec() - m_lastOdomTime);
+
+        odomX = odomData[0];
+        odomY = odomData[1];
+        odomZ = odomData[2];
+        odomWX = odomData[3];
+        odomWY = odomData[4];
+        odomWZ = odomData[5];
+
+        tf::Quaternion q;
+        // roll and pitch from IMU, yaw from odometry:
+        if (m_useIMUAngles)
+            q.setRPY(angleX, angleY, odomWZ);
+        else
+            q.setRPY(odomWX, odomWY, odomWZ);
+
+        m_odomPose.setOrigin(tf::Vector3(odomX, odomY, odomZ));
+        m_odomPose.setRotation(q);
+
+        if(m_mustUpdateOffset) {
+            if(!m_isInitialized) {
+                if(m_initializeFromIMU) {
+                    // Initialization from IMU: Take x, y, z, yaw from odometry, roll and pitch from IMU
+                    m_targetPose.setOrigin(m_odomPose.getOrigin());
+                    m_targetPose.setRotation(tf::createQuaternionFromRPY(angleX, angleY, odomWZ));
+                } else if(m_initializeFromOdometry) {
+                    m_targetPose.setOrigin(m_odomPose.getOrigin());
+                    m_targetPose.setRotation(tf::createQuaternionFromRPY(odomWX, odomWY, odomWZ));
+                }
+                m_isInitialized = true;
+            } else {
+                // Overwrite target pitch and roll angles with IMU data
+                const double target_yaw = tf::getYaw(m_targetPose.getRotation());
+                if(m_initializeFromIMU) {
+                    m_targetPose.setRotation(tf::createQuaternionFromRPY(angleX, angleY, target_yaw));
+                } else if(m_initializeFromOdometry){
+                    m_targetPose.setRotation(tf::createQuaternionFromRPY(odomWX, odomWY, target_yaw));
+                }
+            }
+            m_odomOffset = m_targetPose * m_odomPose.inverse();
+            transformedPose = m_targetPose;
+            m_mustUpdateOffset = false;
+        } else {
+            transformedPose = m_odomOffset * m_odomPose;
+        }
+
+        //
+        // publish the transform over tf first
+        //
+        m_odomTransformMsg.header.stamp = stamp;
+        tf::transformTFToMsg(transformedPose, m_odomTransformMsg.transform);
+        m_transformBroadcaster.sendTransform(m_odomTransformMsg);
+
+
+        //
+        // Fill the Odometry msg
+        //
+        m_odom.header.stamp = stamp;
+        //set the velocity first (old values still valid)
+        m_odom.twist.twist.linear.x = (odomX - m_odom.pose.pose.position.x) / dt;
+        m_odom.twist.twist.linear.y = (odomY - m_odom.pose.pose.position.y) / dt;
+        m_odom.twist.twist.linear.z = (odomZ - m_odom.pose.pose.position.z) / dt;
+        
+        // TODO: calc angular velocity!
+        //	m_odom.twist.twist.angular.z = vth; ??
+
+        //set the position from the above calculated transform
+        m_odom.pose.pose.orientation = m_odomTransformMsg.transform.rotation;
+        m_odom.pose.pose.position.x = m_odomTransformMsg.transform.translation.x;
+        m_odom.pose.pose.position.y = m_odomTransformMsg.transform.translation.y;
+        m_odom.pose.pose.position.z = m_odomTransformMsg.transform.translation.z;
+
+
+        m_odomPub.publish(m_odom);
+
+
+        m_lastOdomTime = stamp.toSec();
+    }
+    ROS_INFO("nao_sensors stopped.");
 
 }
 
