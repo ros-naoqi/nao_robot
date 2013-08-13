@@ -72,7 +72,8 @@ set(NAOqi_COMPONENTS
     alparammanager
     alremotecall
     althread
-    alvision)
+    alvision
+    alproxies)
 
 
 #Set INCLUDE hints
