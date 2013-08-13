@@ -17,7 +17,7 @@
   <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
   
   <node pkg="nao_driver" type="nao_walker.py" name="nao_walker" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen"/>
-  <node pkg="nao_driver" type="nao_sensors.py" name="nao_sensors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen"/>
+  <node pkg="nao_driver" type="nao_sensors_cpp" name="nao_sensors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen"/>
   <node pkg="nao_driver" type="nao_controller.py" name="nao_controller" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen"/>
 
 
