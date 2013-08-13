@@ -37,6 +37,8 @@
 #include <sensor_msgs/Imu.h>
 #include <iostream>
 
+#include <std_srvs/Empty.h>
+#include <nao_msgs/SetTransform.h>
 
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
@@ -65,13 +67,7 @@
 #include <boost/program_options.hpp>
 
 using namespace std;
-/*
-from nao_driver import *
 
-import threading
-from threading import Thread
-
-*/
 class NaoNode
 {
    public:
@@ -171,6 +167,12 @@ public:
     bool connectProxy();
     void run();
 
+    bool pauseOdomCallback(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+    bool resumeOdomCallback(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+    bool odomOffsetCallback(nao_msgs::SetTransform::Request& req, nao_msgs::SetTransform::Response& res);
+    bool setOdomPoseCallback(nao_msgs::SetTransform::Request& req, nao_msgs::SetTransform::Response& res);
+
+
 protected:
 
     double m_rate;
@@ -183,6 +185,12 @@ protected:
     // ROS
     ros::NodeHandle m_nh;
     ros::NodeHandle m_privateNh;
+
+    // Services
+    ros::ServiceServer m_pauseOdomSrv;
+    ros::ServiceServer m_resumeOdomSrv;
+    ros::ServiceServer m_odomOffsetSrv;
+    ros::ServiceServer m_setOdomPoseSrv;
 
     std::string m_odomFrameId;
     std::string m_baseFrameId;
@@ -203,6 +211,7 @@ protected:
 
     bool m_useIMUAngles;
 
+    bool m_paused;
     double m_lastOdomTime;
 
     tf::Pose m_targetPose;
@@ -248,6 +257,7 @@ NaoSensors::NaoSensors(int argc, char ** argv)
    m_odomFrameId("odom"),
    m_baseFrameId("base_link"),
    m_useIMUAngles(false),
+   m_paused(false),
    m_lastOdomTime(0.0),
    m_mustUpdateOffset(false), m_initializeFromIMU(false),
    m_initializeFromOdometry(false), m_isInitialized(false)
@@ -274,6 +284,12 @@ NaoSensors::NaoSensors(int argc, char ** argv)
     m_privateNh.param("base_frame_id", m_baseFrameId, m_baseFrameId);
     m_privateNh.param("odom_frame_id", m_odomFrameId, m_odomFrameId);
     m_privateNh.param("use_imu_angles", m_useIMUAngles, m_useIMUAngles);
+
+    m_pauseOdomSrv = m_nh.advertiseService("pause_odometry", &NaoSensors::pauseOdomCallback, this);
+    m_resumeOdomSrv = m_nh.advertiseService("resume_odometry", &NaoSensors::resumeOdomCallback, this);
+    m_odomOffsetSrv = m_nh.advertiseService("odometry_offset", &NaoSensors::odomOffsetCallback, this);
+    m_setOdomPoseSrv = m_nh.advertiseService("set_odometry_pose", &NaoSensors::setOdomPoseCallback, this);
+
 
     m_odom.header.frame_id = m_odomFrameId;
     m_torsoIMU.header.frame_id = m_baseFrameId;
@@ -423,6 +439,7 @@ void NaoSensors::run()
         /******************************************************************
         *                            Odometry
         *****************************************************************/
+        if (!m_paused) {
 
         // apply offset transformation:
         tf::Pose transformedPose;
@@ -511,11 +528,62 @@ void NaoSensors::run()
 
 
         m_lastOdomTime = stamp.toSec();
+
+        }
     }
     ROS_INFO("nao_sensors stopped.");
 
 }
 
+bool NaoSensors::pauseOdomCallback(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res){
+    if (m_paused){
+        ROS_WARN("Odometry pause requested, but is already paused");
+        return false;
+    } else{
+        ROS_INFO("Odometry paused");
+        m_paused = true;
+        m_targetPose = m_odomOffset * m_odomPose;
+        m_mustUpdateOffset = true;
+        return true;
+    }
+}
+
+bool NaoSensors::resumeOdomCallback(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res){
+    if (m_paused){
+        ROS_INFO("Odometry resumed");
+        m_paused = false;
+        return true;
+    } else{
+        ROS_WARN("Odometry resume requested, but is not paused");
+        return false;
+    }
+}
+
+bool NaoSensors::odomOffsetCallback(nao_msgs::SetTransform::Request& req, nao_msgs::SetTransform::Response& res){
+    ROS_INFO("New odometry offset received");
+    tf::Transform newOffset;
+    tf::transformMsgToTF(req.offset, newOffset);
+
+    // add new offset to current (transformed) odom pose:
+    if(!m_mustUpdateOffset) {
+        m_mustUpdateOffset = true;
+        m_targetPose = m_odomOffset * m_odomPose * newOffset;
+    } else {
+        m_targetPose = m_targetPose * newOffset;
+    }
+
+    return true;
+}
+
+bool NaoSensors::setOdomPoseCallback(nao_msgs::SetTransform::Request& req, nao_msgs::SetTransform::Response& res){
+    ROS_INFO("New target for current odometry pose received");
+    tf::Transform targetPose;
+    tf::transformMsgToTF(req.offset, targetPose);
+
+    m_odomOffset = targetPose * m_odomPose.inverse();
+
+    return true;
+}
 
 int main(int argc, char ** argv)
 {

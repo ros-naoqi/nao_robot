@@ -20,7 +20,7 @@ find_package(NAOqi QUIET COMPONENTS
     alerror
     alvalue)
 
-find_package(Boost REQUIRED COMPONENTS program_options signals)
+find_package(Boost QUIET COMPONENTS program_options signals)
 
 # This will install python libraries
 catkin_python_setup()
@@ -34,7 +34,7 @@ catkin_package( CATKIN_DEPENDS dynamic_reconfigure )
 
 if( ${NAOqi_FOUND} AND ${Boost_FOUND} )
     message(STATUS "NAOqi C++ SDK found; C++ nodes will be built")
-    include_directories(include 
+    include_directories(
         ${catkin_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${NAOqi_INCLUDE_DIRS})
