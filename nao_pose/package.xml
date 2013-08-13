@@ -1,0 +1,33 @@
+<package>
+  <name>nao_pose</name>
+  <version>0.1.0</version>
+  <description>
+      <p>
+          This package contains nodes for managing Nao's poses.
+    </p>
+  </description>
+  <maintainer email="severin.lemaignan@epfl.ch">Séverin Lemaignan</maintainer>
+  <license>BSD</license>
+
+  <url>http://ros.org/wiki/nao_pose</url>
+  <author>Armin Hornung</author>
+  <author>Séverin Lemaignan</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>std_srvs</build_depend>
+  <build_depend>nao_msgs</build_depend>
+  <build_depend>trajectory_msgs</build_depend>
+
+  <run_depend>actionlib</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>actionlib_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>std_srvs</run_depend>
+  <run_depend>nao_msgs</run_depend>
+  <run_depend>trajectory_msgs</run_depend>
+
+</package>
