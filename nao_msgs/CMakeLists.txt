@@ -24,8 +24,6 @@ add_message_files(DIRECTORY msg
     JointAnglesWithSpeed.msg
     JointAngleTrajectory.msg
     TactileTouch.msg
-    TorsoIMU.msg
-    TorsoOdometry.msg
     WordRecognized.msg )
 
 #Add service files
@@ -34,7 +32,8 @@ add_service_files(DIRECTORY srv
     CmdPoseService.srv
     CmdVelService.srv
     GetInstalledBehaviors.srv
-    GetTruepose.srv )
+    GetTruepose.srv
+    SetTransform.srv)
 
 #Add action files
 add_action_files(DIRECTORY action
