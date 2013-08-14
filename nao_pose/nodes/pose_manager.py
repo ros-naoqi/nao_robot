@@ -30,8 +30,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-import roslib
-roslib.load_manifest('nao_pose')
 import rospy
 import sys
 
