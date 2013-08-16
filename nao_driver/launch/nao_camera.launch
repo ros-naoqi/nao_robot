@@ -5,8 +5,8 @@
   <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)" />
   <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
   <node pkg="nao_driver" type="nao_camera.py" name="nao_camera" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen">
-     <param name="calibration_file_bottom" type="string" value="file://$(find nao_driver)/calib/nao_bottom_640x480.yaml"/>
-     <param name="calibration_file_top" type="string" value="file://$(find nao_driver)/calib/nao_top_640x480.yaml"/>
+     <param name="calibration_file_bottom" type="string" value="file://$(find nao_driver)/config/nao_bottom_640x480.yaml"/>
+     <param name="calibration_file_top" type="string" value="file://$(find nao_driver)/config/nao_top_640x480.yaml"/>
      <param name="resolution" type="int" value="2" /> <!--QQVGA=0, QVGA=1, VGA=2 -->
      <param name="color_space" type="int" value="13" /> <!-- 9 = YUV422, 11 = RGB, 13 = BGR -->
      <param name="fps" type="int" value="30" />
