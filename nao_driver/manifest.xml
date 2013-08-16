@@ -15,6 +15,7 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/nao_driver</url>
 
+  <depend package="camera_info_manager_py"/>
   <depend package="diagnostic_updater"/>
   <depend package="std_msgs"/>
   <depend package="std_srvs"/>
