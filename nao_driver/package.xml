@@ -44,5 +44,6 @@
   <run_depend>nao_msgs</run_depend>
   <run_depend>humanoid_nav_msgs</run_depend>
   <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>camera_info_manager</run_depend>
 
 </package>
