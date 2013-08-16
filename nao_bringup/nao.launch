@@ -8,5 +8,6 @@
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
   <include file="$(find nao_driver)/launch/nao_driver.launch" />
+  <include file="$(find nao_pose)/launch/pose_manager.launch" />
 
 </launch>
