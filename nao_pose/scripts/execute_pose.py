@@ -4,10 +4,6 @@
 #
 # Author: Armin Hornung, University of Freiburg 
 
-
-
-import roslib
-roslib.load_manifest('nao_remote')
 import rospy
 import sys
 import actionlib

@@ -2,12 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(nao_pose)
 
 # Find all required modules for compilation
-find_package(catkin REQUIRED COMPONENTS 
-    std_msgs
-    std_srvs
-    actionlib_msgs
-    sensor_msgs
-    trajectory_msgs)
+find_package(catkin REQUIRED COMPONENTS )
 
 # This will install python libraries
 catkin_python_setup()
