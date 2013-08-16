@@ -49,6 +49,8 @@ from std_msgs.msg import String
 from std_msgs.msg import Bool
 from std_srvs.srv import Empty
 
+import xapparser
+
 class PoseManager():
     def __init__(self):
         # ROS initialization:
@@ -77,25 +79,49 @@ class PoseManager():
             rospy.signal_shutdown("Required component missing");
 
 
+    def parseXapPoses(self, xaplibrary):
+        try:
+            poses = xapparser.getpostures(xaplibrary)
+        except RuntimeError as re:
+            rospy.logwarn("Error while parsing the XAP file: %s" % str(re))
+            return
+
+        for name, pose in poses.items():
+
+            trajectory = JointTrajectory()
+
+            trajectory.joint_names = pose.keys()
+            joint_values = pose.values()
+
+            point = JointTrajectoryPoint()
+            point.time_from_start = Duration(2.0) # hardcoded duration!
+            point.positions = pose.values()
+            trajectory.points = [point]
+
+            self.poseLibrary[name] = trajectory
 
 
     def readInPoses(self):
-        poses = rospy.get_param('~poses')
-        rospy.loginfo("Found %d poses on the param server", len(poses))
 
-        for key,value in poses.iteritems():
-            try:
-            # TODO: handle multiple points in trajectory
-                trajectory = JointTrajectory()
-                trajectory.joint_names = value["joint_names"]
-                point = JointTrajectoryPoint()
-                point.time_from_start = Duration(value["time_from_start"])
-                point.positions = value["positions"]
-                trajectory.points = [point]
-                self.poseLibrary[key] = trajectory
-            except:
-                rospy.logwarn("Could not parse pose \"%s\" from the param server:", key);
-                rospy.logwarn(sys.exc_info())
+        xaplibrary = rospy.get_param('~xap', None)
+        if xaplibrary:
+            self.parseXapPoses(xaplibrary)
+
+        poses = rospy.get_param('~poses', None)
+        if poses:
+            for key,value in poses.iteritems():
+                try:
+                # TODO: handle multiple points in trajectory
+                    trajectory = JointTrajectory()
+                    trajectory.joint_names = value["joint_names"]
+                    point = JointTrajectoryPoint()
+                    point.time_from_start = Duration(value["time_from_start"])
+                    point.positions = value["positions"]
+                    trajectory.points = [point]
+                    self.poseLibrary[key] = trajectory
+                except:
+                    rospy.logwarn("Could not parse pose \"%s\" from the param server:", key);
+                    rospy.logwarn(sys.exc_info())
 
         # add a default crouching pose:
         if not "crouch" in self.poseLibrary:
@@ -110,6 +136,9 @@ class PoseManager():
                 1.545, -0.33, 1.57, 0.486, 0.0, 0.0]        # right arm
             trajectory.points = [point]
             self.poseLibrary["crouch"] = trajectory;
+
+
+        rospy.loginfo("Loaded %d poses: %s", len(self.poseLibrary), self.poseLibrary.keys())
 
 
     def executeBodyPose(self, goal):
