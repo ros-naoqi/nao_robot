@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 2.8.3)
 project(nao_pose)
 
 # Find all required modules for compilation
-find_package(catkin REQUIRED COMPONENTS )
+find_package(catkin REQUIRED)
 
 # This will install python libraries
 catkin_python_setup()
 
 # Declare info that other packages need to import messages generated here
-catkin_package( CATKIN_DEPENDS trajectory_msgs )
+catkin_package( )
 
 #And this will install python nodes
 install(DIRECTORY nodes/
@@ -28,4 +28,3 @@ install(DIRECTORY launch/
 # Install config files
 install(DIRECTORY config/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config)
-
