@@ -26,7 +26,7 @@ find_package(Boost QUIET COMPONENTS program_options signals)
 catkin_python_setup()
 
 # Generate dynamic reconfigure files
-generate_dynamic_reconfigure_options( cfg/nao_speech.cfg )
+generate_dynamic_reconfigure_options( config/nao_speech.cfg )
 
 # Information for other packages to import this module
 catkin_package( CATKIN_DEPENDS dynamic_reconfigure )
@@ -60,3 +60,8 @@ install(DIRECTORY nodes/
 # Instructions to install launch files
 install(DIRECTORY launch/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch )
+
+# Install config file (& ignore dynamic reconfigure files)
+install(DIRECTORY config/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
+    PATTERN "*.cfg" EXCLUDE)
