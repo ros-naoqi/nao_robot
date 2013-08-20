@@ -1,0 +1,19 @@
+<package>
+  <name>nao_description</name>
+  <version>0.1.1</version>
+  
+  <description>
+    Description of the Nao robot model that can be used with robot_state_publisher to display the robot's state of joint angles.
+  </description>
+  
+  <maintainer email="HornungA@informatik.uni-freiburg.de">Armin Hornung</maintainer>
+  <license>BSD</license>
+
+  <url>http://www.ros.org/wiki/nao_description</url>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <run_depend>urdf</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+
+</package>

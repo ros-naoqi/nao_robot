@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="nao_pose" type="pose_manager.py" name="pose_manager">
+    <rosparam file="$(find nao_pose)/config/basic_poses.yaml" command="load" ns="poses" />
+    <!-- You can define here a path to a Choregraphe posture library (XAP file). -->
+    <param name="xap" value="$(find nao_pose)/config/basic.xap" />
+  </node>
+</launch>
