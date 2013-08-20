@@ -38,18 +38,21 @@ except ImportError:
 
 class NaoNode():
 	def __init__(self):
+		# If user has set parameters for ip and port use them as default
+		default_ip = rospy.get_param("~pip", "127.0.0.1")
+		default_port = rospy.get_param("~pport", 9559)
+
 		# get connection from command line:
 		from optparse import OptionParser
-
 		parser = OptionParser()
 		parser.add_option("--pip", dest="pip", default="127.0.0.1",
-		                  help="IP/hostname of parent broker. Default is 127.0.0.1.", metavar="IP")
-		parser.add_option("--pport", dest="pport", default=9559,
-		                  help="port of parent broker. Default is 9559.", metavar="PORT")
+						  help="IP/hostname of parent broker. Default is 127.0.0.1.", metavar="IP")
+		parser.add_option("--pport", dest="pport", default=9559, type="int",
+						  help="port of parent broker. Default is 9559.", metavar="PORT")
 
 		(options, args) = parser.parse_args()
 		self.pip = options.pip
-		self.pport = int(options.pport)
+		self.pport = options.pport
 
 	def connectNaoQi(self, ip, port):
 		rospy.loginfo("Connecting to NaoQi at %s:%d", ip, port)
@@ -65,15 +68,14 @@ class NaoNode():
 		except RuntimeError, e:
 			rospy.logerr("Could not create Proxy to ALMotion or ALMemory, exiting. \nException message:\n%s", e)
 			exit(1)
-			
+
 	def getProxy(self, name, warn=True):
 		proxy = None
-		
+
 		try:
 			proxy = ALProxy(name,self.pip,self.pport)
 		except RuntimeError,e:
 			if warn:
 				rospy.logerr("Could not create Proxy to \"%s\". \nException message:\n%s",name, e)
-		
-		return proxy
 
+		return proxy
