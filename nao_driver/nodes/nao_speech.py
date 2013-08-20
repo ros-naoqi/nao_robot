@@ -66,6 +66,12 @@ class Util:
             name.replace("/", "_"),
             rospy.Time.now().to_sec() )
 
+class DummyAudioDevice:
+    def getOutputVolume(self):
+        return 0
+
+    def setOutputVolume(self, vol):
+        pass
 
 class NaoSpeech(NaoNode):
 
@@ -82,6 +88,12 @@ class NaoSpeech(NaoNode):
         self.audio = self.getProxy("ALAudioDevice")
         self.tts = self.getProxy("ALTextToSpeech")
         self.srw = None
+
+        # When using simulated naoqi, audio device is not available,
+        # Use a dummy instead
+        if self.audio is None:
+            rospy.logwarn("Using dummy audio device, volume controls disabled")
+            self.audio = DummyAudioDevice()
 
         # Start reconfigure server
         self.reconf_server = ReConfServer(NodeConfig, self.reconfigure)
