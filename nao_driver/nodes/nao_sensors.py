@@ -42,7 +42,7 @@ import rospy
 from sensor_msgs.msg import JointState
 from sensor_msgs.msg import Imu
 
-from nao_msgs.msg import TorsoOdometry
+#from nao_msgs.msg import TorsoOdometry
 
 from nao_driver import (NaoNode, motion)
 
@@ -90,14 +90,14 @@ class NaoSensors(NaoNode, Thread):
         # use sensor values or commanded (open-loop) values for joint angles
         self.useJointSensors = rospy.get_param('~use_joint_sensors', True) # (set to False in simulation!)
         # init. messages:
-        self.torsoOdom = TorsoOdometry()
-        self.camOdom = TorsoOdometry()
-        self.torsoOdom.header.frame_id = rospy.get_param('~odom_frame_id', "odom")
-        self.camOdom.header.frame_id = rospy.get_param('~odom_frame_id', "odom")
-        if not(self.torsoOdom.header.frame_id[0] == '/'):
-            self.torsoOdom.header.frame_id = self.tf_prefix + '/' + self.torsoOdom.header.frame_id
-        if not(self.camOdom.header.frame_id[0] == '/'):
-            self.camOdom.header.frame_id = self.tf_prefix + '/' + self.camOdom.header.frame_id
+        #self.torsoOdom = TorsoOdometry()
+        #self.camOdom = TorsoOdometry()
+        #self.torsoOdom.header.frame_id = rospy.get_param('~odom_frame_id', "odom")
+        #self.camOdom.header.frame_id = rospy.get_param('~odom_frame_id', "odom")
+        #if not(self.torsoOdom.header.frame_id[0] == '/'):
+        #    self.torsoOdom.header.frame_id = self.tf_prefix + '/' + self.torsoOdom.header.frame_id
+        #if not(self.camOdom.header.frame_id[0] == '/'):
+        #    self.camOdom.header.frame_id = self.tf_prefix + '/' + self.camOdom.header.frame_id
         self.torsoIMU = Imu()
         self.torsoIMU.header.frame_id = self.base_frameID
         self.jointState = JointState()
@@ -114,9 +114,9 @@ class NaoSensors(NaoNode, Thread):
         rospy.logdebug(msg)
 
 
-        if self.sendCamOdom:
-            self.camOdomPub = rospy.Publisher("camera_odometry", TorsoOdometry)
-        self.torsoOdomPub = rospy.Publisher("torso_odometry", TorsoOdometry)
+        #if self.sendCamOdom:
+        #    self.camOdomPub = rospy.Publisher("camera_odometry", TorsoOdometry)
+        #self.torsoOdomPub = rospy.Publisher("torso_odometry", TorsoOdometry)
         self.torsoIMUPub = rospy.Publisher("imu", Imu)
         self.jointStatePub = rospy.Publisher("joint_states", JointState)
 
@@ -153,31 +153,31 @@ class NaoSensors(NaoNode, Thread):
                 print e
                 rospy.signal_shutdown("No NaoQI available anymore")
 
-            self.torsoOdom.header.stamp = timestamp
-            self.camOdom.header.stamp = timestamp
-            if len(odomData)==2:
-                odomData = odomData[1]
-            elif len(odomData)!=6:
-                print "Error getting odom data"
-                continue
-            self.torsoOdom.x = odomData[0]
-            self.torsoOdom.y = odomData[1]
-            self.torsoOdom.z = odomData[2]
-            self.torsoOdom.wx = odomData[3]
-            self.torsoOdom.wy = odomData[4]
-            self.torsoOdom.wz = odomData[5]
+            #self.torsoOdom.header.stamp = timestamp
+            #self.camOdom.header.stamp = timestamp
+            #if len(odomData)==2:
+            #    odomData = odomData[1]
+            #elif len(odomData)!=6:
+            #    print "Error getting odom data"
+            #    continue
+            #self.torsoOdom.x = odomData[0]
+            #self.torsoOdom.y = odomData[1]
+            #self.torsoOdom.z = odomData[2]
+            #self.torsoOdom.wx = odomData[3]
+            #self.torsoOdom.wy = odomData[4]
+            #self.torsoOdom.wz = odomData[5]
 
-            if self.sendCamOdom:
-                self.camOdom.x = camData[0]
-                self.camOdom.y = camData[1]
-                self.camOdom.z = camData[2]
-                self.camOdom.wx = camData[3]
-                self.camOdom.wy = camData[4]
-                self.camOdom.wz = camData[5]
+            #if self.sendCamOdom:
+            #    self.camOdom.x = camData[0]
+            #    self.camOdom.y = camData[1]
+            #    self.camOdom.z = camData[2]
+            #    self.camOdom.wx = camData[3]
+            #    self.camOdom.wy = camData[4]
+            #    self.camOdom.wz = camData[5]
 
-            self.torsoOdomPub.publish(self.torsoOdom)
-            if self.sendCamOdom:
-                self.camOdomPub.publish(self.camOdom)
+            #self.torsoOdomPub.publish(self.torsoOdom)
+            #if self.sendCamOdom:
+            #    self.camOdomPub.publish(self.camOdom)
 
             # Replace 'None' values with 0
             # (=> consistent behavior in 1.8 / 1.10 with 1.6)
@@ -202,11 +202,11 @@ class NaoSensors(NaoNode, Thread):
             self.torsoIMU.angular_velocity.x = memData[4]
             self.torsoIMU.angular_velocity.y = memData[5]
             self.torsoIMU.angular_velocity.z = memData[6] # currently always 0
-      
+
             self.torsoIMU.linear_acceleration.x = memData[7]
             self.torsoIMU.linear_acceleration.y = memData[8]
             self.torsoIMU.linear_acceleration.z = memData[9]
-      
+
             # covariances unknown
             # cf http://www.ros.org/doc/api/sensor_msgs/html/msg/Imu.html
             self.torsoIMU.orientation_covariance[0] = -1
