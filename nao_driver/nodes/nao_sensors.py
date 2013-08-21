@@ -57,7 +57,8 @@ class NaoSensors(NaoNode, Thread):
         self.connectNaoQi()
 
         self.stopThread = False
-        self.odomSleep = 1.0/rospy.get_param('~torso_odom_rate', 20.0)
+        # default sensor rate: 25 Hz (50 is max, stresses Nao's CPU)
+        self.sensorRate = rospy.Rate(rospy.get_param('~sensor_rate', 25.0))
 
         self.dataNamesList = ["DCM/Time",
                                 "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value","Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value",
@@ -219,7 +220,7 @@ class NaoSensors(NaoNode, Thread):
 
             self.jointStatePub.publish(self.jointState)
 
-            rospy.sleep(self.odomSleep)
+            self.sensorRate.sleep()
 
 if __name__ == '__main__':
 

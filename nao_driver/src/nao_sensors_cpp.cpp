@@ -253,7 +253,7 @@ bool NaoSensors::connectProxy()
 }
 
 NaoSensors::NaoSensors(int argc, char ** argv)
- : m_rate(50.0), m_privateNh("~"),
+ : m_rate(25.0), m_privateNh("~"),
    m_odomFrameId("odom"),
    m_baseFrameId("base_link"),
    m_useIMUAngles(false),
@@ -277,8 +277,8 @@ NaoSensors::NaoSensors(int argc, char ** argv)
          "Device/SubDeviceList/InertialSensor/AccelerometerZ/Sensor/Value");
 
 
-    // get update frequency
-    m_privateNh.param("torso_odom_rate", m_rate,m_rate);
+    // get update frequency. default sensor rate: 25 Hz (50 is max, stresses Nao's CPU)
+    m_privateNh.param("sensor_rate", m_rate,m_rate);
 
     // get base_frame_id (and fix prefix if necessary)
     m_privateNh.param("base_frame_id", m_baseFrameId, m_baseFrameId);
