@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-# SVN $HeadURL$
-# SVN $Id$
-
-
 #
 # ROS node to read Nao's sensors and torso odometry through the Aldebaran API.
 # This code is currently compatible to NaoQI version 1.6
@@ -43,8 +39,6 @@ from sensor_msgs.msg import JointState
 from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
 
-#from nao_msgs.msg import TorsoOdometry
-
 from nao_driver import (NaoNode, motion)
 
 from tf import transformations
@@ -60,13 +54,10 @@ class NaoSensors(NaoNode, Thread):
 
         # ROS initialization:
         rospy.init_node('nao_sensors')
-
         self.connectNaoQi()
 
         self.stopThread = False
-
         self.odomSleep = 1.0/rospy.get_param('~torso_odom_rate', 20.0)
-
 
         self.dataNamesList = ["DCM/Time",
                                 "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value","Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value",
@@ -90,19 +81,14 @@ class NaoSensors(NaoNode, Thread):
         if not(self.base_footprint_frameID[0] == '/'):
             self.base_footprint_frameID = self.tf_prefix + '/' + self.base_footprint_frameID
 
-        # send cam odom?
-        self.sendCamOdom = rospy.get_param('~send_cam_odom', False)
         # use sensor values or commanded (open-loop) values for joint angles
         self.useJointSensors = rospy.get_param('~use_joint_sensors', True) # (set to False in simulation!)
         # init. messages:
         self.torsoOdom = Odometry()
-        #self.camOdom = TorsoOdometry()
         self.torsoOdom.header.frame_id = rospy.get_param('~odom_frame_id', "odom")
-        #self.camOdom.header.frame_id = rospy.get_param('~odom_frame_id', "odom")
         if not(self.torsoOdom.header.frame_id[0] == '/'):
             self.torsoOdom.header.frame_id = self.tf_prefix + '/' + self.torsoOdom.header.frame_id
-        #if not(self.camOdom.header.frame_id[0] == '/'):
-        #    self.camOdom.header.frame_id = self.tf_prefix + '/' + self.camOdom.header.frame_id
+
         self.torsoIMU = Imu()
         self.torsoIMU.header.frame_id = self.base_frameID
         self.jointState = JointState()
@@ -118,9 +104,6 @@ class NaoSensors(NaoNode, Thread):
         msg = "Nao joints found: "+ str(self.jointState.name)
         rospy.logdebug(msg)
 
-
-        #if self.sendCamOdom:
-        #    self.camOdomPub = rospy.Publisher("camera_odometry", TorsoOdometry)
         self.torsoOdomPub = rospy.Publisher("odom", Odometry)
         self.torsoIMUPub = rospy.Publisher("imu", Imu)
         self.jointStatePub = rospy.Publisher("joint_states", JointState)
@@ -132,10 +115,8 @@ class NaoSensors(NaoNode, Thread):
     # (re-) connect to NaoQI:
     def connectNaoQi(self):
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
-
         self.motionProxy = self.getProxy("ALMotion")
         self.memProxy = self.getProxy("ALMemory")
-        # TODO: check self.memProxy.version() for > 1.6
         if self.motionProxy is None or self.memProxy is None:
             exit(1)
 
@@ -151,10 +132,6 @@ class NaoSensors(NaoNode, Thread):
                  # odometry data:
                 odomData = self.motionProxy.getPosition('Torso', motion.SPACE_WORLD, True)
                 footprint_to_torso = self.motionProxy.getPosition('Torso', motion.SPACE_NAO, True)
-                # camera data
-                #camData = self.motionProxy.getTransform('CameraTop', motion.SPACE_WORLD, True)
-                if self.sendCamOdom:
-                    camData = self.motionProxy.getPosition('CameraTop', motion.SPACE_WORLD, True)
                 positionData = self.motionProxy.getAngles('Body', self.useJointSensors)
             except RuntimeError, e:
                 print "Error accessing ALMemory, exiting...\n"
@@ -162,7 +139,6 @@ class NaoSensors(NaoNode, Thread):
                 rospy.signal_shutdown("No NaoQI available anymore")
 
             self.torsoOdom.header.stamp = timestamp
-            #self.camOdom.header.stamp = timestamp
             if len(odomData)==2:
                 odomData = odomData[1]
             elif len(odomData)!=6:
@@ -189,20 +165,12 @@ class NaoSensors(NaoNode, Thread):
             q = self.torsoOdom.pose.pose.orientation
             self.tf_br.sendTransform((t.x, t.y, t.z), (q.x, q.y, q.z, q.w),
                                      timestamp, self.base_frameID, self.torsoOdom.header.frame_id)
-            #if self.sendCamOdom:
-            #    self.camOdom.x = camData[0]
-            #    self.camOdom.y = camData[1]
-            #    self.camOdom.z = camData[2]
-            #    self.camOdom.wx = camData[3]
-            #    self.camOdom.wy = camData[4]
-            #    self.camOdom.wz = camData[5]
 
             self.torsoOdomPub.publish(self.torsoOdom)
-            #if self.sendCamOdom:
-            #    self.camOdomPub.publish(self.camOdom)
 
             # Replace 'None' values with 0
             # (=> consistent behavior in 1.8 / 1.10 with 1.6)
+            # TODO: still required with 1.12 / 1.14?
             for i, m in enumerate(memData):
                 if m is None:
                     memData[i] = 0
@@ -237,9 +205,7 @@ class NaoSensors(NaoNode, Thread):
 
             self.torsoIMUPub.publish(self.torsoIMU)
 
-            #
             # Send JointState:
-            #
             self.jointState.header.stamp = timestamp
             self.jointState.header.frame_id = self.base_frameID
             self.jointState.position = positionData
