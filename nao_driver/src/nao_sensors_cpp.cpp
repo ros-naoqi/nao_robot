@@ -280,7 +280,7 @@ NaoSensors::NaoSensors(int argc, char ** argv)
     // get update frequency
     m_privateNh.param("torso_odom_rate", m_rate,m_rate);
 
-    // get base_frame_id (and fix prefixi f necessary)
+    // get base_frame_id (and fix prefix if necessary)
     m_privateNh.param("base_frame_id", m_baseFrameId, m_baseFrameId);
     m_privateNh.param("odom_frame_id", m_odomFrameId, m_odomFrameId);
     m_privateNh.param("use_imu_angles", m_useIMUAngles, m_useIMUAngles);
@@ -306,7 +306,6 @@ NaoSensors::NaoSensors(int argc, char ** argv)
     }
 
     std::stringstream ss;
-    ss << "Nao joints found: " ;
     std::copy(m_jointState.name.begin(), m_jointState.name.end()-1, std::ostream_iterator<std::string>(ss,","));
     std::copy(m_jointState.name.end()-1, m_jointState.name.end(), std::ostream_iterator<std::string>(ss));
     ROS_INFO("Nao joints found: %s",ss.str().c_str());
@@ -602,23 +601,11 @@ int main(int argc, char ** argv)
       ROS_ERROR("Creating NaoSensors object failed with error ");
       return -1;
    }
-   //sensors.parse_command_line(argc,argv);
-   //sensors.connectNaoQi();
-   //sensors.connectProxy();
+   
    sensors->run();
+   
    delete sensors;
 
-   /*
-      ROS_INFO("NodeHandle");
-      ros::Rate r(50);
-
-      while(ros::ok() )
-      {
-      r.sleep();
-      ros::spinOnce();
-      }
-      ROS_INFO("nao_sensors stopped.");
-      */
-   ROS_INFO("End of the road.");
+   ROS_INFO("nao_sensors stopped");
    return 0;
 }
