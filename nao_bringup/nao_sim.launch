@@ -1,0 +1,9 @@
+<launch>
+    
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find nao_description)/urdf/nao_robot_v4.urdf.xacro" />
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
+  <include file="$(find nao_driver)/launch/nao_driver_sim.launch" />
+  <include file="$(find nao_pose)/launch/pose_manager.launch" />
+
+</launch>
