@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
 # Nothing that can be imported by other modules
 catkin_package()
 
+include_directories(${catkin_INCLUDE_DIRS})
 add_executable(base_footprint src/base_footprint.cpp)
 target_link_libraries(base_footprint ${catkin_LIBRARIES})
 #add_dependencies(nao_sensors_cpp ${catkin_EXPORTED_TARGETS})
