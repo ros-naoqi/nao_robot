@@ -1,0 +1,11 @@
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package nao_pose
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forthcoming
+-----------
+* Added support for Choregraphe's XAP posture library
+  This allows a user to create Nao posture from Choregraphe, export them to XAP files
+  and load them in the pose library for later invokation with body_pose action.
+* Add a parser for Choregraphe XAP posture libraries
+* Import pose_manager from nao_remote into nao_robot/nao_pose
