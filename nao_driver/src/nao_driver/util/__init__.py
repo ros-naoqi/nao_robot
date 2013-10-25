@@ -1,5 +1,5 @@
-# Copyright 2009 Armin Hornung, University of Freiburg
-# http://www.ros.org/wiki/nao
+# Copyright (c) 2013, Miguel Sarabia
+# Imperial College London
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -9,7 +9,7 @@
 #    # Redistributions in binary form must reproduce the above copyright
 #       notice, this list of conditions and the following disclaimer in the
 #       documentation and/or other materials provided with the distribution.
-#    # Neither the name of the University of Freiburg nor the names of its
+#    # Neither the name of the Imperial College London nor the names of its
 #       contributors may be used to endorse or promote products derived from
 #       this software without specific prior written permission.
 #
@@ -26,5 +26,9 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-from nao_driver_naoqi import *
+from nao_footstep_clipping import *
+from start_walk_pose import *
+
+#Do not allow nao_footstep_clipping.Params to be exposed
+del Params
 

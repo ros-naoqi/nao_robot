@@ -15,10 +15,26 @@
 
   <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)" />
   <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
+  <arg name="force_python" default="false" />
+
+  <!-- Start nodes in their python variant (only when setting force_python:=true during launch) -->
+  <group if="$(arg force_python)">
+    <node pkg="nao_driver" type="nao_sensors.py" name="nao_sensors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  </group>
   
-  <node pkg="nao_driver" type="nao_walker.py" name="nao_walker" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen"/>
-  <node pkg="nao_driver" type="nao_sensors.py" name="nao_sensors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen"/>
-  <node pkg="nao_driver" type="nao_controller.py" name="nao_controller" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen"/>
+  <!-- Start nodes in their C++ variant (default, when force_python:=false) -->
+  <group unless="$(arg force_python)">
+    <node pkg="nao_driver" type="nao_sensors_cpp" name="nao_sensors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  </group>
+
+  <!-- All other nodes (only exist in one varian) -->
+  
+  <node pkg="nao_driver" type="nao_walker.py" name="nao_walker" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_driver" type="nao_controller.py" name="nao_controller" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_driver" type="nao_behaviors.py" name="nao_behaviors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_driver" type="nao_leds.py" name="nao_leds" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_driver" type="nao_speech.py" name="nao_speech" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_driver" type="nao_tactile.py" name="nao_tactile" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
 
 
 </launch>

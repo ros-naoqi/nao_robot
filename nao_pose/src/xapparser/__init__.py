@@ -1,4 +1,4 @@
-# Copyright 2009 Armin Hornung, University of Freiburg
+# Copyright 2013 Séverin Lemaignan
 # http://www.ros.org/wiki/nao
 #
 # Redistribution and use in source and binary forms, with or without
@@ -26,5 +26,4 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-from nao_driver_naoqi import *
-
+from xapparser import *
