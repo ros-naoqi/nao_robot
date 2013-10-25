@@ -76,11 +76,8 @@ class NaoSensors(NaoNode, Thread):
             self.tf_prefix = ""
 
         self.base_frameID = rospy.get_param('~base_frame_id', "base_link")
-        self.base_footprint_frameID = rospy.get_param('~base_footprint_frame_id', "base_footprint")
         if not(self.base_frameID[0] == '/'):
             self.base_frameID = self.tf_prefix + '/' + self.base_frameID
-        if not(self.base_footprint_frameID[0] == '/'):
-            self.base_footprint_frameID = self.tf_prefix + '/' + self.base_footprint_frameID
 
         # use sensor values or commanded (open-loop) values for joint angles
         self.useJointSensors = rospy.get_param('~use_joint_sensors', True) # (set to False in simulation!)
@@ -132,7 +129,6 @@ class NaoSensors(NaoNode, Thread):
                 memData = self.memProxy.getListData(self.dataNamesList)
                  # odometry data:
                 odomData = self.motionProxy.getPosition('Torso', motion.SPACE_WORLD, True)
-                footprint_to_torso = self.motionProxy.getPosition('Torso', motion.SPACE_NAO, True)
                 positionData = self.motionProxy.getAngles('Body', self.useJointSensors)
             except RuntimeError, e:
                 print "Error accessing ALMemory, exiting...\n"
@@ -145,6 +141,7 @@ class NaoSensors(NaoNode, Thread):
             elif len(odomData)!=6:
                 print "Error getting odom data"
                 continue
+            
             self.torsoOdom.pose.pose.position.x = odomData[0]
             self.torsoOdom.pose.pose.position.y = odomData[1]
             self.torsoOdom.pose.pose.position.z = odomData[2]
@@ -153,14 +150,6 @@ class NaoSensors(NaoNode, Thread):
             self.torsoOdom.pose.pose.orientation.y = q[1]
             self.torsoOdom.pose.pose.orientation.z = q[2]
             self.torsoOdom.pose.pose.orientation.w = q[3]
-            footprint_to_torso_tf = transformations.quaternion_matrix( transformations.quaternion_from_euler(footprint_to_torso[3], footprint_to_torso[4], footprint_to_torso[5]) )
-            footprint_to_torso_tf[0,3] = footprint_to_torso[0]
-            footprint_to_torso_tf[1,3] = footprint_to_torso[1]
-            footprint_to_torso_tf[2,3] = footprint_to_torso[2]
-            torso_to_footprint_tf = transformations.inverse_matrix(footprint_to_torso_tf)
-            q = transformations.quaternion_from_matrix(torso_to_footprint_tf)
-            t = torso_to_footprint_tf[0:3,3]
-            self.tf_br.sendTransform(t, q, timestamp, self.base_footprint_frameID, self.base_frameID)
 
             t = self.torsoOdom.pose.pose.position
             q = self.torsoOdom.pose.pose.orientation
