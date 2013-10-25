@@ -2,8 +2,8 @@
 Changelog for package nao_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2013-10-25)
+------------------
 * Catkinization
 * Removed unused messages TorsoIMU & TorsoOdometry, replaced by standard ROS msgs
 

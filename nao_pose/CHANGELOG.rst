@@ -2,8 +2,8 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2013-10-25)
+------------------
 * Added support for Choregraphe's XAP posture library
   This allows a user to create Nao posture from Choregraphe, export them to XAP files
   and load them in the pose library for later invokation with body_pose action.
