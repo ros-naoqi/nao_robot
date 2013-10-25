@@ -1,6 +1,6 @@
 <package>
   <name>nao_driver</name>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
   <description>
     <p>
       Driver package for the Nao robot, providing access to walking commands,

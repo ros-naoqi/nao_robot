@@ -2,8 +2,8 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2013-10-25)
+------------------
 * [nao_description] Added missing include dirs in CMakeLists
 
 0.2.0 (2013-10-25)

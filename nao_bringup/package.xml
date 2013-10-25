@@ -1,6 +1,6 @@
 <package>
   <name>nao_bringup</name>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
   
   <description>
       Launch files and scripts needed to bring ROS interfaces for Nao up into a
