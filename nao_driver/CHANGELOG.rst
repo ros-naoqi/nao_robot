@@ -2,6 +2,9 @@
 Changelog for package nao_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.2.0 (2013-10-25)
 ------------------
 * Adding force_python parameter to nao_driver.launch to switch

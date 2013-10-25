@@ -2,6 +2,9 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.2.0 (2013-10-25)
 ------------------
 * Added support for Choregraphe's XAP posture library

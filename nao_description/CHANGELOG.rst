@@ -2,6 +2,10 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [nao_description] Added missing include dirs in CMakeLists
+
 0.2.0 (2013-10-25)
 ------------------
 * Added base_footprint node to nao_description, publishes footprint according
