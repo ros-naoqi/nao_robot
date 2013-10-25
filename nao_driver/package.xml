@@ -15,6 +15,9 @@
   <license>BSD</license>
 
   <url>http://ros.org/wiki/nao_driver</url>
+  <url type="bugtracker">https://github.com/ahornung/nao_robot/issues</url>
+  <url type="repository">https://github.com/ahornung/nao_robot</url>
+  
   <author>Armin Hornung</author>
   <author>Stefan Osswald</author>
   <author>Daniel Maier</author>

@@ -12,6 +12,8 @@
   <license>BSD</license>
 
   <url>http://www.ros.org/wiki/nao_description</url>
+  <url type="bugtracker">https://github.com/ahornung/nao_robot/issues</url>
+  <url type="repository">https://github.com/ahornung/nao_robot</url>
   
   <buildtool_depend>catkin</buildtool_depend>
 
