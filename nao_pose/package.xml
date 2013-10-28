@@ -6,14 +6,14 @@
           This package contains nodes for managing Nao's poses.
     </p>
   </description>
-  <maintainer email="severin.lemaignan@epfl.ch">Séverin Lemaignan</maintainer>
+  <maintainer email="severin.lemaignan@epfl.ch">Severin Lemaignan</maintainer>
   <license>BSD</license>
 
   <url>http://ros.org/wiki/nao_pose</url>
   <url type="bugtracker">https://github.com/ahornung/nao_robot/issues</url>
   <url type="repository">https://github.com/ahornung/nao_robot</url>
   <author>Armin Hornung</author>
-  <author>Séverin Lemaignan</author>
+  <author>Severin Lemaignan</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
