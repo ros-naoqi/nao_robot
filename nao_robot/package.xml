@@ -1,6 +1,6 @@
 <package>
   <name>nao_robot</name>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   
   <description>
     <p>The nao_robot stack contains some useful nodes to integrated the Nao humanoid robot into ROS,  developed at the <a href="http://hrl.informatik.uni-freiburg.de/">Humanoid Robots Lab</a> at the Albert-Ludwigs-Unversitaet in Freiburg, Germany. It provides basic functionality and can be installed on the robot. It should be used with the <a href="http://www.ros.org/wiki/nao_common">nao_common stack</a> for more functionality. The <a href="http://www.ros.org/wiki/humanoid_navigation"> humanoid_navigation stack</a> contains some more general packages for humanoid/biped robots.</p>
