@@ -2,6 +2,11 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replace accented character in package.xml files, seems to cause
+  problems with bloom
+
 0.2.1 (2013-10-25)
 ------------------
 
