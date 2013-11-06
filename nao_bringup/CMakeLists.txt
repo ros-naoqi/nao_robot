@@ -14,4 +14,5 @@ install(DIRECTORY config
 
 install(FILES
    nao.launch
+   nao_sim.launch
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
