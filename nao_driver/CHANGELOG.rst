@@ -13,12 +13,12 @@ Changelog for package nao_driver
 0.2.0 (2013-10-25)
 ------------------
 * Adding force_python parameter to nao_driver.launch to switch
-  between C++ and python nodes for nao_sensors (Issue `#11 <https://github.com/ahornung/nao_robot/issues/11>`_)
+  between C++ and python nodes for nao_sensors (Issue `#11 <https://github.com/ros-nao/nao_robot/issues/11>`_)
   Parameter will be passed on from higher-level launch files (nao_bringup).
   Default node is C++, unless a simulation launch file is started.
 * Removing unnecessary output="screen" from launch files
 * Add more nodes to the launch file
-  This is related to bug `#11 <https://github.com/ahornung/nao_robot/issues/11>`_
+  This is related to bug `#11 <https://github.com/ros-nao/nao_robot/issues/11>`_
 * Update rate parameter of nao_sensors (py/C++) is now called ~sensor_rate,
   25Hz default rate. Changed to proper rospy.Rate in python version.
 * Small cleanup of nao_sensors_cpp / py
@@ -67,7 +67,7 @@ Changelog for package nao_driver
 * Added node to interface Nao speech recognition and tts
 * Added module to control NAO's LEDs
 * launch files reorganized
-* Patch from Issue `#6 <https://github.com/ahornung/nao_robot/issues/6>`_: added nao_behaviors node, service and actionlib interface to execute behaviors (thx to Miguel S.)
+* Patch from Issue `#6 <https://github.com/ros-nao/nao_robot/issues/6>`_: added nao_behaviors node, service and actionlib interface to execute behaviors (thx to Miguel S.)
 * added a camera node nao_camera.py
 * Improved compatibility of nao_controller / pose_manager with both H25 and H21 Naos.
   New script execute_pose in nao_remote to test.
