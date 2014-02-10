@@ -47,6 +47,7 @@ from dbus.exceptions import DBusException
 from nao_driver import NaoNode
 import threading
 from threading import Thread
+import os
 
 from diagnostic_msgs.msg import *
 
@@ -66,7 +67,8 @@ class NaoDiagnosticUpdater(NaoNode,Thread):
         self.sleep = 1.0/rospy.get_param('~update_rate', 0.5)  # update rate in Hz
         self.warningThreshold = rospy.get_param('~warning_threshold', 68) # warning threshold for joint temperatures
         self.errorThreshold = rospy.get_param('~error_threshold', 74)     # error threshold for joint temperatures
-        self.runsOnRobot = naoqi.ON_GEODE   # if temperature device files cannot be opened, this flag will be set to False later.
+        # check if NAOqi runs on the robot by checking whether the OS has aldebaran in its name
+        self.runsOnRobot = "aldebaran" in os.uname()[2]   # if temperature device files cannot be opened, this flag will be set to False later.
 
         # Lists with interesting ALMemory keys
         self.jointNamesList = self.motionProxy.getJointNames('Body')    
@@ -165,7 +167,7 @@ class NaoDiagnosticUpdater(NaoNode,Thread):
                     status.level = DiagnosticStatus.ERROR
                     status.message = "Too hot: %3.1f C" % temperature
                 diagnosticArray.status.append(status)
-                        
+
             # Process battery status flags
             status = DiagnosticStatus()
             status.hardware_id = "%s#%s"%(self.hardwareID, "battery")
@@ -198,7 +200,7 @@ class NaoDiagnosticUpdater(NaoNode,Thread):
             if batteryData[1] is None:
                 kv.value = "unknown"
             else:
-                kv.value = bin(batteryData[1])
+                kv.value = bin(int(batteryData[1]))
             status.values.append(kv)
 
             # Process battery charge level
