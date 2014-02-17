@@ -67,8 +67,11 @@ class NaoController(NaoNode):
         # store the number of joints in each motion chain and collection, used for sanity checks
         self.collectionSize = {}
         for collectionName in ['Head', 'LArm', 'LLeg', 'RLeg', 'RArm', 'Body', 'BodyJoints', 'BodyActuators']:
-            self.collectionSize[collectionName] = len(self.motionProxy.getJointNames(collectionName));
-    
+            try:
+                self.collectionSize[collectionName] = len(self.motionProxy.getJointNames(collectionName));
+            except RuntimeError:
+                # the following is useful for old NAOs with no legs/arms
+                rospy.logwarn('Collection %s not found on your robot.' % collectionName)
 
         # Get poll rate for actionlib (ie. how often to check whether currently running task has been preempted)
         # Defaults to 200ms
