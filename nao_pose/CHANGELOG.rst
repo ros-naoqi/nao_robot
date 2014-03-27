@@ -2,6 +2,9 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.3 (2014-03-27)
+------------------
+
 0.2.2 (2013-10-28)
 ------------------
 * Replace accented character in package.xml files, seems to cause

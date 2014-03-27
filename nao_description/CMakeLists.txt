@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf
   message_filters
+  sensor_msgs
 )
 
 # Nothing that can be imported by other modules
@@ -14,7 +15,6 @@ catkin_package()
 include_directories(${catkin_INCLUDE_DIRS})
 add_executable(base_footprint src/base_footprint.cpp)
 target_link_libraries(base_footprint ${catkin_LIBRARIES})
-#add_dependencies(nao_sensors_cpp ${catkin_EXPORTED_TARGETS})
 
 install(TARGETS base_footprint
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )

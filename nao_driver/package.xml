@@ -1,6 +1,6 @@
 <package>
   <name>nao_driver</name>
-  <version>0.2.2</version>
+  <version>0.2.3</version>
   <description>
     <p>
       Driver package for the Nao robot, providing access to walking commands,
@@ -49,6 +49,6 @@
   <run_depend>humanoid_nav_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
   <run_depend>dynamic_reconfigure</run_depend>
-  <run_depend>camera_info_manager</run_depend>
+  <run_depend>camera_info_manager_py</run_depend>
 
 </package>

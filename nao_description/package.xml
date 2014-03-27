@@ -1,6 +1,6 @@
 <package>
   <name>nao_description</name>
-  <version>0.2.2</version>
+  <version>0.2.3</version>
   
   <description>
     Description of the Nao robot model that can be used with robot_state_publisher to display the robot's state of joint angles.
@@ -20,10 +20,13 @@
   <build_depend>roscpp</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>message_filters</build_depend>
+  <build_depend>sensor_msgs</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>urdf</run_depend>
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>tf</run_depend>
+  <run_depend>message_filters</run_depend>
+  <run_depend>sensor_msgs</run_depend>
 
 </package>
