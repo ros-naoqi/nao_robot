@@ -2,6 +2,12 @@
 Changelog for package nao_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix dependency of nao_driver on camera_info_manager_py
+* Fix nao_controller for incomplete NAOs
+* Get nao_diagnostic_updater.py running again
+
 0.2.2 (2013-10-28)
 ------------------
 * Replace accented character in package.xml files, seems to cause

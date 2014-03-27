@@ -2,6 +2,10 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix `#17 <https://github.com/ros-nao/nao_robot/issues/17>`_: add dependency on sensor_msgs in nao_description
+
 0.2.2 (2013-10-28)
 ------------------
 

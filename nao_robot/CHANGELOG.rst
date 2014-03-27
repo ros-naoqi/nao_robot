@@ -2,6 +2,10 @@
 Changelog for package nao_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update nao_robot package.xml
+
 0.2.2 (2013-10-28)
 ------------------
 
