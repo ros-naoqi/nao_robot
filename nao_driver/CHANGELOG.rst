@@ -2,8 +2,8 @@
 Changelog for package nao_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.3 (2014-03-27)
+------------------
 * Fix dependency of nao_driver on camera_info_manager_py
 * Fix nao_controller for incomplete NAOs
 * Get nao_diagnostic_updater.py running again

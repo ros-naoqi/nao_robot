@@ -2,8 +2,8 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.3 (2014-03-27)
+------------------
 * Add missing nao_sim.launch to nao_bringup install
 
 0.2.2 (2013-10-28)
