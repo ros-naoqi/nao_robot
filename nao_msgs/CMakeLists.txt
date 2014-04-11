@@ -33,7 +33,8 @@ add_service_files(DIRECTORY srv
     CmdVelService.srv
     GetInstalledBehaviors.srv
     GetTruepose.srv
-    SetTransform.srv)
+    SetTransform.srv
+    SetArmsEnabled.srv)
 
 #Add action files
 add_action_files(DIRECTORY action

@@ -48,7 +48,7 @@ from std_msgs.msg import Bool
 import std_msgs.msg
 
 from std_srvs.srv import Empty, EmptyResponse
-from nao_msgs.srv import CmdPoseService, CmdVelService, CmdPoseServiceResponse, CmdVelServiceResponse
+from nao_msgs.srv import CmdPoseService, CmdVelService, CmdPoseServiceResponse, CmdVelServiceResponse, SetArmsEnabled, SetArmsEnabledResponse
 from humanoid_nav_msgs.msg import StepTarget
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
 
@@ -114,6 +114,7 @@ class NaoWalker(NaoNode):
         self.stopWalkSrv = rospy.Service("stop_walk_srv", Empty, self.handleStopWalkSrv)
         self.needsStartWalkPoseSrv = rospy.Service("needs_start_walk_pose_srv", Empty, self.handleNeedsStartWalkPoseSrv)
         self.readFootGaitConfigSrv = rospy.Service("read_foot_gait_config_srv", Empty, self.handleReadFootGaitConfigSrv)
+        self.setArmsEnabledSrv = rospy.Service("enable_arms_walking_srv", SetArmsEnabled, self.handleSetArmsEnabledSrv)
 
         self.say("Walker online")
 
@@ -238,6 +239,11 @@ class NaoWalker(NaoNode):
         else:
             self.footGaitConfig = self.motionProxy.getFootGaitConfig("Default")
         return EmptyResponse()
+
+    def handleSetArmsEnabledSrv(self, req):
+        self.motionProxy.setWalkArmsEnable(req.left_arm, req.right_arm)
+        rospy.loginfo("Arms enabled during walk: left(%s) right(%s)" % (req.left_arm, req.right_arm))
+        return SetArmsEnabledResponse()
 
 
 if __name__ == '__main__':
