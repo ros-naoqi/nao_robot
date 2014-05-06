@@ -87,7 +87,7 @@ class NaoDiagnosticUpdater(NaoNode,Thread):
         deviceInfoData = self.memProxy.getListData(self.deviceInfoList)
         if(len(deviceInfoData) > 1 and isinstance(deviceInfoData[1], list)):
             deviceInfoData = deviceInfoData[1]
-        if(deviceInfoData[0] is None):
+        if(deviceInfoData[0] is None or deviceInfoData[0] == 0):
             # No device info -> running in a simulation
             self.isSimulator = True
             if(self.pip.startswith("127.") or self.pip == "localhost"):
