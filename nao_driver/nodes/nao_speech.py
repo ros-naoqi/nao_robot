@@ -33,15 +33,21 @@
 #
 
 import rospy
+import actionlib
 
 from dynamic_reconfigure.server import Server as ReConfServer
+import dynamic_reconfigure.client
 from nao_driver.cfg import nao_speechConfig as NodeConfig
 from nao_driver import NaoNode
 from naoqi import (ALBroker, ALProxy, ALModule)
 
 from std_msgs.msg import( String )
 from std_srvs.srv import( Empty, EmptyResponse )
-from nao_msgs.msg import( WordRecognized )
+from nao_msgs.msg import( 
+    WordRecognized,
+    SetSpeechVocabularyGoal,
+    SetSpeechVocabularyResult,
+    SetSpeechVocabularyAction )
 
 
 class Constants:
@@ -97,6 +103,8 @@ class NaoSpeech(NaoNode):
 
         # Start reconfigure server
         self.reconf_server = ReConfServer(NodeConfig, self.reconfigure)
+        
+        self.reconf_client = dynamic_reconfigure.client.Client(Constants.NODE_NAME)
 
         #Subscribe to speech topic
         self.sub = rospy.Subscriber("speech", String, self.say )
@@ -114,8 +122,42 @@ class NaoSpeech(NaoNode):
             "stop_recognition",
             Empty,
             self.stop )
+            
+        self.setSpeechVocabularyServer = actionlib.SimpleActionServer("speech_vocabulary_action", SetSpeechVocabularyAction, 
+                                                                  execute_cb=self.executeSpeechVocabularyAction,
+                                                                  auto_start=False)
+                                    
+        self.setSpeechVocabularyServer.start()
 
+    def executeSpeechVocabularyAction(self, goal):
+        #~ Called by action client
+        rospy.loginfo("SetSpeechVocabulary action executing");
+                    
+        words = goal.words
+        words_str = ""        
+        
+        #~ Empty word list. Send failure.
+        if len(words) == 0:
+            setVocabularyResult = SetSpeechVocabularyResult()
+            setVocabularyResult.success = False
+            self.setSpeechVocabularyServer.set_succeeded(setVocabularyResult)
+            return
+        
+        #~ Create the vocabulary string
+        for i in range(0, len(words) - 1):
+            words_str += str(words[i]) + "/"
+            
+        words_str += words[len(words) - 1]  
 
+        #~ Update the dynamic reconfigure vocabulary parameter
+        params = { 'vocabulary' : words_str }
+        self.reconf_client.update_configuration(params)
+        
+        #~ Send success
+        setVocabularyResult = SetSpeechVocabularyResult()
+        setVocabularyResult.success = True
+        self.setSpeechVocabularyServer.set_succeeded(setVocabularyResult)
+        
     # RECONFIGURE THIS PROGRAM
     def reconfigure( self, request, level ):
         newConf = {}

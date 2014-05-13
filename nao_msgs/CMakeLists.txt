@@ -44,7 +44,8 @@ add_action_files(DIRECTORY action
     FollowPath.action
     JointAnglesWithSpeed.action
     JointTrajectory.action
-    RunBehavior.action )
+    RunBehavior.action 
+    SetSpeechVocabulary.action)
 
 #And now generate the messages
 generate_messages(DEPENDENCIES ${MESSAGE_DEPENDENCIES})
