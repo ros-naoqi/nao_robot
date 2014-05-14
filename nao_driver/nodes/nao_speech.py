@@ -47,12 +47,18 @@ from nao_msgs.msg import(
     WordRecognized,
     SetSpeechVocabularyGoal,
     SetSpeechVocabularyResult,
-    SetSpeechVocabularyAction )
+    SetSpeechVocabularyAction,
+    SpeechWithFeedbackGoal,
+    SpeechWithFeedbackResult,
+    SpeechWithFeedbackFeedback,
+    SpeechWithFeedbackAction )
 
 
 class Constants:
     NODE_NAME = "nao_speech"
     EVENT = "WordRecognized"
+    TEXT_STARTED_EVENT = "ALTextToSpeech/TextStarted"
+    TEXT_DONE_EVENT = "ALTextToSpeech/TextDone"
 
 
 class Util:
@@ -79,11 +85,35 @@ class DummyAudioDevice:
     def setOutputVolume(self, vol):
         pass
 
-class NaoSpeech(NaoNode):
+class NaoSpeech(ALModule):
 
-    def __init__( self ):
+    def __init__( self, moduleName ):
         # Initialisation
-        NaoNode.__init__( self )
+        from optparse import OptionParser
+
+        parser = OptionParser()
+        parser.add_option("--ip", dest="ip", default="",
+                          help="IP/hostname of broker. Default is system's default IP address.", metavar="IP")
+        parser.add_option("--port", dest="port", default=10512,
+                          help="IP/hostname of broker. Default is 10511.", metavar="PORT")
+        parser.add_option("--pip", dest="pip", default="127.0.0.1",
+                          help="IP/hostname of parent broker. Default is 127.0.0.1.", metavar="IP")
+        parser.add_option("--pport", dest="pport", default=9559,
+                          help="port of parent broker. Default is 9559.", metavar="PORT")
+
+        (options, args) = parser.parse_args()
+        self.ip = options.ip
+        self.port = int(options.port)
+        self.pip = options.pip
+        self.pport = int(options.pport)
+        self.moduleName = moduleName
+        
+        # Used for speech with feedback mode only
+        self.speech_with_feedback_flag = False
+        
+        self.init_almodule()
+        
+        # ROS initialization:
         rospy.init_node( Constants.NODE_NAME )
 
         # State variables
@@ -91,19 +121,14 @@ class NaoSpeech(NaoNode):
 
         # Get Audio proxies
         # Speech-recognition wrapper will be lazily initialized
-        self.audio = self.getProxy("ALAudioDevice")
-        self.tts = self.getProxy("ALTextToSpeech")
         self.srw = None
 
-        # When using simulated naoqi, audio device is not available,
-        # Use a dummy instead
-        if self.audio is None:
-            rospy.logwarn("Using dummy audio device, volume controls disabled")
-            self.audio = DummyAudioDevice()
-
+        # Subscription to the Proxy events
+        self.subscribe()
+        
         # Start reconfigure server
         self.reconf_server = ReConfServer(NodeConfig, self.reconfigure)
-        
+        # Client for receiving the new information
         self.reconf_client = dynamic_reconfigure.client.Client(Constants.NODE_NAME)
 
         #Subscribe to speech topic
@@ -122,12 +147,98 @@ class NaoSpeech(NaoNode):
             "stop_recognition",
             Empty,
             self.stop )
-            
+        
+        # Actionlib server for altering the speech recognition vocabulary
         self.setSpeechVocabularyServer = actionlib.SimpleActionServer("speech_vocabulary_action", SetSpeechVocabularyAction, 
                                                                   execute_cb=self.executeSpeechVocabularyAction,
                                                                   auto_start=False)
-                                    
+        
+        # Actionlib server for having speech with feedback                                                          
+        self.speechWithFeedbackServer = actionlib.SimpleActionServer("speech_action", SpeechWithFeedbackAction, 
+                                                                  execute_cb=self.executeSpeechWithFeedbackAction,
+                                                                  auto_start=False)
+        # Start both actionlib servers                            
         self.setSpeechVocabularyServer.start()
+        self.speechWithFeedbackServer.start()
+        
+    def init_almodule(self):
+        # before we can instantiate an ALModule, an ALBroker has to be created
+        rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
+        try:
+            self.broker = ALBroker("%sBroker" % self.moduleName, self.ip, self.port, self.pip, self.pport)
+        except RuntimeError,e:
+            print("Could not connect to NaoQi's main broker")
+            exit(1)
+        ALModule.__init__(self, self.moduleName)
+        
+        self.memProxy = ALProxy("ALMemory",self.pip,self.pport)
+        # TODO: check self.memProxy.version() for > 1.6
+        if self.memProxy is None:
+            rospy.logerror("Could not get a proxy to ALMemory on %s:%d", self.pip, self.pport)
+            exit(1)
+            
+        self.tts = ALProxy("ALTextToSpeech",self.pip,self.pport)
+        # TODO: check self.memProxy.version() for > 1.6
+        if self.tts is None:
+            rospy.logerror("Could not get a proxy to ALTextToSpeech on %s:%d", self.pip, self.pport)
+            exit(1)
+            
+        self.audio = ALProxy("ALAudioDevice",self.pip,self.pport)
+        # TODO: check self.memProxy.version() for > 1.6
+        if self.audio is None:
+            rospy.logerror("Could not get a proxy to ALAudioDevice on %s:%d", self.pip, self.pport)
+            # When using simulated naoqi, audio device is not available,
+            # Use a dummy instead
+            rospy.logwarn("Using dummy audio device, volume controls disabled")
+            self.audio = DummyAudioDevice()
+ 
+    def subscribe(self):
+        # Subscription to the ALProxies events
+        self.memProxy.subscribeToEvent(Constants.TEXT_DONE_EVENT, self.moduleName, "onTextDone")
+        self.memProxy.subscribeToEvent(Constants.TEXT_STARTED_EVENT, self.moduleName, "onTextStarted")
+
+    def unsubscribe(self):
+        self.memProxy.unsubscribeToEvent(Constants.TEXT_DONE_EVENT, self.moduleName)
+        self.memProxy.unsubscribeToEvent(Constants.TEXT_STARTED_EVENT, self.moduleName)
+        
+    def onTextStarted(self, strVarName, value, strMessage):
+        # Called when NAO begins or ends the speech. On begin the value = 1
+        # Must work only on speech with feedback mode
+        if value == 0 or self.speech_with_feedback_flag == False:
+            return
+        
+        # Send feedback via the speech actionlib server
+        fb = SpeechWithFeedbackFeedback()
+        fb.started = True
+        self.speechWithFeedbackServer.publish_feedback(fb)
+        
+    def onTextDone(self, strVarName, value, strMessage):
+        # Called when NAO begins or ends the speech. On end the value = 1
+        # Must work only on speech with feedback mode
+        if value == 0 or self.speech_with_feedback_flag == False:
+            return
+        
+        # Change the flag to inform the executeSpeechWithFeedbackAction function that
+        # the speaking process is over
+        self.speech_with_feedback_flag = False
+        
+
+    def executeSpeechWithFeedbackAction(self, goal):
+        # Gets the goal and begins the speech
+        self.speech_with_feedback_flag = True
+        saystr = goal.say
+        self.internalSay(saystr)
+        
+        # Wait till the onTextDone event is called or 2 mins are passed
+        counter = 0
+        while self.speech_with_feedback_flag == True and counter < 1200:
+            rospy.sleep(0.1)
+            counter += 1
+        
+        # Send the success feedback
+        result = SpeechWithFeedbackResult()
+        result.finished = True
+        self.speechWithFeedbackServer.set_succeeded(result)
 
     def executeSpeechVocabularyAction(self, goal):
         #~ Called by action client
@@ -224,6 +335,11 @@ class NaoSpeech(NaoNode):
 
     # CALLBACK FOR SPEECH METHOD
     def say( self, request ):
+        self.internalSay(request.data)
+
+    # Used for internal use. Called to say one sentence either from the speech 
+    # action goal callback or message callback
+    def internalSay( self, sentence ):
         #Get current voice parameters
         current_voice = self.tts.getVoice()
         current_language = self.tts.getLanguage()
@@ -245,7 +361,7 @@ class NaoSpeech(NaoNode):
             self.tts.setVolume(target_gain)
 
         #Say whatever it is Nao needs to say
-        self.tts.say( request.data )
+        self.tts.say( sentence )
 
         #And restore them
         if self.conf["voice"] != current_voice:
@@ -259,7 +375,6 @@ class NaoSpeech(NaoNode):
 
         if target_gain != current_gain:
             self.tts.setVolume(current_gain)
-
 
     # SPEECH RECOGNITION SERVICES
     def start( self, request = None ):
@@ -286,6 +401,14 @@ class NaoSpeech(NaoNode):
             self.srw = None
 
         return EmptyResponse()
+        
+    def shutdown(self): 
+        self.unsubscribe()
+        # Shutting down broker seems to be not necessary any more
+        # try:
+        #     self.broker.shutdown()
+        # except RuntimeError,e:
+        #     rospy.logwarn("Could not shut down Python Broker: %s", e)
 
 
 #This class is meant to be used only by NaoSpeech
@@ -380,14 +503,18 @@ class SpeechRecognitionWrapper(ALModule):
 
 
 if __name__ == '__main__':
-    node = NaoSpeech()
-    rospy.loginfo( Constants.NODE_NAME + " running..." )
+  
+    ROSNaoSpeechModule = NaoSpeech("ROSNaoSpeechModule")
+    rospy.loginfo( "ROSNaoSpeechModule running..." )
 
     rospy.spin()
-
+    
+    rospy.loginfo("Stopping ROSNaoSpeechModule ...")
     #If speech recognition was started make sure we stop it
-    if node.srw:
-        node.srw.stop()
-    rospy.loginfo( Constants.NODE_NAME + " stopped." )
+    if ROSNaoSpeechModule.srw:
+        ROSNaoSpeechModule.srw.stop()
+    # Shutdown the module
+    ROSNaoSpeechModule.shutdown();        
+    rospy.loginfo("ROSNaoSpeechModule stopped.")
 
     exit(0)

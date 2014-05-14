@@ -1,0 +1,11 @@
+# Purpose : To have feedback on when the speech was started and when 
+# NAO stopped talking
+# Goal: The sentence for NAO to say 
+# Result: True NAO has finished speaking
+# Feedback: True when NAO starts speaking
+
+string say
+---
+bool finished
+---
+bool started
