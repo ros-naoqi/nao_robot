@@ -85,36 +85,21 @@ class DummyAudioDevice:
     def setOutputVolume(self, vol):
         pass
 
-class NaoSpeech(ALModule):
+class NaoSpeech(ALModule, NaoNode):
 
     def __init__( self, moduleName ):
-        # Initialisation
-        from optparse import OptionParser
-
-        parser = OptionParser()
-        parser.add_option("--ip", dest="ip", default="",
-                          help="IP/hostname of broker. Default is system's default IP address.", metavar="IP")
-        parser.add_option("--port", dest="port", default=10512,
-                          help="IP/hostname of broker. Default is 10511.", metavar="PORT")
-        parser.add_option("--pip", dest="pip", default="127.0.0.1",
-                          help="IP/hostname of parent broker. Default is 127.0.0.1.", metavar="IP")
-        parser.add_option("--pport", dest="pport", default=9559,
-                          help="port of parent broker. Default is 9559.", metavar="PORT")
-
-        (options, args) = parser.parse_args()
-        self.ip = options.ip
-        self.port = int(options.port)
-        self.pip = options.pip
-        self.pport = int(options.pport)
+        # ROS Initialisation
+        NaoNode.__init__(self)
+        rospy.init_node( Constants.NODE_NAME )
+        
+        # NAOQi Module initialization
         self.moduleName = moduleName
+        self.ip = ""
+        self.port = 10512
+        self.init_almodule()
         
         # Used for speech with feedback mode only
         self.speech_with_feedback_flag = False
-        
-        self.init_almodule()
-        
-        # ROS initialization:
-        rospy.init_node( Constants.NODE_NAME )
 
         # State variables
         self.conf = None
