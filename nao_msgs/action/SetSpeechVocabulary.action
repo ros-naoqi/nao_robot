@@ -1,0 +1,9 @@
+# Goal: The new vocabulary to be set in the speech recognition module
+# Result: True if the vocabulary was set
+# Feedback: None
+
+string[] words
+---
+bool success
+---
+
