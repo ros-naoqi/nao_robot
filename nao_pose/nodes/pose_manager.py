@@ -36,10 +36,21 @@ import sys
 import rospy.rostime
 from rospy.rostime import Duration
 
+from nao_driver import NaoNode
+
 import actionlib
 from actionlib_msgs.msg import GoalStatus
+
 import nao_msgs.msg
-from nao_msgs.msg import JointTrajectoryGoal, JointTrajectoryAction, BodyPoseAction, BodyPoseGoal
+from nao_msgs.msg import(
+    JointTrajectoryGoal, 
+    JointTrajectoryAction, 
+    BodyPoseAction, 
+    BodyPoseGoal,
+    PredefinedBodyPoseAction,
+    PredefinedBodyPoseGoal,
+    PredefinedBodyPoseResult)
+
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 from sensor_msgs.msg import JointState
@@ -49,16 +60,21 @@ from std_srvs.srv import Empty
 
 import xapparser
 
-class PoseManager():
+class PoseManager(NaoNode):
     def __init__(self):
+      
+        NaoNode.__init__(self)
         # ROS initialization:
         rospy.init_node('pose_manager')
+        
+        self.connectNaoQi()
 
         self.poseLibrary = dict()
         self.readInPoses()
         self.poseServer = actionlib.SimpleActionServer("body_pose", BodyPoseAction,
                                                        execute_cb=self.executeBodyPose,
                                                        auto_start=False)
+        
         self.trajectoryClient = actionlib.SimpleActionClient("joint_trajectory", JointTrajectoryAction)
         if self.trajectoryClient.wait_for_server(rospy.Duration(3.0)):
             try:
@@ -75,7 +91,21 @@ class PoseManager():
         else:
             rospy.logfatal("Could not connect to required \"joint_trajectory\" action server, is the nao_controller node running?");
             rospy.signal_shutdown("Required component missing");
+            
+        self.predefinedPoseServer = actionlib.SimpleActionServer("predefined_body_pose", PredefinedBodyPoseAction,
+                                                       execute_cb=self.executePredefinedBodyPose,
+                                                       auto_start=False)
+        self.predefinedPoseServer.start()
+        
+        self.enableStiffnessServiceClient = rospy.ServiceProxy('body_stiffness/enable', Empty)
 
+    def connectNaoQi(self):
+        '''(re-) connect to NaoQI'''
+        rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
+
+        self.robotPostureProxy = self.getProxy("ALRobotPosture")
+        if self.robotPostureProxy is None:
+            exit(1)
 
     def parseXapPoses(self, xaplibrary):
         try:
@@ -97,7 +127,6 @@ class PoseManager():
             trajectory.points = [point]
 
             self.poseLibrary[name] = trajectory
-
 
     def readInPoses(self):
 
@@ -139,6 +168,14 @@ class PoseManager():
         rospy.loginfo("Loaded %d poses: %s", len(self.poseLibrary), self.poseLibrary.keys())
 
 
+    def executePredefinedBodyPose(self, goal):
+      #~ Must set stiffness on
+      self.enableStiffnessServiceClient();
+      #~ Go to posture. This is blocking
+      self.robotPostureProxy.goToPosture(goal.posture_name, goal.speed)
+      #~ Return success
+      self.predefinedPoseServer.set_succeeded()
+      
     def executeBodyPose(self, goal):
         if not goal.pose_name in self.poseLibrary:
             rospy.loginfo("Pose %s not in library, reload library from parameters..." % goal.pose_name)
@@ -172,6 +209,10 @@ class PoseManager():
 if __name__ == '__main__':
 
     manager = PoseManager()
+    
+    rospy.loginfo("pose_manager running...")
     rospy.spin()
+    rospy.loginfo("pose_manager stopping...")
+    
     exit(0)
 

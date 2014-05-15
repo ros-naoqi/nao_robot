@@ -1,0 +1,9 @@
+# goal: a predefined body pose name :
+# Crouch, LyingBack, LyingBelly, Sit, SitRelax, Stand, StandInit, StandZero
+
+string posture_name
+float32 speed
+---
+# no result currently
+---
+# no feedback
