@@ -194,7 +194,6 @@ class NaoSpeech(ALModule, NaoNode):
         
         # Send feedback via the speech actionlib server
         fb = SpeechWithFeedbackFeedback()
-        fb.started = True
         self.speechWithFeedbackServer.publish_feedback(fb)
         
     def onTextDone(self, strVarName, value, strMessage):
@@ -221,9 +220,7 @@ class NaoSpeech(ALModule, NaoNode):
             counter += 1
         
         # Send the success feedback
-        result = SpeechWithFeedbackResult()
-        result.finished = True
-        self.speechWithFeedbackServer.set_succeeded(result)
+        self.speechWithFeedbackServer.set_succeeded()
 
     def executeSpeechVocabularyAction(self, goal):
         #~ Called by action client
