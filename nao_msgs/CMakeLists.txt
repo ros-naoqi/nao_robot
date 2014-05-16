@@ -45,7 +45,7 @@ add_action_files(DIRECTORY action
     JointAnglesWithSpeed.action
     JointTrajectory.action
     RunBehavior.action 
-    PredefinedBodyPose.action)
+    BodyPoseWithSpeed.action)
 
 #And now generate the messages
 generate_messages(DEPENDENCIES ${MESSAGE_DEPENDENCIES})
