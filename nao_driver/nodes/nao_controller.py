@@ -44,7 +44,10 @@ from nao_msgs.msg import(
     JointAnglesWithSpeed,
     JointAnglesWithSpeedGoal,
     JointAnglesWithSpeedResult,
-    JointAnglesWithSpeedAction)
+    JointAnglesWithSpeedAction,
+    BodyPoseWithSpeedAction,
+    BodyPoseWithSpeedGoal,
+    BodyPoseWithSpeedResult)
  
 from nao_driver import NaoNode
 
@@ -112,6 +115,11 @@ class NaoController(NaoNode):
         # subsribers last:
         rospy.Subscriber("joint_angles", JointAnglesWithSpeed, self.handleJointAngles, queue_size=10)
         rospy.Subscriber("joint_stiffness", JointState, self.handleJointStiffness, queue_size=10)
+        
+        self.bodyPoseWithSpeedServer = actionlib.SimpleActionServer("body_pose_naoqi", BodyPoseWithSpeedAction,
+                                                       execute_cb=self.executeBodyPoseWithSpeed,
+                                                       auto_start=False)
+        self.bodyPoseWithSpeedServer.start()
 
         rospy.loginfo("nao_controller initialized")
 
@@ -121,6 +129,10 @@ class NaoController(NaoNode):
 
         self.motionProxy = self.getProxy("ALMotion")
         if self.motionProxy is None:
+            exit(1)
+            
+        self.robotPostureProxy = self.getProxy("ALRobotPosture")
+        if self.robotPostureProxy is None:
             exit(1)
             
     def handleJointAngles(self, msg):
@@ -328,6 +340,36 @@ class NaoController(NaoNode):
             return len(goal_position.position) == self.collectionSize[goal_position.name[0]] 
         else:
             return len(goal_position.position) ==  len(goal_position.name)
+            
+    def executeBodyPoseWithSpeed(self, goal):
+      
+      #~ Sanity checks
+      if (goal.speed < 0.0) or (goal.speed > 1.0):
+          bodyPoseWithSpeedResult = BodyPoseWithSpeedResult()
+          self.bodyPoseWithSpeedServer.set_aborted(bodyPoseWithSpeedResult)
+          rospy.logerr("Body pose setter: Not a valid speed value.")
+          return
+      
+      valid_postures = self.robotPostureProxy.getPostureList()
+
+      if goal.posture_name not in valid_postures:
+          bodyPoseWithSpeedResult = BodyPoseWithSpeedResult()
+          self.bodyPoseWithSpeedServer.set_aborted(bodyPoseWithSpeedResult)  
+          rospy.logerr("Body pose setter: Not a valid posture.")
+          return
+
+      #~ Must set stiffness on
+      try:
+          self.motionProxy.stiffnessInterpolation("Body", 1.0, 0.5)
+          rospy.loginfo("Body stiffness enabled")
+      except RuntimeError,e:
+          rospy.logerr("Exception caught:\n%s", e)
+          return
+          
+      #~ Go to posture. This is blocking
+      self.robotPostureProxy.goToPosture(goal.posture_name, goal.speed)
+      #~ Return success
+      self.bodyPoseWithSpeedServer.set_succeeded()
 
 if __name__ == '__main__':
 
