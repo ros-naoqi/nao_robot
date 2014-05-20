@@ -28,6 +28,5 @@
   <run_depend>tf</run_depend>
   <run_depend>message_filters</run_depend>
   <run_depend>sensor_msgs</run_depend>
-  <run_depend>xacro</run_depend>
 
 </package>
