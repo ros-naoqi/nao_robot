@@ -120,7 +120,7 @@ class NaoSpeech(ALModule, NaoNode):
         self.sub = rospy.Subscriber("speech", String, self.say )
 
         # Advertise word recognise topic
-        self.pub = rospy.Publisher("word_recognized", WordRecognized )
+        self.pub = rospy.Publisher("word_recognized", WordRecognized, queue_size=10)
 
         # Register ROS services
         self.start_srv = rospy.Service(
