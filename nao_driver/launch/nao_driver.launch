@@ -32,6 +32,7 @@
   <node pkg="nao_driver" type="nao_walker.py" name="nao_walker" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
   <node pkg="nao_driver" type="nao_controller.py" name="nao_controller" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
   <node pkg="nao_driver" type="nao_behaviors.py" name="nao_behaviors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_driver" type="nao_diagnostic_updater.py" name="nao_diagnostic_updater" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
   <node pkg="nao_driver" type="nao_leds.py" name="nao_leds" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
   <node pkg="nao_driver" type="nao_speech.py" name="nao_speech" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
   <node pkg="nao_driver" type="nao_tactile.py" name="nao_tactile" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />

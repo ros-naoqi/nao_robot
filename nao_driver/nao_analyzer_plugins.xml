@@ -1,0 +1,7 @@
+<library path="lib/libnao_diagnostic_analyzers" >
+  <class name="nao_dashboard/NaoJointsAnalyzer" type="diagnostic_aggregator::NaoJointsAnalyzer" base_class_type="diagnostic_aggregator::Analyzer">
+    <description>
+      NaoJointsAnalyzer is an analyzer for monitoring the temperature and stiffness of Nao's joints.
+    </description>
+  </class>
+</library>

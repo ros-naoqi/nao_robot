@@ -52,6 +52,14 @@ else()
     message(STATUS "Cannot find NAOqi C++ sdk; C++ nodes will NOT be built")
 endif()
 
+# add a diagnostic analyzer plugin
+add_library(nao_diagnostic_analyzers src/NaoJointsAnalyzer.cpp)
+include_directories(${catkin_INCLUDE_DIRS})
+target_link_libraries(nao_diagnostic_analyzers ${catkin_LIBRARIES})
+install(TARGETS nao_diagnostic_analyzers DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
+install(FILES nao_analyzer_plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
 #And this will install python nodes
 install(DIRECTORY nodes/
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
