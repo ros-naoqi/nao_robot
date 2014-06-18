@@ -112,14 +112,18 @@ class NaoController(NaoNode):
         self.jointStiffnessServer.start()
         self.jointAnglesServer.start()
 
-        # subsribers last:
+        # only start when ALRobotPosture proxy is available
+        if not (self.robotPostureProxy is None):
+            self.bodyPoseWithSpeedServer = actionlib.SimpleActionServer("body_pose_naoqi", BodyPoseWithSpeedAction,
+                                              execute_cb=self.executeBodyPoseWithSpeed,
+                                              auto_start=False)
+            self.bodyPoseWithSpeedServer.start()
+        else:
+          rospy.logwarn("Proxy to ALRobotPosture not available, requests to body_pose_naoqi will be ignored.")
+
+        # subscribers last:
         rospy.Subscriber("joint_angles", JointAnglesWithSpeed, self.handleJointAngles, queue_size=10)
         rospy.Subscriber("joint_stiffness", JointState, self.handleJointStiffness, queue_size=10)
-        
-        self.bodyPoseWithSpeedServer = actionlib.SimpleActionServer("body_pose_naoqi", BodyPoseWithSpeedAction,
-                                                       execute_cb=self.executeBodyPoseWithSpeed,
-                                                       auto_start=False)
-        self.bodyPoseWithSpeedServer.start()
 
         rospy.loginfo("nao_controller initialized")
 
@@ -130,10 +134,10 @@ class NaoController(NaoNode):
         self.motionProxy = self.getProxy("ALMotion")
         if self.motionProxy is None:
             exit(1)
-            
+
+        # optional, newly introduced in 1.14
         self.robotPostureProxy = self.getProxy("ALRobotPosture")
-        if self.robotPostureProxy is None:
-            exit(1)
+            
             
     def handleJointAngles(self, msg):
         rospy.logdebug("Received a joint angle target")
