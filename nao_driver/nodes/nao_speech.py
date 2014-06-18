@@ -159,22 +159,20 @@ class NaoSpeech(ALModule, NaoNode):
         self.memProxy = ALProxy("ALMemory",self.pip,self.pport)
         # TODO: check self.memProxy.version() for > 1.6
         if self.memProxy is None:
-            rospy.logerror("Could not get a proxy to ALMemory on %s:%d", self.pip, self.pport)
+            rospy.logerr("Could not get a proxy to ALMemory on %s:%d", self.pip, self.pport)
             exit(1)
             
-        self.tts = ALProxy("ALTextToSpeech",self.pip,self.pport)
+        self.tts = self.getProxy("ALTextToSpeech")
         # TODO: check self.memProxy.version() for > 1.6
         if self.tts is None:
-            rospy.logerror("Could not get a proxy to ALTextToSpeech on %s:%d", self.pip, self.pport)
+            rospy.logerr("Could not get a proxy to ALTextToSpeech on %s:%d", self.pip, self.pport)
             exit(1)
             
-        self.audio = ALProxy("ALAudioDevice",self.pip,self.pport)
-        # TODO: check self.memProxy.version() for > 1.6
+        self.audio = self.getProxy("ALAudioDevice")        
         if self.audio is None:
-            rospy.logerror("Could not get a proxy to ALAudioDevice on %s:%d", self.pip, self.pport)
             # When using simulated naoqi, audio device is not available,
             # Use a dummy instead
-            rospy.logwarn("Using dummy audio device, volume controls disabled")
+            rospy.logwarn("Proxy to ALAudioDevice not available, using dummy device (normal in simulation; volume controls disabled)")
             self.audio = DummyAudioDevice()
  
     def subscribe(self):
