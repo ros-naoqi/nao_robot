@@ -87,7 +87,7 @@ class NaoNode
 };
 
 
-NaoNode::NaoNode() : m_pip("127.0.0.01"),m_ip("0.0.0.0"),m_port(16712),m_pport(9559),m_brokerName("NaoROSBroker")
+NaoNode::NaoNode() : m_pip("127.0.0.01"),m_ip("0.0.0.0"),m_port(0),m_pport(9559),m_brokerName("NaoROSBroker")
 {
 
 

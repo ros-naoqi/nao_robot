@@ -94,8 +94,9 @@ class NaoSpeech(ALModule, NaoNode):
         
         # NAOQi Module initialization
         self.moduleName = moduleName
+        # Causes ALBroker to fill in ip and find a unused port
         self.ip = ""
-        self.port = 10512
+        self.port = 0
         self.init_almodule()
         
         # Used for speech with feedback mode only
