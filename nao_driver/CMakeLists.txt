@@ -11,7 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
     sensor_msgs
     geometry_msgs
     nao_msgs
-    dynamic_reconfigure)
+    dynamic_reconfigure
+    diagnostic_aggregator
+    diagnostic_msgs)
 
 find_package(NAOqi QUIET COMPONENTS
     alcommon
