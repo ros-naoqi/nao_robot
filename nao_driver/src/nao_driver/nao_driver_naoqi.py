@@ -54,6 +54,9 @@ class NaoNode():
 		self.pip = options.pip
 		self.pport = options.pport
 
+		# A distutils.version.LooseVersion that contains the current verssion of NAOqi we're connected to
+		self.__naoqi_version = None
+
 	def connectNaoQi(self, ip, port):
 		rospy.loginfo("Connecting to NaoQi at %s:%d", ip, port)
 
@@ -79,3 +82,26 @@ class NaoNode():
 				rospy.logerr("Could not create Proxy to \"%s\". \nException message:\n%s",name, e)
 
 		return proxy
+
+	def getVersion(self):
+		"""
+		Returns the NAOqi version.
+		A proxy for ALMemory is automatically created if needed as self.memProxy.
+		You can then simply have code that runs or not depending on the NAOqi version.
+		E.g. if distutils.version.LooseVersion('1.6') < getVersion()    ....
+		:return: a distutils.version.LooseVersion object with the NAOqi version
+		"""
+		if self.__naoqi_version is None:
+			if not hasattr(self, 'memProxy') or self.memProxy is None:
+				self.memProxy = self.getProxy("ALMemory")
+				if self.memProxy is None:
+					# exiting is bad but it should not happen
+					# except maybe with NAOqi versions < 1.6 or future ones
+					# in which case we will adapt that code to call the proper
+					# version function
+					exit(1)
+
+			from distutils.version import LooseVersion
+			self.__naoqi_version = LooseVersion(self.memProxy.version())
+
+		return self.__naoqi_version
