@@ -45,23 +45,16 @@ import dbus
 from dbus.exceptions import DBusException
 
 from nao_driver import NaoNode
-import threading
-from threading import Thread
 import os
 
 from diagnostic_msgs.msg import *
 
-import naoqi
-
-class NaoDiagnosticUpdater(NaoNode,Thread):
+class NaoDiagnosticUpdater(NaoNode):
     def __init__(self):
-        NaoNode.__init__(self)
-        Thread.__init__(self)
-        
+        NaoNode.__init__(self, 'nao_diagnostic_updater')
+
         # ROS initialization:
-        rospy.init_node('nao_diagnostic_updater')        
         self.connectNaoQi()
-        self.stopThread = False
 
         # Read parameters:
         self.sleep = 1.0/rospy.get_param('~update_rate', 0.5)  # update rate in Hz
@@ -112,11 +105,12 @@ class NaoDiagnosticUpdater(NaoNode,Thread):
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
         self.motionProxy = self.getProxy("ALMotion")
         self.memProxy = self.getProxy("ALMemory")
-        
+        if self.motionProxy is None or self.memProxy is None:
+            exit(1)
+
     def run(self):
         """ Diagnostic thread code - collects and sends out diagnostic data. """
-        while(not self.stopThread):
-            timestamp = rospy.Time.now()
+        while self.is_looping():
             try:
                 # Get data from robot
                 jointsTempData = self.memProxy.getListData(self.jointTempPathsList)
@@ -390,10 +384,4 @@ if __name__ == '__main__':
     updater.start()
     
     rospy.spin()
-    
-    rospy.loginfo("Stopping nao_diagnostic_updater ...")
-    updater.stopThread = True
-    updater.join()
-    
-    rospy.loginfo("nao_diagnostic_updater stopped.")
     exit(0)

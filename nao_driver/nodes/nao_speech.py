@@ -89,8 +89,7 @@ class NaoSpeech(ALModule, NaoNode):
 
     def __init__( self, moduleName ):
         # ROS Initialisation
-        NaoNode.__init__(self)
-        rospy.init_node( Constants.NODE_NAME )
+        NaoNode.__init__(self, Constants.NODE_NAME )
         
         # NAOQi Module initialization
         self.moduleName = moduleName

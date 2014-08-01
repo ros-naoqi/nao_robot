@@ -37,31 +37,20 @@ import rospy
 
 from nao_driver import NaoNode
 
-import math
-from math import fabs
-
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Pose2D
-from sensor_msgs.msg import JointState
-from std_msgs.msg import Bool
-import std_msgs.msg
 
 from std_srvs.srv import Empty, EmptyResponse
 from nao_msgs.srv import CmdPoseService, CmdVelService, CmdPoseServiceResponse, CmdVelServiceResponse, SetArmsEnabled, SetArmsEnabledResponse
 from humanoid_nav_msgs.msg import StepTarget
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
 
-import nao_msgs.srv
-
 from nao_driver.util import startWalkPose
 
 class NaoWalker(NaoNode):
     def __init__(self):
-        NaoNode.__init__(self)
-
-        # ROS initialization:
-        rospy.init_node('nao_walker')
+        NaoNode.__init__(self, 'nao_walker')
 
         self.connectNaoQi()
 
