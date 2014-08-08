@@ -73,7 +73,10 @@ set(NAOqi_COMPONENTS
     alremotecall
     althread
     alvision
-    alproxies)
+    alproxies
+    qi
+    qitype
+)
 
 
 #Set INCLUDE hints
