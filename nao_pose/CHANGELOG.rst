@@ -2,6 +2,13 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix xapparser __init__.py encoding, UTF used in header
+* Moved the predefined pose support from pose_manager to nao_controller. Action name changed as well
+* Support for predefined postures via actionlib
+* Contributors: Armin Hornung, Manos Tsardoulias
+
 0.2.3 (2014-03-27)
 ------------------
 

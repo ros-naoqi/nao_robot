@@ -2,6 +2,22 @@
 Changelog for package nao_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update maintainers
+  Armin, thank you for all your work, in ROS, Octomap and NAO.
+  Good luck out of the university !
+* Merge branch 'pose_manager_posture_enhancement' of https://github.com/etsardou/nao_robot into etsardou-pose_manager_posture_enhancement
+  Conflicts:
+  nao_msgs/CMakeLists.txt
+* Moved the predefined pose support from pose_manager to nao_controller. Action name changed as well
+* SpeechWithFeedback.action refined. Erased unneccessary bool flags.
+* Support for predefined postures via actionlib
+* Added actionlib interface for speech with feedback
+* Added support for changing speech recognition vocabulary via actionlib. Updates the dynamic reconfigure variable as well.
+* Adding service for toggling the arm motion while walking
+* Contributors: Armin Hornung, Manos Tsardoulias, Vincent Rabaud
+
 0.2.3 (2014-03-27)
 ------------------
 

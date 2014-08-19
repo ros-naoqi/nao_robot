@@ -2,6 +2,13 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update maintainers
+  Armin, thank you for all your work, in ROS, Octomap and NAO.
+  Good luck out of the university !
+* Contributors: Armin Hornung, Vincent Rabaud
+
 0.2.3 (2014-03-27)
 ------------------
 * Fix `#17 <https://github.com/ros-nao/nao_robot/issues/17>`_: add dependency on sensor_msgs in nao_description

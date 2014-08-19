@@ -2,6 +2,13 @@
 Changelog for package nao_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update maintainers
+  Armin, thank you for all your work, in ROS, Octomap and NAO.
+  Good luck out of the university !
+* Contributors: Vincent Rabaud
+
 0.2.3 (2014-03-27)
 ------------------
 * Update nao_robot package.xml
