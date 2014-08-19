@@ -109,8 +109,8 @@ class NaoSensors(NaoNode):
     # (re-) connect to NaoQI:
     def connectNaoQi(self):
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
-        self.motionProxy = self.getProxy("ALMotion")
-        self.memProxy = self.getProxy("ALMemory")
+        self.motionProxy = self.get_proxy("ALMotion")
+        self.memProxy = self.get_proxy("ALMemory")
         if self.motionProxy is None or self.memProxy is None:
             exit(1)
 

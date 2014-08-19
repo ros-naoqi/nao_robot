@@ -121,12 +121,12 @@ class NaoController(NaoNode):
         '''(re-) connect to NaoQI'''
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
 
-        self.motionProxy = self.getProxy("ALMotion")
+        self.motionProxy = self.get_proxy("ALMotion")
         if self.motionProxy is None:
             exit(1)
 
         # optional, newly introduced in 1.14
-        self.robotPostureProxy = self.getProxy("ALRobotPosture")
+        self.robotPostureProxy = self.get_proxy("ALRobotPosture")
             
             
     def handleJointAngles(self, msg):

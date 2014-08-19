@@ -53,7 +53,7 @@ class NaoLogger(NaoNode):
         NaoNode.__init__( self, self.NODE_NAME )
 
         from distutils.version import LooseVersion
-        if self.getVersion() < LooseVersion('2.0.0'):
+        if self.get_version() < LooseVersion('2.0.0'):
             rospy.loginfo('The NAOqi version is inferior to 2.0, hence no log bridge possible')
             exit(0)
 

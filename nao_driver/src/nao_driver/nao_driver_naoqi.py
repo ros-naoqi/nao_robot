@@ -123,7 +123,7 @@ class NaoNode(Thread):
         """
         return not self.__stop_thread
 
-    def getProxy(self, name, warn=True):
+    def get_proxy(self, name, warn=True):
         """
         Returns a proxy to a specific module. If it has not been created yet, it is created
         :param name: the name of the module to create a proxy for
@@ -142,16 +142,16 @@ class NaoNode(Thread):
         self.__proxies[name] = proxy
         return proxy
 
-    def getVersion(self):
+    def get_version(self):
         """
         Returns the NAOqi version.
         A proxy for ALMemory is automatically created if needed as self.memProxy.
         You can then simply have code that runs or not depending on the NAOqi version.
-        E.g. if distutils.version.LooseVersion('1.6') < getVersion()    ....
+        E.g. if distutils.version.LooseVersion('1.6') < get_version()    ....
         :return: a distutils.version.LooseVersion object with the NAOqi version
         """
         if self.__naoqi_version is None:
-            proxy = self.getProxy('ALMemory')
+            proxy = self.get_proxy('ALMemory')
             if proxy is None:
                 # exiting is bad but it should not happen
                 # except maybe with NAOqi versions < 1.6 or future ones

@@ -57,7 +57,7 @@ class NaoLeds(NaoNode):
         NaoNode.__init__( self, self.NODE_NAME )
 
         #Proxy to interface with LEDs
-        self.proxy = self.getProxy( "ALLeds" )
+        self.proxy = self.get_proxy( "ALLeds" )
         
         #Seed python's random number generator
         random.seed( rospy.Time.now().to_nsec() )

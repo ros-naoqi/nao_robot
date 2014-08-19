@@ -103,8 +103,8 @@ class NaoDiagnosticUpdater(NaoNode):
     def connectNaoQi(self):
         """ Connects to NaoQi and gets proxies to ALMotion and ALMemory. """
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
-        self.motionProxy = self.getProxy("ALMotion")
-        self.memProxy = self.getProxy("ALMemory")
+        self.motionProxy = self.get_proxy("ALMotion")
+        self.memProxy = self.get_proxy("ALMemory")
         if self.motionProxy is None or self.memProxy is None:
             exit(1)
 

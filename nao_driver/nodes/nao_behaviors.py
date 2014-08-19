@@ -59,7 +59,7 @@ class NaoBehaviors(NaoNode):
         self.lock = threading.RLock()
         
         #Proxy for listingBehaviors and stopping them
-        self.behaviorProxy = self.getProxy( "ALBehaviorManager" )
+        self.behaviorProxy = self.get_proxy( "ALBehaviorManager" )
         
         # Register ROS services
         self.getInstalledBehaviorsService = rospy.Service(
