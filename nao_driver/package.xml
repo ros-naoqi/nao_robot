@@ -10,7 +10,7 @@
       NaoQI API in Python. This requires the "lib" directory of the Aldebaran
       Python SDK to be in your PYTHONPATH environment variable.
 
-      Note that cameras drivers are provided in a separate package (nao_camera).
+      Note that cameras drivers are provided in a separate package (nao_sensors).
     </p>
   </description>
   <maintainer email="HornungA@informatik.uni-freiburg.de">Armin Hornung</maintainer>
