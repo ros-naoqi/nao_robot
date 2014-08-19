@@ -36,13 +36,10 @@
 
 import rospy
 import actionlib
-import nao_msgs.msg
 from nao_msgs.msg import(
-    JointTrajectoryGoal,
     JointTrajectoryResult,
     JointTrajectoryAction,
     JointAnglesWithSpeed,
-    JointAnglesWithSpeedGoal,
     JointAnglesWithSpeedResult,
     JointAnglesWithSpeedAction,
     BodyPoseWithSpeedAction,
@@ -51,19 +48,12 @@ from nao_msgs.msg import(
  
 from nao_driver import NaoNode
 
-import math
-from math import fabs
-
-from std_msgs.msg import String
 from std_srvs.srv import Empty, EmptyResponse
 from sensor_msgs.msg import JointState
 
 class NaoController(NaoNode):
     def __init__(self): 
-        NaoNode.__init__(self)
-    
-        # ROS initialization:
-        rospy.init_node('nao_controller')
+        NaoNode.__init__(self, 'nao_controller')
         
         self.connectNaoQi()
         

@@ -54,9 +54,8 @@ class NaoLeds(NaoNode):
     def __init__( self ):
         
         #Initialisation
-        NaoNode.__init__( self )
-        rospy.init_node( self.NODE_NAME )
-        
+        NaoNode.__init__( self, self.NODE_NAME )
+
         #Proxy to interface with LEDs
         self.proxy = self.getProxy( "ALLeds" )
         

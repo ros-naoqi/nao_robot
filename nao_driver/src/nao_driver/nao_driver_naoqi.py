@@ -26,61 +26,120 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+from threading import Thread
+
 import rospy
 
 # import Aldebaran API (must be in PYTHONPATH):
 try:
-    import motion
     from naoqi import ALProxy
 except ImportError:
-    rospy.logerr("Error importing NaoQI. Please make sure that Aldebaran's NaoQI API is in your PYTHONPATH.")
-    exit(1)
+    raise RuntimeError("Error importing NaoQI. Please make sure that Aldebaran's NaoQI API is in your PYTHONPATH.")
 
-class NaoNode():
-    def __init__(self):
+class NaoNode(Thread):
+    """
+    A ROS Node wrapper that can help you connect to NAOqi and deal with ROS shutdown
+    To start your node, just call:
+    my_node = MyNode('my_node')
+    my_node.start() # that will spawn your node in a thread (and run whatever is in the run() function
+    rospy.spin()
+    # when killing ROS, the node will automatically stop its main loop, exit, and then unsubscribe from ALMemory events
+    # and call whatever you have in unsubscribe()
+    Then, if your node needs to process data, you just needs to have a run function:
+
+    def run(Self):
+        #do some initialization
+        while self.is_looping():
+            # do something
+        # do some post processing
+    """
+    def __init__(self, name):
+        """
+        :param name: the name of the ROS node
+        """
+        super(NaoNode, self).__init__()
+
+        # A distutils.version.LooseVersion that contains the current verssion of NAOqi we're connected to
+        self.__naoqi_version = None
+        self.__name = name
+
+        ## NAOqi stuff
+        # dict from a modulename to a proxy
+        self.__proxies = {}
+
         # If user has set parameters for ip and port use them as default
         default_ip = rospy.get_param("~pip", "127.0.0.1")
         default_port = rospy.get_param("~pport", 9559)
 
         # get connection from command line:
-        from optparse import OptionParser
-        parser = OptionParser()
-        parser.add_option("--pip", dest="pip", default="127.0.0.1",
+        from argparse import ArgumentParser
+        parser = ArgumentParser()
+        parser.add_argument("--pip", dest="pip", default=default_ip,
                           help="IP/hostname of parent broker. Default is 127.0.0.1.", metavar="IP")
-        parser.add_option("--pport", dest="pport", default=9559, type="int",
+        parser.add_argument("--pport", dest="pport", default=default_port, type=int,
                           help="port of parent broker. Default is 9559.", metavar="PORT")
 
-        (options, args) = parser.parse_args()
-        self.pip = options.pip
-        self.pport = options.pport
+        import sys
+        args = parser.parse_args(args=rospy.myargv(argv=sys.argv)[1:])
+        self.pip = args.pip
+        self.pport = args.pport
 
-        # A distutils.version.LooseVersion that contains the current verssion of NAOqi we're connected to
-        self.__naoqi_version = None
+        ## ROS stuff
+        self.__stop_thread = False
+        rospy.init_node(self.__name)
+        # make sure that we unregister from everything when the module dies
+        rospy.on_shutdown(self.__on_ros_shutdown)
 
-    def connectNaoQi(self, ip, port):
-        rospy.loginfo("Connecting to NaoQi at %s:%d", ip, port)
+    def __on_ros_shutdown(self):
+        """
+        Callback function called whenever rospy.spin() stops
+        """
+        rospy.loginfo('Stopping ' + self.__name)
 
+        self.__stop_thread = True
+        # wait for the thread to be done
+        if self.is_alive():
+            self.join()
 
-        self.motionProxy = None
-        self.memProxy = None
+        rospy.loginfo(self.__name + ' stopped')
 
-        try:
-            self.motionProxy = ALProxy("ALMotion", ip, port)
-            self.memProxy = ALProxy("ALMemory", ip, port)
-            # TODO: check self.memProxy.version() for > 1.6
-        except RuntimeError, e:
-            rospy.logerr("Could not create Proxy to ALMotion or ALMemory, exiting. \nException message:\n%s", e)
-            exit(1)
+    def run(self):
+        """
+        This is a virtual method that corresponds to the code of the Node that runs continuously
+        It should have a while loop calling the self.is_looping() function
+        """
+        """
+        # code example
+        #do some initialization
+        while self.is_looping():
+            # do something
+        # do some post processing
+        """
+        raise NotImplementedError('Implement the run function of your NaoNode !')
+
+    def is_looping(self):
+        """
+        :return: whether the thread is supposed to be running
+        """
+        return not self.__stop_thread
 
     def getProxy(self, name, warn=True):
-        proxy = None
+        """
+        Returns a proxy to a specific module. If it has not been created yet, it is created
+        :param name: the name of the module to create a proxy for
+        :return: a proxy to the corresponding module
+        """
+        if name in self.__proxies and self.__proxies[name] is not None:
+            return self.__proxies[name]
 
+        proxy = None
         try:
             proxy = ALProxy(name,self.pip,self.pport)
         except RuntimeError,e:
             if warn:
                 rospy.logerr("Could not create Proxy to \"%s\". \nException message:\n%s",name, e)
 
+        self.__proxies[name] = proxy
         return proxy
 
     def getVersion(self):
@@ -92,16 +151,15 @@ class NaoNode():
         :return: a distutils.version.LooseVersion object with the NAOqi version
         """
         if self.__naoqi_version is None:
-            if not hasattr(self, 'memProxy') or self.memProxy is None:
-                self.memProxy = self.getProxy("ALMemory")
-                if self.memProxy is None:
-                    # exiting is bad but it should not happen
-                    # except maybe with NAOqi versions < 1.6 or future ones
-                    # in which case we will adapt that code to call the proper
-                    # version function
-                    exit(1)
+            proxy = self.getProxy('ALMemory')
+            if proxy is None:
+                # exiting is bad but it should not happen
+                # except maybe with NAOqi versions < 1.6 or future ones
+                # in which case we will adapt that code to call the proper
+                # version function
+                exit(1)
 
             from distutils.version import LooseVersion
-            self.__naoqi_version = LooseVersion(self.memProxy.version())
+            self.__naoqi_version = LooseVersion(proxy.version())
 
         return self.__naoqi_version

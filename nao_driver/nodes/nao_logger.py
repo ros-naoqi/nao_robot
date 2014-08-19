@@ -50,7 +50,7 @@ class NaoLogger(NaoNode):
 
     def __init__( self ):
         #Initialization
-        NaoNode.__init__( self )
+        NaoNode.__init__( self, self.NODE_NAME )
 
         from distutils.version import LooseVersion
         if self.getVersion() < LooseVersion('2.0.0'):
