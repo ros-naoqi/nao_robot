@@ -2,8 +2,8 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2014-08-19)
+------------------
 * update maintainers
   Armin, thank you for all your work, in ROS, Octomap and NAO.
   Good luck out of the university !
