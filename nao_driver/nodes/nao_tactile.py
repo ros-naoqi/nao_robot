@@ -63,8 +63,8 @@ class NaoTactile(ALModule):
         parser = OptionParser()
         parser.add_option("--ip", dest="ip", default="",
                           help="IP/hostname of broker. Default is system's default IP address.", metavar="IP")
-        parser.add_option("--port", dest="port", default=10511,
-                          help="IP/hostname of broker. Default is 10511.", metavar="PORT")
+        parser.add_option("--port", dest="port", default=0,
+                          help="IP/hostname of broker. Default is automatic port.", metavar="PORT")
         parser.add_option("--pip", dest="pip", default="127.0.0.1",
                           help="IP/hostname of parent broker. Default is 127.0.0.1.", metavar="IP")
         parser.add_option("--pport", dest="pport", default=9559,

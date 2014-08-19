@@ -8,6 +8,7 @@
   </description>
   
   <maintainer email="severin.lemaignan@epfl.ch">Severin Lemaignan</maintainer>
+  <author>Severin Lemaignan</author>
   <license>BSD</license>
 
   <url>http://www.ros.org/wiki/nao_robot</url>

@@ -11,14 +11,19 @@ find_package(catkin REQUIRED COMPONENTS
     sensor_msgs
     geometry_msgs
     nao_msgs
-    dynamic_reconfigure)
+    dynamic_reconfigure
+    diagnostic_aggregator
+    diagnostic_msgs)
 
 find_package(NAOqi QUIET COMPONENTS
     alcommon
     alvision
     alproxies
     alerror
-    alvalue)
+    alvalue
+    qi
+    qitype
+)
 
 find_package(Boost QUIET COMPONENTS program_options signals)
 
@@ -51,6 +56,14 @@ if( ${NAOqi_FOUND} AND ${Boost_FOUND} )
 else()
     message(STATUS "Cannot find NAOqi C++ sdk; C++ nodes will NOT be built")
 endif()
+
+# add a diagnostic analyzer plugin
+add_library(nao_diagnostic_analyzers src/NaoJointsAnalyzer.cpp)
+include_directories(${catkin_INCLUDE_DIRS})
+target_link_libraries(nao_diagnostic_analyzers ${catkin_LIBRARIES})
+install(TARGETS nao_diagnostic_analyzers DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
+install(FILES nao_analyzer_plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 #And this will install python nodes
 install(DIRECTORY nodes/

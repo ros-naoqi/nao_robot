@@ -39,24 +39,20 @@ from sensor_msgs.msg import JointState
 from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
 
-from nao_driver import (NaoNode, motion)
+from nao_driver import NaoNode
 
 from tf import transformations
 import tf
 
-import threading
-from threading import Thread
+# NAOqi specific
+import motion
 
-class NaoSensors(NaoNode, Thread):
+class NaoSensors(NaoNode):
     def __init__(self):
-        NaoNode.__init__(self)
-        Thread.__init__(self)
+        NaoNode.__init__(self, 'nao_sensors')
 
-        # ROS initialization:
-        rospy.init_node('nao_sensors')
         self.connectNaoQi()
 
-        self.stopThread = False
         # default sensor rate: 25 Hz (50 is max, stresses Nao's CPU)
         self.sensorRate = rospy.Rate(rospy.get_param('~sensor_rate', 25.0))
 
@@ -113,14 +109,14 @@ class NaoSensors(NaoNode, Thread):
     # (re-) connect to NaoQI:
     def connectNaoQi(self):
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
-        self.motionProxy = self.getProxy("ALMotion")
-        self.memProxy = self.getProxy("ALMemory")
+        self.motionProxy = self.get_proxy("ALMotion")
+        self.memProxy = self.get_proxy("ALMemory")
         if self.motionProxy is None or self.memProxy is None:
             exit(1)
 
     def run(self):
         """ Odometry thread code - collects and sends out odometry esimate. """
-        while(not self.stopThread):
+        while self.is_looping():
                 #
                 # Build odometry:
                 #
@@ -217,10 +213,4 @@ if __name__ == '__main__':
     sensors.start()
 
     rospy.spin()
-
-    rospy.loginfo("Stopping nao_sensors ...")
-    sensors.stopThread = True
-    sensors.join()
-
-    rospy.loginfo("nao_sensors stopped.")
     exit(0)

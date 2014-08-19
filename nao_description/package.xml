@@ -8,7 +8,8 @@
 
   <author>Armin Hornung</author>
   <author>Stefan Osswald</author>
-  <maintainer email="HornungA@informatik.uni-freiburg.de">Armin Hornung</maintainer>
+  <maintainer email="severin.lemaignan@epfl.ch">Severin Lemaignan</maintainer>
+  <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
   <license>BSD</license>
 
   <url>http://www.ros.org/wiki/nao_description</url>

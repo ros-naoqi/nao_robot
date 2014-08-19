@@ -37,31 +37,20 @@ import rospy
 
 from nao_driver import NaoNode
 
-import math
-from math import fabs
-
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Pose2D
-from sensor_msgs.msg import JointState
-from std_msgs.msg import Bool
-import std_msgs.msg
 
 from std_srvs.srv import Empty, EmptyResponse
-from nao_msgs.srv import CmdPoseService, CmdVelService, CmdPoseServiceResponse, CmdVelServiceResponse
+from nao_msgs.srv import CmdPoseService, CmdVelService, CmdPoseServiceResponse, CmdVelServiceResponse, SetArmsEnabled, SetArmsEnabledResponse
 from humanoid_nav_msgs.msg import StepTarget
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
-
-import nao_msgs.srv
 
 from nao_driver.util import startWalkPose
 
 class NaoWalker(NaoNode):
     def __init__(self):
-        NaoNode.__init__(self)
-
-        # ROS initialization:
-        rospy.init_node('nao_walker')
+        NaoNode.__init__(self, 'nao_walker')
 
         self.connectNaoQi()
 
@@ -114,6 +103,7 @@ class NaoWalker(NaoNode):
         self.stopWalkSrv = rospy.Service("stop_walk_srv", Empty, self.handleStopWalkSrv)
         self.needsStartWalkPoseSrv = rospy.Service("needs_start_walk_pose_srv", Empty, self.handleNeedsStartWalkPoseSrv)
         self.readFootGaitConfigSrv = rospy.Service("read_foot_gait_config_srv", Empty, self.handleReadFootGaitConfigSrv)
+        self.setArmsEnabledSrv = rospy.Service("enable_arms_walking_srv", SetArmsEnabled, self.handleSetArmsEnabledSrv)
 
         self.say("Walker online")
 
@@ -123,7 +113,7 @@ class NaoWalker(NaoNode):
         '''(re-) connect to NaoQI'''
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
 
-        self.motionProxy = self.getProxy("ALMotion")
+        self.motionProxy = self.get_proxy("ALMotion")
         if self.motionProxy is None:
             exit(1)
 
@@ -238,6 +228,11 @@ class NaoWalker(NaoNode):
         else:
             self.footGaitConfig = self.motionProxy.getFootGaitConfig("Default")
         return EmptyResponse()
+
+    def handleSetArmsEnabledSrv(self, req):
+        self.motionProxy.setWalkArmsEnable(req.left_arm, req.right_arm)
+        rospy.loginfo("Arms enabled during walk: left(%s) right(%s)" % (req.left_arm, req.right_arm))
+        return SetArmsEnabledResponse()
 
 
 if __name__ == '__main__':

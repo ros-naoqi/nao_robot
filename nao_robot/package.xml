@@ -8,7 +8,9 @@
     The <a href="http://www.ros.org/wiki/humanoid_navigation"> humanoid_navigation stack</a> contains some more general packages for humanoid/biped robots.</p>
   </description>
   
-  <maintainer email="HornungA@informatik.uni-freiburg.de">Armin Hornung</maintainer>
+  <maintainer email="severin.lemaignan@epfl.ch">Severin Lemaignan</maintainer>
+  <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
+  <author>Armin Hornung</author>
   <license>BSD</license>
 
   <url>http://www.ros.org/wiki/nao_robot</url>

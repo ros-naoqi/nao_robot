@@ -38,10 +38,7 @@ import actionlib
 
 from nao_driver import NaoNode
 
-from nao_msgs.msg import(
-    RunBehaviorAction,
-    RunBehaviorResult
-    )
+from nao_msgs.msg import RunBehaviorAction
 
 from nao_msgs.srv import (
     GetInstalledBehaviors, 
@@ -55,15 +52,14 @@ class NaoBehaviors(NaoNode):
     def __init__( self ):
         
         #Initialisation
-        NaoNode.__init__( self )
-        rospy.init_node( self.NODE_NAME )
+        NaoNode.__init__( self, self.NODE_NAME )
         
         #We need this variable to be able to call stop behavior when preempted
         self.behavior = None
         self.lock = threading.RLock()
         
         #Proxy for listingBehaviors and stopping them
-        self.behaviorProxy = self.getProxy( "ALBehaviorManager" )
+        self.behaviorProxy = self.get_proxy( "ALBehaviorManager" )
         
         # Register ROS services
         self.getInstalledBehaviorsService = rospy.Service(

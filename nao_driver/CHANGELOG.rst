@@ -2,6 +2,45 @@
 Changelog for package nao_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update maintainers
+  Armin, thank you for all your work, in ROS, Octomap and NAO.
+  Good luck out of the university !
+* respect PEP008
+* mention nao_sensors instead of nao_camera
+* Merge pull request `#29 <https://github.com/ros-nao/nao_robot/issues/29>`_ from severin-lemaignan/remove_camera
+  Remove the Python camera driver
+* [python] better threading for NaoNode (with ROS shutdown handling)
+  also do a few import cleanups
+* modify nao_driver for naoqi2 compatibility
+* use proper Python indentation for several files
+* Add a Logger bridge for NAOqi 2.0
+* add a way to get the NAOqi version
+* Added missing dependency on diagnostics in nao_driver cmake lists.
+* Removed hard-coded ports from nao_sensors_cpp and nao_speech.py
+* Modified nao_tactile node to search for a free port.
+* Fixing PR `#23 <https://github.com/ros-nao/nao_robot/issues/23>`_ for simulation usage
+  Use class NaoNode as before for proxy creation
+* Fixing PR `#24 <https://github.com/ros-nao/nao_robot/issues/24>`_ for NaoQI 1.12
+  ALRobotPosture is optional, node no longer exits
+* make the license explicit as mentioned by @ahornung
+* move NaoJointsAnalyzer.cpp from nao_viz
+* run nao_diagnostic_updater by default
+* Removed the Python camera driver
+  It has been moved to nao_camera since a few months
+* Added erroneous input checks. Altered the action server name.
+* Moved the predefined pose support from pose_manager to nao_controller. Action name changed as well
+* SpeechWithFeedback.action refined. Erased unneccessary bool flags.
+* Double inheritance from NaoNode and ALModule implemented
+* Added actionlib interface for speech with feedback
+* Added support for changing speech recognition vocabulary via actionlib. Updates the dynamic reconfigure variable as well.
+* Extend sim detection in nao_diagnostic_updater.py
+* Adding service for toggling the arm motion while walking
+* Contributors: Armin Hornung, Jon Dybeck, Manos Tsardoulias, Séverin Lemaignan, Vincent Rabaud, jondy276, margueda
+
+* The Python camera driver has moved to `nao_camera <https://github.com/ros-nao/nao_sensors>`_
+
 0.2.3 (2014-03-27)
 ------------------
 * Fix dependency of nao_driver on camera_info_manager_py

@@ -36,31 +36,24 @@
 
 import rospy
 import actionlib
-import nao_msgs.msg
 from nao_msgs.msg import(
-    JointTrajectoryGoal,
     JointTrajectoryResult,
     JointTrajectoryAction,
     JointAnglesWithSpeed,
-    JointAnglesWithSpeedGoal,
     JointAnglesWithSpeedResult,
-    JointAnglesWithSpeedAction)
+    JointAnglesWithSpeedAction,
+    BodyPoseWithSpeedAction,
+    BodyPoseWithSpeedGoal,
+    BodyPoseWithSpeedResult)
  
 from nao_driver import NaoNode
 
-import math
-from math import fabs
-
-from std_msgs.msg import String
 from std_srvs.srv import Empty, EmptyResponse
 from sensor_msgs.msg import JointState
 
 class NaoController(NaoNode):
     def __init__(self): 
-        NaoNode.__init__(self)
-    
-        # ROS initialization:
-        rospy.init_node('nao_controller')
+        NaoNode.__init__(self, 'nao_controller')
         
         self.connectNaoQi()
         
@@ -109,7 +102,16 @@ class NaoController(NaoNode):
         self.jointStiffnessServer.start()
         self.jointAnglesServer.start()
 
-        # subsribers last:
+        # only start when ALRobotPosture proxy is available
+        if not (self.robotPostureProxy is None):
+            self.bodyPoseWithSpeedServer = actionlib.SimpleActionServer("body_pose_naoqi", BodyPoseWithSpeedAction,
+                                              execute_cb=self.executeBodyPoseWithSpeed,
+                                              auto_start=False)
+            self.bodyPoseWithSpeedServer.start()
+        else:
+            rospy.logwarn("Proxy to ALRobotPosture not available, requests to body_pose_naoqi will be ignored.")
+
+        # subscribers last:
         rospy.Subscriber("joint_angles", JointAnglesWithSpeed, self.handleJointAngles, queue_size=10)
         rospy.Subscriber("joint_stiffness", JointState, self.handleJointStiffness, queue_size=10)
 
@@ -119,9 +121,13 @@ class NaoController(NaoNode):
         '''(re-) connect to NaoQI'''
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
 
-        self.motionProxy = self.getProxy("ALMotion")
+        self.motionProxy = self.get_proxy("ALMotion")
         if self.motionProxy is None:
             exit(1)
+
+        # optional, newly introduced in 1.14
+        self.robotPostureProxy = self.get_proxy("ALRobotPosture")
+            
             
     def handleJointAngles(self, msg):
         rospy.logdebug("Received a joint angle target")
@@ -328,6 +334,36 @@ class NaoController(NaoNode):
             return len(goal_position.position) == self.collectionSize[goal_position.name[0]] 
         else:
             return len(goal_position.position) ==  len(goal_position.name)
+            
+    def executeBodyPoseWithSpeed(self, goal):
+      
+        #~ Sanity checks
+        if (goal.speed < 0.0) or (goal.speed > 1.0):
+            bodyPoseWithSpeedResult = BodyPoseWithSpeedResult()
+            self.bodyPoseWithSpeedServer.set_aborted(bodyPoseWithSpeedResult)
+            rospy.logerr("Body pose setter: Not a valid speed value.")
+            return
+      
+        valid_postures = self.robotPostureProxy.getPostureList()
+
+        if goal.posture_name not in valid_postures:
+            bodyPoseWithSpeedResult = BodyPoseWithSpeedResult()
+            self.bodyPoseWithSpeedServer.set_aborted(bodyPoseWithSpeedResult)  
+            rospy.logerr("Body pose setter: Not a valid posture.")
+            return
+
+        #~ Must set stiffness on
+        try:
+            self.motionProxy.stiffnessInterpolation("Body", 1.0, 0.5)
+            rospy.loginfo("Body stiffness enabled")
+        except RuntimeError,e:
+            rospy.logerr("Exception caught:\n%s", e)
+            return
+          
+        #~ Go to posture. This is blocking
+        self.robotPostureProxy.goToPosture(goal.posture_name, goal.speed)
+        #~ Return success
+        self.bodyPoseWithSpeedServer.set_succeeded()
 
 if __name__ == '__main__':
 

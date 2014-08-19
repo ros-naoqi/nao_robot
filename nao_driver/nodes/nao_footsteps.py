@@ -85,10 +85,7 @@ class StepTarget(StepTarget):
 
 class NaoFootsteps(NaoNode):
     def __init__(self):
-        NaoNode.__init__(self)
-
-        # ROS initialization:
-        rospy.init_node('nao_footsteps')
+        NaoNode.__init__(self, 'nao_footsteps')
 
         self.connectNaoQi()
 
@@ -124,7 +121,7 @@ class NaoFootsteps(NaoNode):
         """(re-) connect to NaoQI"""
         rospy.loginfo("Connecting to NaoQi at %s:%d", self.pip, self.pport)
 
-        self.motionProxy = self.getProxy("ALMotion")
+        self.motionProxy = self.get_proxy("ALMotion")
         if self.motionProxy is None:
             exit(1)
 

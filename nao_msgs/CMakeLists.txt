@@ -24,7 +24,8 @@ add_message_files(DIRECTORY msg
     JointAnglesWithSpeed.msg
     JointAngleTrajectory.msg
     TactileTouch.msg
-    WordRecognized.msg )
+    WordRecognized.msg
+)
 
 #Add service files
 add_service_files(DIRECTORY srv
@@ -33,17 +34,23 @@ add_service_files(DIRECTORY srv
     CmdVelService.srv
     GetInstalledBehaviors.srv
     GetTruepose.srv
-    SetTransform.srv)
+    SetTransform.srv
+    SetArmsEnabled.srv
+)
 
 #Add action files
 add_action_files(DIRECTORY action
     FILES
     Blink.action
     BodyPose.action
+    BodyPoseWithSpeed.action
     FollowPath.action
     JointAnglesWithSpeed.action
     JointTrajectory.action
-    RunBehavior.action )
+    RunBehavior.action 
+    SetSpeechVocabulary.action
+    SpeechWithFeedback.action
+)
 
 #And now generate the messages
 generate_messages(DEPENDENCIES ${MESSAGE_DEPENDENCIES})
