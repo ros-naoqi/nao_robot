@@ -2,6 +2,11 @@
 Changelog for package nao_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
+* The Python camera driver has moved to `nao_camera <https://github.com/ros-nao/nao_camera>`_
+
 0.2.3 (2014-03-27)
 ------------------
 * Fix dependency of nao_driver on camera_info_manager_py
