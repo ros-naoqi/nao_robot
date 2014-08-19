@@ -13,7 +13,9 @@
       Note that cameras drivers are provided in a separate package (nao_sensors).
     </p>
   </description>
-  <maintainer email="HornungA@informatik.uni-freiburg.de">Armin Hornung</maintainer>
+  <author>Armin Hornung</author>
+  <maintainer email="severin.lemaignan@epfl.ch">Severin Lemaignan</maintainer>
+  <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
   <license>BSD</license>
 
   <url>http://ros.org/wiki/nao_driver</url>
