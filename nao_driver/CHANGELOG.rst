@@ -2,8 +2,8 @@
 Changelog for package nao_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2014-09-18)
+------------------
 * Add 'queue_size=10' to Publisher, for Indigo's compatability
 * Contributors: hris2003
 

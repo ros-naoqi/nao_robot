@@ -2,8 +2,8 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2014-09-18)
+------------------
 * urdf generated files, launchfiles and config files
   generated files updated
   updated mesh file path
