@@ -2,6 +2,17 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* urdf generated files, launchfiles and config files
+  generated files updated
+  updated mesh file path
+  add xacro macro for fingers in naohands
+  update nao.urdf based on new macros for fingers
+  export with meshes
+  remove useless imu frame
+* Contributors: margueda
+
 0.3.0 (2014-08-19)
 ------------------
 * update maintainers

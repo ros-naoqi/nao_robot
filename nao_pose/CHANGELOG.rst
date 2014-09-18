@@ -2,6 +2,9 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.3.0 (2014-08-19)
 ------------------
 * Fix xapparser __init__.py encoding, UTF used in header

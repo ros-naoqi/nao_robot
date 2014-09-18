@@ -2,6 +2,11 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update nao_bringup launchfiles to use new urdf
+* Contributors: margueda
+
 0.3.0 (2014-08-19)
 ------------------
 * update maintainers
