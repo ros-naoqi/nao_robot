@@ -95,7 +95,7 @@ class NaoDiagnosticUpdater(NaoNode):
             self.isSimulator = False
             
         # init. messages:        
-        self.diagnosticPub = rospy.Publisher("diagnostics", DiagnosticArray)
+        self.diagnosticPub = rospy.Publisher("diagnostics", DiagnosticArray, queue_size=10)
 
         rospy.loginfo("nao_diagnostic_updater initialized")
 

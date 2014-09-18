@@ -85,8 +85,8 @@ class NaoTactile(ALModule):
         # init. messages:
         self.tactile = TactileTouch()              
         self.bumper = Bumper()
-        self.tactilePub = rospy.Publisher("tactile_touch", TactileTouch)
-        self.bumperPub = rospy.Publisher("bumper", Bumper)
+        self.tactilePub = rospy.Publisher("tactile_touch", TactileTouch, queue_size=10)
+        self.bumperPub = rospy.Publisher("bumper", Bumper, queue_size=10)
         
         try:
             footContact = self.memProxy.getData("footContact", 0)
@@ -98,7 +98,7 @@ class NaoTactile(ALModule):
             rospy.loginfo("Foot contact key is not present in ALMemory, will not publish to foot_contact topic.")
         else:
             self.hasFootContactKey = True
-            self.footContactPub = rospy.Publisher("foot_contact", Bool, latch=True)
+            self.footContactPub = rospy.Publisher("foot_contact", Bool, latch=True, queue_size=10)
             self.footContactPub.publish(footContact > 0.0)
 
         # constants in TactileTouch and Bumper will not be available in callback functions

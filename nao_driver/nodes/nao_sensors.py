@@ -98,9 +98,9 @@ class NaoSensors(NaoNode):
         msg = "Nao joints found: "+ str(self.jointState.name)
         rospy.logdebug(msg)
 
-        self.torsoOdomPub = rospy.Publisher("odom", Odometry)
-        self.torsoIMUPub = rospy.Publisher("imu", Imu)
-        self.jointStatePub = rospy.Publisher("joint_states", JointState)
+        self.torsoOdomPub = rospy.Publisher("odom", Odometry, queue_size=10)
+        self.torsoIMUPub = rospy.Publisher("imu", Imu, queue_size=10)
+        self.jointStatePub = rospy.Publisher("joint_states", JointState, queue_size=10)
 
         self.tf_br = tf.TransformBroadcaster()
 
