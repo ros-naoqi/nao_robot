@@ -1,0 +1,6 @@
+<launch>
+  <arg name="version" default="V40" />
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find nao_description)/urdf/nao$(arg version)_generated_urdf/naorobot.xacro" /> 
+  <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher" />   
+  <node pkg="nao_description" type="base_footprint" name="base_footprint" />
+</launch>

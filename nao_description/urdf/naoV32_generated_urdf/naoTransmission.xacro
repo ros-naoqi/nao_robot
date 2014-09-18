@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!-- This file has been created by hand based on the work of Konstantinos Chatzilygeroudis in his nao_dcm project https://github.com/costashatz/nao_dcm -->
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+ <!-- Dummy file !! -->
+</robot>

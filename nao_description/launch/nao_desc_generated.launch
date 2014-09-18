@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Load Nao Robot parameter file -->
+	<arg name="version" default="V40" />
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find nao_description)/urdf/nao$(arg version)_generated_urdf/naorobot.xacro" /> 
+
+</launch>

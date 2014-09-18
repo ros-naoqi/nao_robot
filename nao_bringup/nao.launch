@@ -7,7 +7,7 @@
     <rosparam command="load" file="$(find nao_bringup)/config/nao_analysers.yaml" />
   </node>
 
-  <include file="$(find nao_description)/launch/nao_v4_publisher.launch" />
+  <include file="$(find nao_description)/launch/nao_publisher.launch" />
   <include file="$(find nao_driver)/launch/nao_driver.launch">
     <arg name="force_python" value="$(arg force_python)" />
   </include>
