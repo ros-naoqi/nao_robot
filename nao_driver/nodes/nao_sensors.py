@@ -70,6 +70,9 @@ class NaoSensors(NaoNode):
             self.tf_prefix = rospy.get_param(tf_prefix_param_name)
         else:
             self.tf_prefix = ""
+        
+        # To stop odometry tf being broadcast
+        self.broadcast_odometry = rospy.param('~broadcast_odometry', True)
 
         self.base_frameID = rospy.get_param('~base_frame_id', "base_link")
         if not(self.base_frameID[0] == '/'):
@@ -149,8 +152,10 @@ class NaoSensors(NaoNode):
 
             t = self.torsoOdom.pose.pose.position
             q = self.torsoOdom.pose.pose.orientation
-            self.tf_br.sendTransform((t.x, t.y, t.z), (q.x, q.y, q.z, q.w),
-                                     timestamp, self.base_frameID, self.torsoOdom.header.frame_id)
+            
+            if self.broadcast_odometry:
+                self.tf_br.sendTransform((t.x, t.y, t.z), (q.x, q.y, q.z, q.w),
+                                         timestamp, self.base_frameID, self.torsoOdom.header.frame_id)
 
             self.torsoOdomPub.publish(self.torsoOdom)
 
