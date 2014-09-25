@@ -72,7 +72,7 @@ class NaoSensors(NaoNode):
             self.tf_prefix = ""
         
         # To stop odometry tf being broadcast
-        self.broadcast_odometry = rospy.param('~broadcast_odometry', True)
+        self.broadcast_odometry = rospy.get_param('~broadcast_odometry', True)
 
         self.base_frameID = rospy.get_param('~base_frame_id', "base_link")
         if not(self.base_frameID[0] == '/'):
