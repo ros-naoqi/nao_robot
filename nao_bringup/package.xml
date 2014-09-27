@@ -7,8 +7,8 @@
       running state.
   </description>
   
-  <maintainer email="severin.lemaignan@epfl.ch">Severin Lemaignan</maintainer>
-  <author>Severin Lemaignan</author>
+  <maintainer email="severin.lemaignan@epfl.ch">Séverin Lemaignan</maintainer>
+  <author>Séverin Lemaignan</author>
   <license>BSD</license>
 
   <url>http://www.ros.org/wiki/nao_robot</url>

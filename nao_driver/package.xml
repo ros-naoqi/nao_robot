@@ -14,7 +14,7 @@
     </p>
   </description>
   <author>Armin Hornung</author>
-  <maintainer email="severin.lemaignan@epfl.ch">Severin Lemaignan</maintainer>
+  <maintainer email="severin.lemaignan@epfl.ch">Séverin Lemaignan</maintainer>
   <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
   <license>BSD</license>
 
@@ -26,7 +26,7 @@
   <author>Stefan Osswald</author>
   <author>Daniel Maier</author>
   <author>Miguel Sarabia</author>
-  <author>Severin Lemaignan</author>
+  <author>Séverin Lemaignan</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
