@@ -34,8 +34,9 @@ catkin_python_setup()
 generate_dynamic_reconfigure_options( config/nao_speech.cfg )
 
 # Information for other packages to import this module
-catkin_package( CATKIN_DEPENDS dynamic_reconfigure )
-
+catkin_package( CATKIN_DEPENDS dynamic_reconfigure
+   CFG_EXTRAS cmake_modules-extras.cmake
+)
 
 if( ${NAOqi_FOUND} AND ${Boost_FOUND} )
     message(STATUS "NAOqi C++ SDK found; C++ nodes will be built")
@@ -78,3 +79,7 @@ install(DIRECTORY launch/
 install(DIRECTORY config/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
     PATTERN "*.cfg" EXCLUDE)
+
+## Install all cmake files
+install(FILES cmake/FindNAOqi.cmake
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/)
