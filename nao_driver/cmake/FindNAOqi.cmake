@@ -78,6 +78,15 @@ set(NAOqi_COMPONENTS
     qitype
 )
 
+# These are NAOqi low-level library. They must sometimes be included even though they are not directly
+# used by the module, but they are not always present, depending on the SDK version.
+# Therefore, if they are present, we try to include them to avoid any compilation issue,
+# but if they cannot be found then no error is raised.
+set(NAOqi_OPTIONALS
+    qi
+    qitype
+)
+
 
 #Set INCLUDE hints
 set(NAOqi_INCLUDE_HINTS
@@ -106,7 +115,19 @@ if ( NAOqi_FIND_COMPONENTS )
     endforeach()
 endif()
 
+set(NAOqi_FILTERED_OPTIONALS ${NAOqi_OPTIONALS})
+
+if ( NAOqi_OPTIONALS )
+    foreach(comp ${NAOqi_OPTIONALS})
+        list(FIND NAOqi_COMPONENTS ${comp} ${comp}_KNOWN)
+        if (${comp}_KNOWN EQUAL -1)
+            list(REMOVE_ITEM NAOqi_FILTERED_OPTIONALS ${comp})
+        endif()
+    endforeach()
+endif()
+
 list(LENGTH NAOqi_FILTERED_COMPONENTS NAOqi_NUMBER_OF_COMPONENTS)
+list(LENGTH NAOqi_FILTERED_OPTIONALS NAOqi_NUMBER_OF_OPTIONALS)
 set(NAOqi_FOUND_COMPONENTS TRUE)
 
 # Look for components (ie. libraries)
@@ -126,6 +147,16 @@ else()
     message(STATUS "No NAOqi components specified")
 endif()
 
+if( ${NAOqi_NUMBER_OF_OPTIONALS}  )
+    foreach(comp ${NAOqi_FILTERED_OPTIONALS})
+        #Look for the actual library here
+        find_library(${comp}_LIBRARY NAMES ${comp} HINTS ${NAOqi_LIBRARY_HINTS})
+        if ( NOT ${${comp}_LIBRARY} STREQUAL ${comp}_LIBRARY-NOTFOUND)
+            #If everything went well append this component to list of libraries
+            list(APPEND NAOqi_LIBRARY ${${comp}_LIBRARY})
+        endif()
+    endforeach()
+endif()
 
 # Handle the QUIET and REQUIRED arguments
 include(FindPackageHandleStandardArgs)
