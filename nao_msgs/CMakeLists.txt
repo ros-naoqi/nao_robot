@@ -19,6 +19,7 @@ find_package(catkin REQUIRED
 #Add message files
 add_message_files(DIRECTORY msg
     FILES
+    AudioBuffer.msg
     Bumper.msg
     FadeRGB.msg
     JointAnglesWithSpeed.msg
