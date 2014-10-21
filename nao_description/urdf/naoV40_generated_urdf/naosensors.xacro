@@ -87,6 +87,12 @@
 		<child link="LFootBumperLeft_frame"/>
 		<origin rpy="0 0 0" xyz="0.0876 0.019 -0.035"/>
 	</joint>
+	<link name="LFootBumper_frame"/>
+	<joint name="LFootBumper_joint" type="fixed">
+		<parent link="l_ankle"/>
+		<child link="LFootBumper_frame"/>
+		<origin rpy="0 0 0" xyz="0.0876 0.0 -0.035"/>
+	</joint>
 	<link name="ChestButton_frame"/>
 	<joint name="ChestButton_joint" type="fixed">
 		<parent link="torso"/>
@@ -141,11 +147,53 @@
 		<child link="HeadTouchFront_frame"/>
 		<origin rpy="0 -1.186099535 0" xyz="0.0312 0 0.1014"/>
 	</joint>
-	<link name="CameraBottom_frame"/>
+	<link name="CameraBottom_frame">
+    <inertial>
+        <mass value="0.05" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9" />
+    </inertial> 
+    </link>
 	<joint name="CameraBottom_joint" type="fixed">
 		<parent link="Head"/>
 		<child link="CameraBottom_frame"/>
 		<origin rpy="0 0.6929 0" xyz="0.05071 0 0.01774"/>
+	</joint>
+	<link name="CameraDepth_frame">
+    <inertial>
+        <mass value="0.05" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9" />
+    </inertial> 
+    </link>
+	<joint name="CameraDepth_joint" type="fixed">
+		<parent link="Head"/>
+		<child link="CameraDepth_frame"/>
+		<origin rpy="1.05 3.14159265 1.57079632" xyz="-0.01 0.05 0.13"/>
+	</joint>
+	<link name="CameraDepth2_frame">
+    <inertial>
+        <mass value="0.05" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9" />
+    </inertial> 
+    </link>
+	<joint name="CameraDepth2_joint" type="fixed">
+		<parent link="Head"/>
+		<child link="CameraDepth2_frame"/>
+		<origin rpy="0 -3.14159 1.5707" xyz="-0.01 0.05 0.13"/>
+	</joint>
+	<link name="CameraDepth3_frame">
+    <inertial>
+        <mass value="0.05" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9" />
+    </inertial> 
+    </link>
+	<joint name="CameraDepth3_joint" type="fixed">
+		<parent link="Head"/>
+		<child link="CameraDepth3_frame"/>
+		<origin rpy="0 0 0" xyz="-0.01 0.05 0.13"/>
 	</joint>
 	<link name="LHandTouchRight_frame"/>
 	<joint name="LHandTouchRight_joint" type="fixed">
@@ -159,7 +207,13 @@
 		<child link="RSonar_frame"/>
 		<origin rpy="0 0.04365 -0.39265" xyz="0.0507 -0.03785 0.06035"/>
 	</joint>
-	<link name="CameraTop_frame"/>
+	<link name="CameraTop_frame">
+    <inertial>
+        <mass value="0.05" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9" />
+    </inertial> 
+    </link>
 	<joint name="CameraTop_joint" type="fixed">
 		<parent link="Head"/>
 		<child link="CameraTop_frame"/>
