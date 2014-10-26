@@ -2,8 +2,8 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2014-10-27)
+------------------
 * get the accent right in Séverin's name
 * Contributors: Vincent Rabaud
 

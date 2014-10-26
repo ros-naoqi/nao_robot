@@ -2,8 +2,8 @@
 Changelog for package nao_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.1 (2014-10-27)
+------------------
 * Fix qi/qitype dependency inconsistency
 * Export FindNAOqi.cmake so that other projects can use the same file
 * get the accent right in Séverin's name

@@ -1,6 +1,6 @@
 <package>
   <name>nao_robot</name>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
   
   <description>
     <p>The nao_robot metapackage contains some useful nodes to integrate the Nao humanoid robot into ROS.
