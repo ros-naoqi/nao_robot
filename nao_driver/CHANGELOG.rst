@@ -2,6 +2,15 @@
 Changelog for package nao_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix qi/qitype dependency inconsistency
+* Export FindNAOqi.cmake so that other projects can use the same file
+* get the accent right in Séverin's name
+* Turn odometry tf broadcast on/off
+* Update nao_sensors.py
+* Contributors: Jamie Diprose, Vincent Rabaud, jdddog, sambrose
+
 0.4.0 (2014-09-18)
 ------------------
 * Add 'queue_size=10' to Publisher, for Indigo's compatability
