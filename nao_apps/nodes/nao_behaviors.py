@@ -36,23 +36,23 @@ import threading
 import rospy
 import actionlib
 
-from nao_driver import NaoNode
+from naoqi_driver.naoqi_node import NaoqiNode
 
-from nao_msgs.msg import RunBehaviorAction
+from naoqi_msgs.msg import RunBehaviorAction
 
-from nao_msgs.srv import (
-    GetInstalledBehaviors, 
+from naoqi_msgs.srv import (
+    GetInstalledBehaviors,
     GetInstalledBehaviorsResponse,
     )
 
-class NaoBehaviors(NaoNode):
+class NaoBehaviors(NaoqiNode):
     #This should be treated as a constant
     NODE_NAME = "nao_behaviors"
     
     def __init__( self ):
         
         #Initialisation
-        NaoNode.__init__( self, self.NODE_NAME )
+        NaoqiNode.__init__( self, self.NODE_NAME )
         
         #We need this variable to be able to call stop behavior when preempted
         self.behavior = None

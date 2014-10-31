@@ -35,22 +35,22 @@
 
 import rospy
 
-from nao_driver import NaoNode
+from naoqi_driver.naoqi_node import NaoqiNode
 
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Pose2D
 
 from std_srvs.srv import Empty, EmptyResponse
-from nao_msgs.srv import CmdPoseService, CmdVelService, CmdPoseServiceResponse, CmdVelServiceResponse, SetArmsEnabled, SetArmsEnabledResponse
+from naoqi_msgs.srv import CmdPoseService, CmdVelService, CmdPoseServiceResponse, CmdVelServiceResponse, SetArmsEnabled, SetArmsEnabledResponse
 from humanoid_nav_msgs.msg import StepTarget
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
 
-from nao_driver.util import startWalkPose
+from nao_apps import startWalkPose
 
-class NaoWalker(NaoNode):
+class NaoWalker(NaoqiNode):
     def __init__(self):
-        NaoNode.__init__(self, 'nao_walker')
+        NaoqiNode.__init__(self, 'nao_walker')
 
         self.connectNaoQi()
 
@@ -94,7 +94,7 @@ class NaoWalker(NaoNode):
         rospy.Subscriber("cmd_step", StepTarget, self.handleStep, queue_size=50)
 
         # Create ROS publisher for speech
-        self.pub = rospy.Publisher("speech", String, latch = True, queue_size=10)
+        self.pub = rospy.Publisher("speech", String, latch = True)
 
         # ROS services (blocking functions)
         self.cmdPoseSrv = rospy.Service("cmd_pose_srv", CmdPoseService, self.handleTargetPoseService)

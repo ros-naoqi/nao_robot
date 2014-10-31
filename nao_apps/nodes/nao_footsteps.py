@@ -33,7 +33,7 @@
 import rospy
 import time
 
-from nao_driver import NaoNode
+from naoqi_driver.naoqi_node import NaoqiNode
 
 import math
 from math import fabs
@@ -44,7 +44,7 @@ from humanoid_nav_msgs.msg import *
 from humanoid_nav_msgs.srv import StepTargetService, StepTargetServiceResponse
 from humanoid_nav_msgs.srv import ClipFootstep, ClipFootstepResponse
 
-from nao_driver.util import ( startWalkPose, clip_footstep_tuple )
+from nao_apps import ( startWalkPose, clip_footstep_tuple )
 
 
 LEG_LEFT = "LLeg"
@@ -83,9 +83,9 @@ class StepTarget(StepTarget):
         return self.__str__()
 
 
-class NaoFootsteps(NaoNode):
+class NaoFootsteps(NaoqiNode):
     def __init__(self):
-        NaoNode.__init__(self, 'nao_footsteps')
+        NaoqiNode.__init__(self, 'nao_footsteps')
 
         self.connectNaoQi()
 

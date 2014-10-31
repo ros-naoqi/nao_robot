@@ -44,14 +44,14 @@ import rospy
 import dbus
 from dbus.exceptions import DBusException
 
-from nao_driver import NaoNode
+from naoqi_driver.naoqi_node import NaoqiNode
 import os
 
 from diagnostic_msgs.msg import *
 
-class NaoDiagnosticUpdater(NaoNode):
+class NaoDiagnosticUpdater(NaoqiNode):
     def __init__(self):
-        NaoNode.__init__(self, 'nao_diagnostic_updater')
+        NaoqiNode.__init__(self, 'nao_diagnostic_updater')
 
         # ROS initialization:
         self.connectNaoQi()
@@ -95,7 +95,7 @@ class NaoDiagnosticUpdater(NaoNode):
             self.isSimulator = False
             
         # init. messages:        
-        self.diagnosticPub = rospy.Publisher("diagnostics", DiagnosticArray, queue_size=10)
+        self.diagnosticPub = rospy.Publisher("diagnostics", DiagnosticArray)
 
         rospy.loginfo("nao_diagnostic_updater initialized")
 

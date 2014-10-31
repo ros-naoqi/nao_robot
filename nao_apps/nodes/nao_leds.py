@@ -38,23 +38,23 @@ import actionlib
 import random
 import copy
 
-from nao_driver import NaoNode
+from naoqi_driver.naoqi_node import NaoqiNode
 
-from nao_msgs.msg import(
+from naoqi_msgs.msg import(
     BlinkAction,
     BlinkResult,
     BlinkFeedback,
     FadeRGB
     )
 
-class NaoLeds(NaoNode):
+class NaoLeds(NaoqiNode):
     #This should be treated as a constant
     NODE_NAME = "nao_leds"
     
     def __init__( self ):
         
         #Initialisation
-        NaoNode.__init__( self, self.NODE_NAME )
+        NaoqiNode.__init__( self, self.NODE_NAME )
 
         #Proxy to interface with LEDs
         self.proxy = self.get_proxy( "ALLeds" )

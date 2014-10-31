@@ -8,9 +8,9 @@
   <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)" />
   <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
 
-  <param name="nao_sensors/use_joint_sensors" value="False" />
+  <param name="nao_joint_states/use_joint_sensors" value="False" />
 
-  <node pkg="nao_driver" type="nao_footsteps.py" name="nao_footsteps" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)"  />
-  <node pkg="nao_driver" type="nao_sensors.py" name="nao_sensors" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_apps" type="nao_footsteps.py" name="nao_footsteps" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)"  />
+  <node pkg="nao_driver" type="nao_joint_states.py" name="nao_joint_states" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
   <node pkg="nao_driver" type="nao_controller.py" name="nao_controller" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
 </launch>

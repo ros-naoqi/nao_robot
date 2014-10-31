@@ -37,13 +37,13 @@ import actionlib
 
 from dynamic_reconfigure.server import Server as ReConfServer
 import dynamic_reconfigure.client
-from nao_driver.cfg import nao_speechConfig as NodeConfig
-from nao_driver import NaoNode
+from naoqi_driver.cfg import naoqi_speechConfig as NodeConfig
+from naoqi_driver.naoqi_node import NaoqiNode
 from naoqi import (ALBroker, ALProxy, ALModule)
 
 from std_msgs.msg import( String )
 from std_srvs.srv import( Empty, EmptyResponse )
-from nao_msgs.msg import( 
+from naoqi_msgs.msg import( 
     WordRecognized,
     SetSpeechVocabularyGoal,
     SetSpeechVocabularyResult,
@@ -85,11 +85,11 @@ class DummyAudioDevice:
     def setOutputVolume(self, vol):
         pass
 
-class NaoSpeech(ALModule, NaoNode):
+class NaoSpeech(ALModule, NaoqiNode):
 
     def __init__( self, moduleName ):
         # ROS Initialisation
-        NaoNode.__init__(self, Constants.NODE_NAME )
+        NaoqiNode.__init__(self, Constants.NODE_NAME )
         
         # NAOQi Module initialization
         self.moduleName = moduleName
@@ -120,7 +120,7 @@ class NaoSpeech(ALModule, NaoNode):
         self.sub = rospy.Subscriber("speech", String, self.say )
 
         # Advertise word recognise topic
-        self.pub = rospy.Publisher("word_recognized", WordRecognized, queue_size=10)
+        self.pub = rospy.Publisher("word_recognized", WordRecognized )
 
         # Register ROS services
         self.start_srv = rospy.Service(
