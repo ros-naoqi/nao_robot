@@ -1,0 +1,13 @@
+<launch>
+
+  <!-- Use Python nodes by default for nao_driver -->
+  <arg name="force_python" default="true" />
+  
+  <include file="$(find nao_description)/launch/nao_v4_publisher.launch" />
+
+  <include file="$(find nao_driver)/launch/nao_driver_sim.launch">
+    <arg name="force_python" value="$(arg force_python)" />
+  </include>
+  <include file="$(find nao_pose)/launch/pose_manager.launch" />
+
+</launch>

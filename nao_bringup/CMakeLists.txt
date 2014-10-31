@@ -9,10 +9,8 @@ catkin_package()
 install(DIRECTORY config
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-#install(DIRECTORY scripts/
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(PROGRAMS nodes/sonar.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-install(FILES
-   nao.launch
-   nao_sim.launch
+install(DIRECTORY launch
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

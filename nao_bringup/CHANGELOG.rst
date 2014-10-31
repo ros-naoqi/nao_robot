@@ -2,11 +2,6 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.1 (2014-10-27)
-------------------
-* get the accent right in Séverin's name
-* Contributors: Vincent Rabaud
-
 0.4.0 (2014-09-18)
 ------------------
 * update nao_bringup launchfiles to use new urdf

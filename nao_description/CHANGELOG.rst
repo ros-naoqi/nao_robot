@@ -2,12 +2,6 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.1 (2014-10-27)
-------------------
-* added camera and sonar to naoGazebo.xacro
-* get the accent right in Séverin's name
-* Contributors: Vincent Rabaud, margueda
-
 0.4.0 (2014-09-18)
 ------------------
 * urdf generated files, launchfiles and config files

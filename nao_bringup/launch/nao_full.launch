@@ -1,0 +1,25 @@
+<launch>
+
+  <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)" />
+  <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
+
+  <!-- Use CPP node by default for nao_sensors -->
+  <arg name="force_python" default="false" />
+
+  <node pkg="diagnostic_aggregator" type="aggregator_node" name="diag_agg" clear_params="true">
+    <rosparam command="load" file="$(find nao_bringup)/config/nao_analysers.yaml" />
+  </node>
+
+  <include file="$(find nao_description)/launch/nao_publisher.launch" />
+  <include file="$(find naoqi_driver)/launch/naoqi_driver.launch">
+    <arg name="force_python" value="$(arg force_python)" />
+  </include>
+  <include file="$(find nao_pose)/launch/pose_manager.launch" />
+
+  <!-- Specify here all dependent settings (default top) -->
+  <include file="$(find naoqi_sensors)/launch/camera.launch" ns="nao_robot/camera/top" />
+
+  <!-- Load left and right sonar -->
+  <node pkg="nao_bringup" type="sonar.py" name="nao_sonar" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen" />
+
+</launch>
