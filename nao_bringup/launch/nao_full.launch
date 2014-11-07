@@ -3,7 +3,7 @@
   <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)" />
   <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
 
-  <!-- Use CPP node by default for nao_sensors -->
+  <!-- Use CPP node by default for naoqi_sensors -->
   <arg name="force_python" default="false" />
 
   <node pkg="diagnostic_aggregator" type="aggregator_node" name="diag_agg" clear_params="true">

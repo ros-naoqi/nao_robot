@@ -11,6 +11,6 @@
   <param name="nao_joint_states/use_joint_sensors" value="False" />
 
   <node pkg="nao_apps" type="nao_footsteps.py" name="nao_footsteps" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)"  />
-  <node pkg="nao_driver" type="nao_joint_states.py" name="nao_joint_states" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
-  <node pkg="nao_driver" type="nao_controller.py" name="nao_controller" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="naoqi_driver" type="naoqi_joint_states.py" name="naoqi_joint_states" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
+  <node pkg="nao_pose" type="pose_controller.py" name="nao_pose" required="true" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" />
 </launch>

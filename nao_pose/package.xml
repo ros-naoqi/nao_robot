@@ -23,7 +23,7 @@
   <run_depend>actionlib_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>std_srvs</run_depend>
-  <run_depend>nao_msgs</run_depend>
+  <run_depend>naoqi_msgs</run_depend>
   <run_depend>trajectory_msgs</run_depend>
 
 </package>

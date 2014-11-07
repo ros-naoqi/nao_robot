@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import roslib
-roslib.load_manifest('nao_driver')
+roslib.load_manifest('naoqi_driver')
 import rospy
 from rospy.exceptions import ROSException
 

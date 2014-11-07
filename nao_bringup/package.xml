@@ -14,11 +14,11 @@
   <url>http://www.ros.org/wiki/nao_robot</url>
   <url type="bugtracker">https://github.com/ros-nao/nao_robot/issues</url>
   <url type="repository">https://github.com/ros-nao/nao_robot</url>
-  
+
   <buildtool_depend>catkin</buildtool_depend>
 
   <run_depend>nao_description</run_depend>
-  <run_depend>nao_driver</run_depend>
+  <run_depend>naoqi_driver</run_depend>
   <run_depend>nao_pose</run_depend>
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>diagnostic_aggregator</run_depend>

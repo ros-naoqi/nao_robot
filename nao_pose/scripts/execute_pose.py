@@ -8,7 +8,7 @@ import rospy
 import sys
 import actionlib
 
-from nao_msgs.msg import BodyPoseAction, BodyPoseGoal
+from naoqi_msgs.msg import BodyPoseAction, BodyPoseGoal
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:

@@ -2,14 +2,14 @@
 
 import roslib
 #from rospy.exceptions import ROSException
-roslib.load_manifest('nao_driver')
+roslib.load_manifest('naoqi_driver')
 import rospy
 from rospy import Duration
 
 
 import actionlib
 from actionlib_msgs.msg import GoalStatus
-import nao_msgs.msg
+import naoqi_msgs.msg
 import trajectory_msgs.msg
 from trajectory_msgs.msg import JointTrajectoryPoint
 import std_srvs.srv
@@ -19,9 +19,9 @@ def joint_angle_client():
 	#inhibitWalkSrv = rospy.ServiceProxy("inhibit_walk", std_srvs.srv.Empty)
 	#uninhibitWalkSrv = rospy.ServiceProxy("uninhibit_walk", std_srvs.srv.Empty)
 	
-	client = actionlib.SimpleActionClient("joint_trajectory", nao_msgs.msg.JointTrajectoryAction)
-	stiffness_client = actionlib.SimpleActionClient("joint_stiffness_trajectory", nao_msgs.msg.JointTrajectoryAction)
-	angle_client = actionlib.SimpleActionClient("joint_angles_action", nao_msgs.msg.JointAnglesWithSpeedAction)
+	client = actionlib.SimpleActionClient("joint_trajectory", naoqi_msgs.msg.JointTrajectoryAction)
+	stiffness_client = actionlib.SimpleActionClient("joint_stiffness_trajectory", naoqi_msgs.msg.JointTrajectoryAction)
+	angle_client = actionlib.SimpleActionClient("joint_angles_action", naoqi_msgs.msg.JointAnglesWithSpeedAction)
 	
 	rospy.loginfo("Waiting for joint_trajectory and joint_stiffness servers...")
 	client.wait_for_server()
@@ -31,7 +31,7 @@ def joint_angle_client():
 	
 	#inhibitWalkSrv()
 	try:	
-		goal = nao_msgs.msg.JointTrajectoryGoal()
+		goal = naoqi_msgs.msg.JointTrajectoryGoal()
 		
 		# move head: single joint, multiple keypoints
 		goal.trajectory.joint_names = ["HeadYaw"]
@@ -110,7 +110,7 @@ def joint_angle_client():
 		
 		
 		# Control of joints with relative speed
-		angle_goal = nao_msgs.msg.JointAnglesWithSpeedGoal()
+		angle_goal = naoqi_msgs.msg.JointAnglesWithSpeedGoal()
 		angle_goal.joint_angles.relative = False
 		angle_goal.joint_angles.joint_names = ["HeadYaw", "HeadPitch"]
 		angle_goal.joint_angles.joint_angles = [1.0, 0.0]
@@ -135,7 +135,7 @@ def joint_angle_client():
 		    rospy.loginfo("Preemption seems okay")
 
 		# Test stiffness actionlib
-		stiffness_goal = nao_msgs.msg.JointTrajectoryGoal()
+		stiffness_goal = naoqi_msgs.msg.JointTrajectoryGoal()
 		stiffness_goal.trajectory.joint_names = ["Body"]
 		stiffness_goal.trajectory.points.append(JointTrajectoryPoint(time_from_start = Duration(0.5), positions = [1.0]))
 		rospy.loginfo("Sending stiffness goal...")
