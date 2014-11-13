@@ -2,8 +2,8 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2014-11-13)
+------------------
 * bugfix: fixing python imports for nao_robot
 * bugfix: python imports
 * Contributors: Karsten Knese

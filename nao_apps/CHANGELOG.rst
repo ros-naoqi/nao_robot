@@ -2,8 +2,8 @@
 Changelog for package nao_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2014-11-13)
+------------------
 * Merge pull request `#2 <https://github.com/ros-naoqi/nao_robot/issues/2>`_ from k-okada/encode_utf8
   vocabulary must encode to utf8
 * bugfix: missing reconfigure in naoqi_driver
