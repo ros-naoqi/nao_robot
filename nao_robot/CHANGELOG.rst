@@ -2,27 +2,36 @@
 Changelog for package nao_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.0 (2014-09-18)
-------------------
+Forthcoming
+-----------
 
-0.3.0 (2014-08-19)
+0.5.0 (2014-11-06)
 ------------------
+* transfer nao_robot
+* 0.4.1
+* update changelogs
+* get the accent right in Séverin's name
+* 0.4.0
+* update changelogs
+* 0.3.0
+* update changelogs
 * update maintainers
   Armin, thank you for all your work, in ROS, Octomap and NAO.
   Good luck out of the university !
-* Contributors: Vincent Rabaud
-
-0.2.3 (2014-03-27)
-------------------
+* "0.2.3"
+* Changelogs
+* {ahornung->ros-nao}
+* {ahornung->ros-nao}
 * Update nao_robot package.xml
-
-0.2.2 (2013-10-28)
-------------------
-
-0.2.1 (2013-10-25)
-------------------
-
-0.2.0 (2013-10-25)
-------------------
-* New nao_robot metapackage (catkinized)
-
+* "0.2.2"
+* changelog
+* "0.2.1"
+* Changelogs
+* "0.2.0"
+* Adding (edited) catkin-generated changelogs
+* Adding bugtracker and repo URLs to package manifests
+* Fix nao_robot metapackage xml
+* Add run_depends to nao_robot metapackage
+* Initial catkinization.
+  Beware! Compilation of nao_sensors_cpp has been temporarily disabled.
+* Contributors: Armin Hornung, Karsten Knese, Miguel Sarabia, Séverin Lemaignan, Vincent Rabaud

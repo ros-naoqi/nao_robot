@@ -2,31 +2,51 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.4.0 (2014-09-18)
-------------------
-* update nao_bringup launchfiles to use new urdf
-* Contributors: margueda
+Forthcoming
+-----------
+* bugfix: fixing python imports for nao_robot
+* bugfix: python imports
+* Contributors: Karsten Knese
 
-0.3.0 (2014-08-19)
+0.5.0 (2014-11-06)
 ------------------
+* update on rviz config
+* moved pose manager into nao_robot
+* transfer nao_robot
+* 0.4.1
+* update changelogs
+* get the accent right in Séverin's name
+* 0.4.0
+* update changelogs
+* update nao_bringup launchfiles to use new urdf
+* 0.3.0
+* update changelogs
 * update maintainers
   Armin, thank you for all your work, in ROS, Octomap and NAO.
   Good luck out of the university !
-* Contributors: Vincent Rabaud
-
-0.2.3 (2014-03-27)
-------------------
+* "0.2.3"
+* Changelogs
+* {ahornung->ros-nao}
+* {ahornung->ros-nao}
 * Add missing nao_sim.launch to nao_bringup install
-
-0.2.2 (2013-10-28)
-------------------
+* "0.2.2"
+* changelog
 * Replace accented character in package.xml files, seems to cause
   problems with bloom
-
-0.2.1 (2013-10-25)
-------------------
-
-0.2.0 (2013-10-25)
-------------------
-* New catkinized package nao_bringup
-
+* "0.2.1"
+* Changelogs
+* "0.2.0"
+* Adjust version number mismatch
+* Adding (edited) catkin-generated changelogs
+* Adding bugtracker and repo URLs to package manifests
+* nao_bringup: include nao_description launch files
+* Adding force_python parameter to nao_driver.launch to switch
+  between C++ and python nodes for nao_sensors (Issue `#11 <https://github.com/ros-naoqi/nao_robot/issues/11>`_)
+  Parameter will be passed on from higher-level launch files (nao_bringup).
+  Default node is C++, unless a simulation launch file is started.
+* Add nao_sim launch file to bringup simulated nao
+* [nao_bringup] Include pose_manager in nao.launch
+* Include nao_driver/launch/nao_driver.launch instead of copying its content
+* XML comments do not work well in launch files...
+* Added nao_bringup: provide general launch file for ROS on Nao
+* Contributors: Armin Hornung, Karsten Knese, Séverin Lemaignan, Vincent Rabaud, margueda
