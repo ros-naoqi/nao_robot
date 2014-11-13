@@ -453,7 +453,7 @@ class SpeechRecognitionWrapper(ALModule):
         self.proxy.setAudioExpression( config["audio_expression"] )
         self.proxy.setVisualExpression( config["visual_expression"] )
         self.proxy.setVocabulary(
-            Util.parse_vocabulary( config["vocabulary"] ),
+            Util.parse_vocabulary( config["vocabulary"].encode('utf-8') ),
             config["word_spotting"] )
 
 
