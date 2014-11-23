@@ -13,9 +13,9 @@
   <include file="$(find naoqi_driver)/launch/naoqi_driver.launch">
     <arg name="nao_ip" value="$(arg nao_ip)"/>
     <arg name="nao_port" value="$(arg nao_port)"/>
-    <arg name="force_python" value="$(arg force_python)" />
-    
+    <arg name="force_python" value="$(arg force_python)" />    
   </include>
+
   <include file="$(find nao_pose)/launch/pose_manager.launch" >
     <arg name="nao_ip" value="$(arg nao_ip)"/>
     <arg name="nao_port" value="$(arg nao_port)"/>
