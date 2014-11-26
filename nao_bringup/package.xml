@@ -19,6 +19,7 @@
 
   <run_depend>nao_description</run_depend>
   <run_depend>naoqi_driver</run_depend>
+  <run_depend>naoqi_sensors</run_depend>
   <run_depend>nao_pose</run_depend>
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>diagnostic_aggregator</run_depend>
