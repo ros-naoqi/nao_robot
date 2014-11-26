@@ -4,7 +4,7 @@
 	<arg name="model" />
 	<arg name="gui" default="True" />
 	<arg name="version" default="V40" />
-  <param name="robot_description" command="$(find xacro)/xacro.py $(find nao_description)/urdf/nao$(arg version)_generated_urdf/naorobot.xacro" /> 
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find nao_description)/urdf/nao$(arg version)_generated_urdf/nao_robot.xacro" />
 
 	<param name="use_gui" value="$(arg gui)"/>
 	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
