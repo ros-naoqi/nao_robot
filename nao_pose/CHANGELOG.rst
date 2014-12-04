@@ -2,8 +2,8 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2014-12-04)
+------------------
 * remove trailing spaces
 * Contributors: Mikael ARGUEDAS
 

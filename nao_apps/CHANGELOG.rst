@@ -2,8 +2,8 @@
 Changelog for package nao_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2014-12-04)
+------------------
 * remove trailing spaces
 * add nao_speech.launch
 * Contributors: Kanae Kochigami, Mikael ARGUEDAS

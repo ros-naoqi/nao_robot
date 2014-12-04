@@ -2,8 +2,8 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2014-12-04)
+------------------
 * remove trailing spaces
 * Added naoqi_sensors dependency
 * deleted extra space
