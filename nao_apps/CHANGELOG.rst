@@ -2,6 +2,12 @@
 Changelog for package nao_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* remove trailing spaces
+* add nao_speech.launch
+* Contributors: Kanae Kochigami, Mikael ARGUEDAS
+
 0.5.1 (2014-11-13)
 ------------------
 * Merge pull request `#2 <https://github.com/ros-naoqi/nao_robot/issues/2>`_ from k-okada/encode_utf8

@@ -2,6 +2,15 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* remove trailing spaces
+* Added naoqi_sensors dependency
+* deleted extra space
+* added nao_ip and nao_port as args to work
+* Add microphone launcher in nao_full
+* Contributors: Arguedas Mikael, Mikael ARGUEDAS, kochigami, sambrose
+
 0.5.1 (2014-11-13)
 ------------------
 * bugfix: fixing python imports for nao_robot

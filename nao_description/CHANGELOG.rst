@@ -2,6 +2,14 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fixed gazebo tags used by nao_gazebo_plugin
+* remove trailing spaces
+* update generated urdf files, add gazebo plugins
+* Added xacro and urdf dependencies
+* Contributors: Arguedas Mikael, Mikael ARGUEDAS
+
 0.5.1 (2014-11-13)
 ------------------
 
