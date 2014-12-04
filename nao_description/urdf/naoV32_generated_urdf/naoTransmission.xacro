@@ -15,7 +15,7 @@
 		<joint name="HeadYaw">
         	<hardwareInterface>PositionJointInterface</hardwareInterface>
 		</joint>
-        <actuator name="HeadYaw_Motor"> 
+        <actuator name="HeadYaw_Motor">
 			<!-- Dummy Values -->
 			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>${speed_red_type3A}</mechanicalReduction>
@@ -31,7 +31,7 @@
 			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>${speed_red_type3B}</mechanicalReduction>
 		</actuator>
-	</transmission> 
+	</transmission>
 	<!-- ARMS -->
 	<!-- XACRO -->
 	<xacro:macro name="arm_joints_transmissions" params="side">
@@ -99,7 +99,7 @@
 
 		</xacro:macro>
 	<xacro:arm_joints_transmissions side="L"/>
-	<xacro:arm_joints_transmissions side="R"/>  
+	<xacro:arm_joints_transmissions side="R"/>
 	<!-- LEGS -->
 	<!-- XACRO -->
 	<xacro:macro name="leg_joints_transmissions" params="side">
