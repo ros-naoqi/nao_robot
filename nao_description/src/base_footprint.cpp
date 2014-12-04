@@ -1,7 +1,7 @@
 
 /*
  * Publish the Nao humanoid's base_footprint frame according to REP-120
- * Based on nao_common/remap_odometry.cpp 
+ * Based on nao_common/remap_odometry.cpp
  *
  * Copyright 2013 Armin Hornung, Stefan Osswald, University of Freiburg
  * http://www.ros.org/wiki/nao
@@ -57,7 +57,7 @@ private:
   tf::MessageFilter<sensor_msgs::JointState> * m_jsFilter;
   tf::TransformBroadcaster m_brBaseFootPrint;
   tf::TransformListener m_listener;
-  
+
   std::string m_odomFrameId;
   std::string m_baseFrameId;
   std::string m_lfootFrameId;
@@ -78,7 +78,7 @@ BaseFootprint::BaseFootprint()
 
 
   // Resolve TF frames using ~tf_prefix parameter
-  
+
   m_odomFrameId = m_listener.resolve(m_odomFrameId);
   m_baseFrameId = m_listener.resolve(m_baseFrameId);
   m_baseFootPrintID = m_listener.resolve(m_baseFootPrintID);
@@ -106,7 +106,7 @@ void BaseFootprint::jsCallback(const sensor_msgs::JointState::ConstPtr & ptr)
 {
   ros::Time time = ptr->header.stamp;
   tf::StampedTransform tf_odom_to_base, tf_odom_to_left_foot, tf_odom_to_right_foot;
-  
+
   ROS_DEBUG("JointState callback function, computing frame %s", m_baseFootPrintID.c_str());
   try {
     m_listener.lookupTransform(m_odomFrameId, m_lfootFrameId, time, tf_odom_to_left_foot);
@@ -116,23 +116,23 @@ void BaseFootprint::jsCallback(const sensor_msgs::JointState::ConstPtr & ptr)
     ROS_ERROR("%s",ex.what());
     return ;
   }
-  
+
   tf::Vector3 new_origin = (tf_odom_to_right_foot.getOrigin() + tf_odom_to_left_foot.getOrigin())/2.0; // middle of both feet
   double height = std::min(tf_odom_to_left_foot.getOrigin().getZ(), tf_odom_to_right_foot.getOrigin().getZ()); // fix to lowest foot
   new_origin.setZ(height);
-  
+
   // adjust yaw according to torso orientation, all other angles 0 (= in z-plane)
   double roll, pitch, yaw;
   tf_odom_to_base.getBasis().getRPY(roll, pitch, yaw);
-  
+
   tf::Transform tf_odom_to_footprint(tf::createQuaternionFromYaw(yaw), new_origin);
   tf::Transform tf_base_to_footprint = tf_odom_to_base.inverse() * tf_odom_to_footprint;
-  
+
   // publish transform with parent m_baseFrameId and new child m_baseFootPrintID
   // i.e. transform from m_baseFrameId to m_baseFootPrintID
   m_brBaseFootPrint.sendTransform(tf::StampedTransform(tf_base_to_footprint, time, m_baseFrameId, m_baseFootPrintID));
   ROS_DEBUG("Published Transform %s --> %s", m_baseFrameId.c_str(), m_baseFootPrintID.c_str());
-  
+
   return;
 
 }

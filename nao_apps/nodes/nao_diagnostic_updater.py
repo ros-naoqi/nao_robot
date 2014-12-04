@@ -64,18 +64,18 @@ class NaoDiagnosticUpdater(NaoqiNode):
         self.runsOnRobot = "aldebaran" in os.uname()[2]   # if temperature device files cannot be opened, this flag will be set to False later.
 
         # Lists with interesting ALMemory keys
-        self.jointNamesList = self.motionProxy.getJointNames('Body')    
+        self.jointNamesList = self.motionProxy.getJointNames('Body')
         self.jointTempPathsList = []
-        self.jointStiffPathsList = []    
+        self.jointStiffPathsList = []
         for i in range(0, len(self.jointNamesList)):
             self.jointTempPathsList.append("Device/SubDeviceList/%s/Temperature/Sensor/Value" % self.jointNamesList[i])
             self.jointStiffPathsList.append("Device/SubDeviceList/%s/Hardness/Actuator/Value" % self.jointNamesList[i])
 
         self.batteryNamesList = ["Percentage", "Status"]
-        self.batteryPathsList = ["Device/SubDeviceList/Battery/Charge/Sensor/Value", 
+        self.batteryPathsList = ["Device/SubDeviceList/Battery/Charge/Sensor/Value",
                                  "Device/SubDeviceList/Battery/Charge/Sensor/Status",
                                  "Device/SubDeviceList/Battery/Current/Sensor/Value"]
-        
+
         self.deviceInfoList = ["Device/DeviceList/ChestBoard/BodyId"]
         deviceInfoData = self.memProxy.getListData(self.deviceInfoList)
         if(len(deviceInfoData) > 1 and isinstance(deviceInfoData[1], list)):
@@ -89,12 +89,12 @@ class NaoDiagnosticUpdater(NaoqiNode):
                 self.hardwareID = "%s:%d"%(f.readline().rstrip(), self.pport)
                 f.close()
             else:
-                self.hardwareID = "%s:%d"%(self.pip, self.pport)            
+                self.hardwareID = "%s:%d"%(self.pip, self.pport)
         else:
             self.hardwareID = deviceInfoData[0].rstrip()
             self.isSimulator = False
-            
-        # init. messages:        
+
+        # init. messages:
         self.diagnosticPub = rospy.Publisher("diagnostics", DiagnosticArray)
 
         rospy.loginfo("nao_diagnostic_updater initialized")
@@ -119,7 +119,7 @@ class NaoDiagnosticUpdater(NaoqiNode):
                 if isinstance(jointsTempData[1], list):
                     # Some naoqi versions provide data in [0, [data1, data2, ...], timestamp] format,
                     # others just as [data1, data2, ...]
-                    # --> get data list                    
+                    # --> get data list
                     jointsTempData = jointsTempData[1]
                     jointsStiffData = jointsStiffData[1]
                     batteryData = batteryData[1]
@@ -129,12 +129,12 @@ class NaoDiagnosticUpdater(NaoqiNode):
                 rospy.signal_shutdown("No NaoQI available anymore")
 
             diagnosticArray = DiagnosticArray()
-            
+
             # Process joint temperature and stiffness
             for i in range(0, len(self.jointTempPathsList)):
                 status = DiagnosticStatus()
-                status.hardware_id = "%s#%s"%(self.hardwareID, self.jointNamesList[i])           
-                status.name = "nao_joint: %s" % self.jointNamesList[i]                
+                status.hardware_id = "%s#%s"%(self.hardwareID, self.jointNamesList[i])
+                status.name = "nao_joint: %s" % self.jointNamesList[i]
                 kv = KeyValue()
                 kv.key = "Temperature"
                 temperature = jointsTempData[i]
@@ -177,7 +177,7 @@ class NaoDiagnosticUpdater(NaoqiNode):
             # Battery status: See http://www.aldebaran-robotics.com/documentation/naoqi/sensors/dcm/pref_file_architecture.html?highlight=discharge#charge-for-the-battery
             # Note: SANYO batteries use different keys!
             statuskeys = ["End off Discharge flag", "Near End Off Discharge flag", "Charge FET on", "Discharge FET on", "Accu learn flag", "Discharging flag", "Full Charge Flag", "Charge Flag", "Charge Temperature Alarm", "Over Charge Alarm", "Discharge Alarm", "Charge Over Current Alarm", "Discharge Over Current Alarm (14A)", "Discharge Over Current Alarm (6A)", "Discharge Temperature Alarm", "Power-Supply present" ]
-                        
+
             for j in range(0, 16):
                 kv = KeyValue()
                 kv.key = statuskeys[j]
@@ -188,7 +188,7 @@ class NaoDiagnosticUpdater(NaoqiNode):
                 else:
                     kv.value = "False"
                 status.values.append(kv)
-                
+
             kv = KeyValue()
             kv.key = "Status"
             if batteryData[1] is None:
@@ -217,13 +217,12 @@ class NaoDiagnosticUpdater(NaoqiNode):
                 status.level = DiagnosticStatus.ERROR
                 status.message = "Battery almost empty (%3.1f%% left)" % (batteryData[0] * 100)
             diagnosticArray.status.append(status)
-            
 
             # Process battery current
             status = DiagnosticStatus()
             status.hardware_id = "%s#%s"%(self.hardwareID, "power")
             status.name = "nao_power: Current"
-             
+
             if batteryData[2] is None:
                 status.level = DiagnosticStatus.OK
                 status.message = "Total Current: unknown"
@@ -251,7 +250,7 @@ class NaoDiagnosticUpdater(NaoqiNode):
             status.values.append(kv)
             kv = KeyValue()
             kv.key = "Board Temperature"
-            kv.value = str(temp['HeadBoard'])            
+            kv.value = str(temp['HeadBoard'])
             status.values.append(kv)
             if(temp['HeadSilicium'] == "invalid"):
                 status.level = DiagnosticStatus.OK
@@ -263,24 +262,23 @@ class NaoDiagnosticUpdater(NaoqiNode):
                 elif temp['HeadSilicium'] < 105:
                     status.level = DiagnosticStatus.WARN
                 else:
-                    status.level = DiagnosticStatus.ERROR                    
-            diagnosticArray.status.append(status)            
-            
-            
+                    status.level = DiagnosticStatus.ERROR
+            diagnosticArray.status.append(status)
+
             # Process WIFI and LAN status
             statusWifi = DiagnosticStatus()
             statusWifi.hardware_id = "%s#%s"%(self.hardwareID, "wlan")
             statusWifi.name = "nao_wlan: Status"
-            
+
             statusLan = DiagnosticStatus()
             statusLan.hardware_id = "%s#%s"%(self.hardwareID, "ethernet")
             statusLan.name = "nao_ethernet: Status"
-            
+
             if self.runsOnRobot:
                 statusLan.level = DiagnosticStatus.ERROR
                 statusLan.message = "offline"
                 statusWifi.level = DiagnosticStatus.ERROR
-                statusWifi.message = "offline"                              
+                statusWifi.message = "offline"
                 systemBus = dbus.SystemBus()
                 try:
                     manager = dbus.Interface(systemBus.get_object("org.moblin.connman", "/"), "org.moblin.connman.Manager")
@@ -294,19 +292,19 @@ class NaoDiagnosticUpdater(NaoqiNode):
                             props = service.GetProperties()
                         except DBusException as e:
                             continue # WLAN network probably disappeared meanwhile
-                        
+
                         state = str(props.get("State", "None"))
                         if state == "idle":
-                            pass # other network, not connected 
-                        else:                 
+                            pass # other network, not connected
+                        else:
                             nettype = str(props.get("Type", "<unknown>"))
                             if(nettype == "wifi"):
                                 status = statusWifi
                             else:
-                                status = statusLan   
+                                status = statusLan
                             kv = KeyValue()
                             kv.key = "Network"
-                            kv.value = str(props.get("Name", "<unknown>"))                    
+                            kv.value = str(props.get("Name", "<unknown>"))
                             status.values.append(kv)
                             if nettype == "wifi":
                                 strength = int(props.get("Strength", "<unknown>"))
@@ -315,7 +313,7 @@ class NaoDiagnosticUpdater(NaoqiNode):
                                 kv.value = "%d%%"%strength
                                 status.values.append(kv)
                             else:
-                                strength = None                    
+                                strength = None
                             kv = KeyValue()
                             kv.key = "Type"
                             kv.value = nettype
@@ -324,7 +322,7 @@ class NaoDiagnosticUpdater(NaoqiNode):
                                 status.message = state
                             else:
                                 status.message = "%s (%d%%)"%(state, strength)
-                                
+
                             if state in ["online", "ready"]:
                                 status.level = DiagnosticStatus.OK
                             elif state in ["configuration", "association"]:
@@ -335,18 +333,18 @@ class NaoDiagnosticUpdater(NaoqiNode):
             else:
                 statusWifi.level = DiagnosticStatus.OK
                 statusWifi.message = "nao_diagnostic_updater not running on robot, cannot determine WLAN status"
-                                
+
                 statusLan.level = DiagnosticStatus.OK
                 statusLan.message = "nao_diagnostic_updater not running on robot, cannot determine Ethernet status"
-                                        
-            diagnosticArray.status.append(statusWifi)   
-            diagnosticArray.status.append(statusLan)   
-            
+
+            diagnosticArray.status.append(statusWifi)
+            diagnosticArray.status.append(statusLan)
+
             # Publish all diagnostic messages
-            diagnosticArray.header.stamp = rospy.Time.now()                                  
-            self.diagnosticPub.publish(diagnosticArray)                             
+            diagnosticArray.header.stamp = rospy.Time.now()
+            self.diagnosticPub.publish(diagnosticArray)
             rospy.sleep(self.sleep)
-            
+
     def temp_get(self):
         """Read the CPU and head temperature from the system devices.
 
@@ -379,9 +377,9 @@ class NaoDiagnosticUpdater(NaoqiNode):
 
 
 if __name__ == '__main__':
-    
+
     updater = NaoDiagnosticUpdater()
     updater.start()
-    
+
     rospy.spin()
     exit(0)

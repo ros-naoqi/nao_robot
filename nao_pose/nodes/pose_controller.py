@@ -2,7 +2,7 @@
 
 #
 # ROS node to provide joint angle control to Nao by wrapping NaoQI
-# This code is currently compatible to NaoQI version 1.6 or newer (latest 
+# This code is currently compatible to NaoQI version 1.6 or newer (latest
 # tested: 1.12)
 #
 # Copyright 2011 Armin Hornung, University of Freiburg
@@ -293,7 +293,7 @@ class PoseController(NaoqiNode):
         if goal.joint_angles.relative == 1:
             # TODO: this uses the current angles instead of the angles at the given timestamp
             currentAngles = self.motionProxy.getAngles(names, True)
-            angles = list(map(lambda x,y: x+y, angles, currentAngles))            
+            angles = list(map(lambda x,y: x+y, angles, currentAngles))
 
         task_id = None
         running = True
@@ -330,7 +330,7 @@ class PoseController(NaoqiNode):
 
     def checkJointsLen(self, goal_position):
         if len(goal_position.name) == 1 and self.collectionSize.has_key(goal_position.name[0]):
-            return len(goal_position.position) == self.collectionSize[goal_position.name[0]] 
+            return len(goal_position.position) == self.collectionSize[goal_position.name[0]]
         else:
             return len(goal_position.position) ==  len(goal_position.name)
 
@@ -347,7 +347,7 @@ class PoseController(NaoqiNode):
 
         if goal.posture_name not in valid_postures:
             bodyPoseWithSpeedResult = BodyPoseWithSpeedResult()
-            self.bodyPoseWithSpeedServer.set_aborted(bodyPoseWithSpeedResult)  
+            self.bodyPoseWithSpeedServer.set_aborted(bodyPoseWithSpeedResult)
             rospy.logerr("Body pose setter: Not a valid posture.")
             return
 

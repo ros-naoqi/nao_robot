@@ -50,20 +50,20 @@ from naoqi_msgs.msg import(
 class NaoLeds(NaoqiNode):
     #This should be treated as a constant
     NODE_NAME = "nao_leds"
-    
+
     def __init__( self ):
-        
+
         #Initialisation
         NaoqiNode.__init__( self, self.NODE_NAME )
 
         #Proxy to interface with LEDs
         self.proxy = self.get_proxy( "ALLeds" )
-        
+
         #Seed python's random number generator
         random.seed( rospy.Time.now().to_nsec() )
-        
+
         #Create a subscriber for the fade_rgb topic
-        self.subscriber = rospy.Subscriber( 
+        self.subscriber = rospy.Subscriber(
             "fade_rgb",
             FadeRGB,
             self.fade_rgb)
@@ -76,11 +76,10 @@ class NaoLeds(NaoqiNode):
             False
             )
         self.actionlib.start()
-        
-    
+
     def fade_rgb(self, request) :
         hexColor =  int(
-            int(request.color.r*255) << 16 | 
+            int(request.color.r*255) << 16 |
             int(request.color.g*255) << 8 |
             int(request.color.b*255)
             )
@@ -90,21 +89,21 @@ class NaoLeds(NaoqiNode):
             hexColor,
             request.fade_duration.to_sec()
             )
-    
+
     def run_blink( self, request ):
         #Note that this function is executed on a different thread
 
         third_of_duration = request.blink_duration / 3.0
-        
+
         #Prepare background message
         bg_msg = FadeRGB();
         bg_msg.led_name = "FaceLeds"
         bg_msg.color = request.bg_color
         bg_msg.fade_duration = third_of_duration
-        
+
         #Prepare a copy for blink_msg
         blink_msg = copy.deepcopy( bg_msg )
-        
+
         #Construct result and feedback
         feedback = BlinkFeedback()
         result = BlinkResult()
@@ -122,21 +121,21 @@ class NaoLeds(NaoqiNode):
         elif request.blink_rate_mean <= 0.0 or request.blink_rate_sd <= 0.0:
             bad_request = True
             reason = "Invalid parameter for blink rate"
-        
+
         if bad_request:
             rospy.logwarn("Bad Blink request: {}".format(reason))
             self.actionlib.set_aborted(result, reason)
             return
-        
+
         #Sleep time is drawn from a gaussian dist with these parameters
         sleep_mean = request.blink_rate_mean
         sleep_sd = request.blink_rate_sd
         max_sleep_time = sleep_mean + 3* sleep_sd #This is highly unlikely
-        
+
         #Main blinking loop
-        while ( not self.actionlib.is_preempt_requested() and 
+        while ( not self.actionlib.is_preempt_requested() and
             not rospy.is_shutdown() ) :
-            
+
             #Chose a blinking color at random
             blink_msg.color = random.choice( request.colors )
 
@@ -146,25 +145,25 @@ class NaoLeds(NaoqiNode):
             rospy.sleep( third_of_duration )
             #Fade to background (takes another 1/3 duration)
             self.fade_rgb( bg_msg )
-            
+
             #Publish feedback
             feedback.last_color = blink_msg.color
             self.actionlib.publish_feedback( feedback )
-            
+
             #Sleep for a random amount of time
             sleep_time = random.gauss( sleep_mean, sleep_sd )
-            
+
             if sleep_time < 0:
                 sleep_time = 0
-            elif sleep_time > max_sleep_time : 
+            elif sleep_time > max_sleep_time :
                 sleep_time = max_sleep_time
-                
+
             rospy.sleep( sleep_time )
-        
+
         #If we were pre-empted by other request, make sure result shows this
         if self.actionlib.is_new_goal_available() :
             result.still_blinking = True
-                
+
         # Task never completes so if we reach here, blink has been pre-empted
         self.actionlib.set_preempted( result )
 

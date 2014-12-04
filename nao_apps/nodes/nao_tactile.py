@@ -46,11 +46,11 @@ from naoqi import ( ALModule, ALBroker, ALProxy )
 #   If port 0 is used, a free port will be assigned automatically,
 #   but naoqi is unable to pick up the assigned port number, leaving
 #   the module unable to communicate with naoqi (1.10.52).
-# 
+#
 # - Callback functions _must_ have a docstring, otherwise they won't get bound.
-# 
+#
 # - Shutting down the broker manually will result in a deadlock,
-#   not shutting down the broker will sometimes result in an exception 
+#   not shutting down the broker will sometimes result in an exception
 #   when the script ends (1.10.52).
 #
 
@@ -76,23 +76,23 @@ class NaoTactile(ALModule):
         self.pip = options.pip
         self.pport = int(options.pport)
         self.moduleName = moduleName
-        
+
         self.init_almodule()
-        
+
         # ROS initialization:
         rospy.init_node('nao_tactile')
-             
+
         # init. messages:
-        self.tactile = TactileTouch()              
+        self.tactile = TactileTouch()
         self.bumper = Bumper()
         self.tactilePub = rospy.Publisher("tactile_touch", TactileTouch, queue_size=10)
         self.bumperPub = rospy.Publisher("bumper", Bumper, queue_size=10)
-        
+
         try:
             footContact = self.memProxy.getData("footContact", 0)
         except RuntimeError:
             footContact = None
-            
+
         if footContact is None:
             self.hasFootContactKey = False
             rospy.loginfo("Foot contact key is not present in ALMemory, will not publish to foot_contact topic.")
@@ -109,9 +109,9 @@ class NaoTactile(ALModule):
         self.tactileTouchRearButton = TactileTouch.buttonRear;
         self.bumperRightButton = Bumper.right;
         self.bumperLeftButton = Bumper.left;
-        
+
         self.subscribe()
-        
+
         rospy.loginfo("nao_tactile initialized")
 
     def init_almodule(self):
@@ -123,7 +123,7 @@ class NaoTactile(ALModule):
             print("Could not connect to NaoQi's main broker")
             exit(1)
         ALModule.__init__(self, self.moduleName)
-        
+
         self.memProxy = ALProxy("ALMemory",self.pip,self.pport)
         # TODO: check self.memProxy.version() for > 1.6
         if self.memProxy is None:
@@ -131,7 +131,7 @@ class NaoTactile(ALModule):
             exit(1)
 
 
-    def shutdown(self): 
+    def shutdown(self):
         self.unsubscribe()
         # Shutting down broker seems to be not necessary any more
         # try:
@@ -183,7 +183,7 @@ class NaoTactile(ALModule):
         self.bumper.state = int(value);
         self.bumperPub.publish(self.bumper)
         rospy.logdebug("bumper pressed: name=%s, value=%d, message=%s.", strVarName, value, strMessage);
-        
+
     def onFootContactChanged(self, strVarName, value, strMessage):
         "Called when foot contact changes in ALMemory"
         self.footContactPub.publish(value > 0.0)
@@ -192,8 +192,8 @@ if __name__ == '__main__':
     ROSNaoTactileModule = NaoTactile("ROSNaoTactileModule")
 
     rospy.spin()
-    
+
     rospy.loginfo("Stopping nao_tactile ...")
-    ROSNaoTactileModule.shutdown();        
+    ROSNaoTactileModule.shutdown();
     rospy.loginfo("nao_tactile stopped.")
     exit(0)

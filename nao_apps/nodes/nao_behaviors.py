@@ -48,26 +48,26 @@ from naoqi_msgs.srv import (
 class NaoBehaviors(NaoqiNode):
     #This should be treated as a constant
     NODE_NAME = "nao_behaviors"
-    
+
     def __init__( self ):
-        
+
         #Initialisation
         NaoqiNode.__init__( self, self.NODE_NAME )
-        
+
         #We need this variable to be able to call stop behavior when preempted
         self.behavior = None
         self.lock = threading.RLock()
-        
+
         #Proxy for listingBehaviors and stopping them
         self.behaviorProxy = self.get_proxy( "ALBehaviorManager" )
-        
+
         # Register ROS services
         self.getInstalledBehaviorsService = rospy.Service(
             "get_installed_behaviors",
             GetInstalledBehaviors,
             self.getInstalledBehaviors
             )
-        
+
         #Prepare and start actionlib server
         self.actionlibServer = actionlib.SimpleActionServer(
             "run_behavior",
@@ -75,28 +75,28 @@ class NaoBehaviors(NaoqiNode):
             self.runBehavior,
             False
             )
-        
+
         self.actionlibServer.register_preempt_callback( self.stopBehavior )
-        
+
         self.actionlibServer.start()
-    
+
     def getInstalledBehaviors( self, request ):
         result = self.behaviorProxy.getInstalledBehaviors()
         return GetInstalledBehaviorsResponse( result )
-    
-    
+
+
     def runBehavior( self, request ):
         #Note this function is executed from a different thread
         rospy.logdebug(
             "Execution of behavior: '{}' requested".format(request.behavior))
-        
+
         #Check requested behavior is installed
         if not request.behavior in self.behaviorProxy.getInstalledBehaviors():
             error_msg = "Behavior '{}' not installed".format(request.behavior)
             self.actionlibServer.set_aborted(text = error_msg)
             rospy.logdebug(error_msg)
             return
-        
+
         with self.lock:
             # Check first if we're already preempted, and return if so
             if self.actionlibServer.is_preempt_requested():
@@ -109,10 +109,10 @@ class NaoBehaviors(NaoqiNode):
             #Execute behavior (on another thread so we can release lock)
             taskID = self.behaviorProxy.post.runBehavior( self.behavior )
 
-        # Wait for task to complete (or be preempted)    
+        # Wait for task to complete (or be preempted)
         rospy.logdebug("Waiting for behavior execution to complete")
         self.behaviorProxy.wait( taskID, 0 )
-        
+
         #Evaluate results
         with self.lock:
             self.behavior = None
