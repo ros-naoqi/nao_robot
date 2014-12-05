@@ -21,6 +21,9 @@
 
   <!-- Specify here all dependent settings (default top) -->
   <include file="$(find naoqi_sensors)/launch/camera.launch" ns="nao_robot/camera/top" />
+  <include file="$(find naoqi_sensors)/launch/camera.launch" ns="nao_robot/camera/bottom" >
+    <arg name="source" value="1" />
+  </include>
 
   <!-- Load left and right sonar -->
   <node pkg="nao_bringup" type="sonar.py" name="nao_sonar" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen" />
