@@ -32,6 +32,7 @@
 #
 
 import rospy
+import distutils
 
 from naoqi_driver.naoqi_node import NaoqiNode
 from naoqi import (ALBroker, ALProxy, ALModule)
@@ -46,6 +47,9 @@ class NaoALife(NaoqiNode):
 
         #Initialisation
         NaoqiNode.__init__( self, self.NODE_NAME )
+        if self.get_version() < distutils.version.LooseVersion('2.0'):
+            rospy.logwarn("{} is only available on NaoQi version 2.0 or higher, your version is {}".format(self.NODE_NAME, self.get_version()))
+            exit(1)
 
         #Proxy to interface with LEDs
         self.proxy = self.get_proxy( "ALAutonomousLife" )
