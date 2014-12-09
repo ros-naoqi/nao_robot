@@ -82,6 +82,8 @@ class PoseController(NaoqiNode):
         # start services / actions:
         self.enableStiffnessSrv = rospy.Service("body_stiffness/enable", Empty, self.handleStiffnessSrv)
         self.disableStiffnessSrv = rospy.Service("body_stiffness/disable", Empty, self.handleStiffnessOffSrv)
+        self.wakeUpSrv = rospy.Service("wakeup", Empty, self.handleWakeUpSrv)
+        self.restSrv = rospy.Service("rest", Empty, self.handleRestSrv)
 
 
         #Start simple action servers
@@ -164,6 +166,23 @@ class PoseController(NaoqiNode):
             rospy.logerr("Exception caught:\n%s", e)
             return None
 
+    def handleWakeUpSrv(self, req):
+        try:
+            self.motionProxy.wakeUp()
+            rospy.loginfo("Wake Up")
+            return EmptyResponse()
+        except RuntimeError,e:
+            rospy.logerr("Exception caught:\n%s", e)
+            return None
+
+    def handleRestSrv(self, req):
+        try:
+            self.motionProxy.rest()
+            rospy.loginfo("Rest")
+            return EmptyResponse()
+        except RuntimeError,e:
+            rospy.logerr("Exception caught:\n%s", e)
+            return None
 
     def jointTrajectoryGoalMsgToAL(self, goal):
         """Helper, convert action goal msg to Aldebraran-style arrays for NaoQI"""
