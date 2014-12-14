@@ -2,6 +2,9 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.2 (2014-12-04)
 ------------------
 * fixed gazebo tags used by nao_gazebo_plugin
