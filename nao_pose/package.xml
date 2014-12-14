@@ -1,6 +1,6 @@
 <package>
   <name>nao_pose</name>
-  <version>0.5.2</version>
+  <version>0.5.3</version>
   <description>
       <p>
           This package contains nodes for managing Nao's poses.

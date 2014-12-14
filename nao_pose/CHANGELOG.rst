@@ -2,8 +2,8 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.3 (2014-12-14)
+------------------
 * add wakeup and rest services
 * Contributors: Kei Okada
 
