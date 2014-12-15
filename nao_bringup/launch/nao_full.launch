@@ -10,10 +10,17 @@
     <rosparam command="load" file="$(find nao_bringup)/config/nao_analysers.yaml" />
   </node>
 
-  <include file="$(find nao_description)/launch/nao_publisher.launch" />
+  <!-- upload nao robot model V40 by default-->
+  <include file="$(find nao_description)/launch/robot_state_publisher.launch" >
+    <arg name="version" value="V40" />
+  </include>
+
+  <!-- publish joint states and basic actuators -->
   <include file="$(find naoqi_driver)/launch/naoqi_driver.launch">
     <arg name="force_python" value="$(arg force_python)" />
   </include>
+
+  <!-- launch pose manager -->
   <include file="$(find nao_pose)/launch/pose_manager.launch" >
     <arg name="nao_ip" value="$(arg nao_ip)" />
     <arg name="nao_port" value="$(arg nao_port)" />
