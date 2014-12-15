@@ -26,7 +26,14 @@
   </include>
 
   <!-- Load left and right sonar -->
-  <node pkg="nao_bringup" type="sonar.py" name="nao_sonar" args="--pip=$(arg nao_ip) --pport=$(arg nao_port)" output="screen" />
+  <include file="$(find naoqi_sensors)/launch/sonar.launch" ns="nao_robot/sonar/left" >
+    <arg name="memory_key" value="Device/SubDeviceList/US/Left/Sensor/Value" />
+    <arg name="frame_id" value="LSonar_frame" />
+  </include>
+  <include file="$(find naoqi_sensors)/launch/sonar.launch" ns="nao_robot/sonar/right" >
+    <arg name="memory_key" value="Device/SubDeviceList/US/Right/Sensor/Value" />
+    <arg name="frame_id" value="RSonar_frame" />
+  </include>
 
   <!-- Specify here all dependent settings (default top) -->
   <include file="$(find naoqi_sensors)/launch/microphone.launch" ns="nao_robot/microphone" />
