@@ -2,8 +2,8 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.5 (2015-02-17)
+------------------
 * update to the latest version of the generation script
 * Contributors: Vincent Rabaud
 
