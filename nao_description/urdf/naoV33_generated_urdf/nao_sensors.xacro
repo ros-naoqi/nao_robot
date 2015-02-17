@@ -17,6 +17,12 @@
 		<origin rpy="0 0 0" xyz="-0.03025 0.0191 -0.04511"/>
 		<axis xyz="0 0 0"/>
 	</joint>
+	<link name="CameraBottom_optical_frame"/>
+	<joint name="CameraBottom_optical_frame_joint" type="fixed">
+		<parent link="CameraBottom_frame"/>
+		<child link="CameraBottom_optical_frame"/>
+		<origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
+	</joint>
 	<link name="RFsrRR_frame"/>
 	<joint name="RFoot/FSR/RearRight_sensor_fixedjoint" type="fixed">
 		<parent link="r_ankle"/>
@@ -73,13 +79,6 @@
 		<origin rpy="0 0 0" xyz="-0.02965 -0.0191 -0.04511"/>
 		<axis xyz="0 0 0"/>
 	</joint>
-	<link name="LSonar_frame"/>
-	<joint name="Sonar/Right_sensor_fixedjoint" type="fixed">
-		<parent link="torso"/>
-		<child link="LSonar_frame"/>
-		<origin rpy="0.00478508 0.0436497 -0.392441" xyz="0.00558253 -0.0192068 0.0623853"/>
-		<axis xyz="0 0 0"/>
-	</joint>
 	<link name="HeadTouchFront_frame"/>
 	<joint name="Head/Touch/Front_sensor_fixedjoint" type="fixed">
 		<parent link="Head"/>
@@ -129,6 +128,13 @@
 		<origin rpy="0 0 0" xyz="0.07025 0.0231 -0.04511"/>
 		<axis xyz="0 0 0"/>
 	</joint>
+	<link name="LSonar_frame"/>
+	<joint name="Sonar/Left_sensor_fixedjoint" type="fixed">
+		<parent link="torso"/>
+		<child link="LSonar_frame"/>
+		<origin rpy="-0.00478508 0.0436497 0.392441" xyz="0.00558253 0.0192068 0.0623853"/>
+		<axis xyz="0 0 0"/>
+	</joint>
 	<link name="MicroSurroundRight_frame"/>
 	<joint name="MicroRight_sensor_fixedjoint" type="fixed">
 		<parent link="Head"/>
@@ -151,10 +157,10 @@
 		<axis xyz="0 0 0"/>
 	</joint>
 	<link name="RSonar_frame"/>
-	<joint name="Sonar/Left_sensor_fixedjoint" type="fixed">
+	<joint name="Sonar/Right_sensor_fixedjoint" type="fixed">
 		<parent link="torso"/>
 		<child link="RSonar_frame"/>
-		<origin rpy="-0.00478508 0.0436497 0.392441" xyz="0.00558253 0.0192068 0.0623853"/>
+		<origin rpy="0.00478508 0.0436497 -0.392441" xyz="0.00558253 -0.0192068 0.0623853"/>
 		<axis xyz="0 0 0"/>
 	</joint>
 	<link name="RHandTouchLeft_frame"/>
@@ -177,6 +183,12 @@
 		<child link="CameraTop_frame"/>
 		<origin rpy="0 0 0" xyz="0.0539 0 0.0679"/>
 		<axis xyz="0 0 0"/>
+	</joint>
+	<link name="CameraTop_optical_frame"/>
+	<joint name="CameraTop_optical_frame_joint" type="fixed">
+		<parent link="CameraTop_frame"/>
+		<child link="CameraTop_optical_frame"/>
+		<origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
 	</joint>
 	<link name="LInfraRed_frame"/>
 	<joint name="InfraredL_sensor_fixedjoint" type="fixed">
