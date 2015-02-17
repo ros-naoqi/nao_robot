@@ -2,6 +2,11 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update to the latest version of the generation script
+* Contributors: Vincent Rabaud
+
 0.5.4 (2015-02-17)
 ------------------
 * restore sensor in naoGazebo.xacro
