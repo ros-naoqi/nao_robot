@@ -2,6 +2,9 @@
 Changelog for package nao_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.3 (2014-12-14)
 ------------------
 * check naoqi version and exit if not supported

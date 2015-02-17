@@ -2,6 +2,11 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* restore sensor in naoGazebo.xacro
+* Contributors: Mikael Arguedas
+
 0.5.3 (2014-12-14)
 ------------------
 
