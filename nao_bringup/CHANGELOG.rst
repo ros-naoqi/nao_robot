@@ -2,8 +2,8 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.4 (2015-02-17)
+------------------
 * configure sonars via namespace and params
 * Contributors: Karsten Knese
 
