@@ -1,3 +1,0 @@
-<launch>
-  <include file="$(find nao_description)/launch/nao_publisher.launch" />
-</launch>
