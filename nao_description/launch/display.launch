@@ -1,6 +1,6 @@
 <launch>
   <arg name="version" default="V40" />
-  <include file="$(find nao_description)/launch/robot_state_publisher.launch>
+  <include file="$(find nao_description)/launch/robot_state_publisher.launch">
     <arg name="version" value="$(arg version)" />
   </include>
 
