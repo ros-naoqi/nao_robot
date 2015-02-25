@@ -3,29 +3,29 @@
     <!-- MACROS FOR DISABLE LINKS -->
 	<xacro:property name="PI" value="3.14159265359" />
     <xacro:macro name="DisabledLinks" params="side side_small">
-        <plugin name="${side}Finger11" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
-            <link>${side}Finger11</link>
+        <plugin name="${side}Finger11_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
+            <link>${side}Finger11_link</link>
         </plugin>
-        <plugin name="${side}Finger12" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
-            <link>${side}Finger12</link>
+        <plugin name="${side}Finger12_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
+            <link>${side}Finger12_link</link>
         </plugin>
-        <plugin name="${side}Finger13" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
-            <link>${side}Finger13</link>
+        <plugin name="${side}Finger13_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
+            <link>${side}Finger13_link</link>
         </plugin>
-        <plugin name="${side}Finger21" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
-            <link>${side}Finger21</link>
+        <plugin name="${side}Finger21_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
+            <link>${side}Finger21_link</link>
         </plugin>
-        <plugin name="${side}Finger22" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
-            <link>${side}Finger22</link>
+        <plugin name="${side}Finger22_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
+            <link>${side}Finger22_link</link>
         </plugin>
-        <plugin name="${side}Finger23" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
-            <link>${side}Finger23</link>
+        <plugin name="${side}Finger23_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
+            <link>${side}Finger23_link</link>
         </plugin>
-        <plugin name="${side}Thumb1" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
-            <link>${side}Thumb1</link>
+        <plugin name="${side}Thumb1_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
+            <link>${side}Thumb1_link</link>
         </plugin>
-        <plugin name="${side}Thumb2" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
-            <link>${side}Thumb2</link>
+        <plugin name="${side}Thumb2_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
+            <link>${side}Thumb2_link</link>
         </plugin> 
         <plugin name="${side_small}_gripper" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
             <link>${side_small}_gripper</link>
@@ -34,36 +34,36 @@
     <!-- MACROS FOR MIMIC JOINTS -->
     <!-- Fingers -->
     <xacro:macro name="FingerMimics" params="side num">
-        <plugin name="mimic_${side}Finger${num}" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+        <plugin name="mimic_${side}Finger${num}1" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
             <joint>${side}Hand</joint>
-            <mimicJoint>${side}Finger${num}</mimicJoint>
+            <mimicJoint>${side}Finger${num}1</mimicJoint>
             <multiplier>-${PI/4}</multiplier>
             <offset>${PI/4}</offset>
         </plugin>
-        <plugin name="mimic_${side}Finger${num}_1" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+        <plugin name="mimic_${side}Finger${num}2" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
             <joint>${side}Hand</joint>
-            <mimicJoint>${side}Finger${num}_1</mimicJoint>
+            <mimicJoint>${side}Finger${num}2</mimicJoint>
             <multiplier>-${PI/4}</multiplier>
             <offset>${PI/4}</offset>
         </plugin>
-        <plugin name="mimic_${side}Finger${num}_2" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+        <plugin name="mimic_${side}Finger${num}3" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
             <joint>${side}Hand</joint>
-            <mimicJoint>${side}Finger${num}_2</mimicJoint>
+            <mimicJoint>${side}Finger${num}3</mimicJoint>
             <multiplier>-${PI/4}</multiplier>
             <offset>${PI/4}</offset>
         </plugin>
     </xacro:macro> 
     <!-- Thumbs -->
     <xacro:macro name="ThumbMimics" params="side">
-        <plugin name="${side}Thumb1_joint" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+        <plugin name="${side}Thumb1" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
             <joint>${side}Hand</joint>
-            <mimicJoint>${side}Thumb1_joint</mimicJoint>
+            <mimicJoint>${side}Thumb1</mimicJoint>
             <multiplier>-${PI/4}</multiplier>
             <offset>${PI/4}</offset>
         </plugin>
-        <plugin name="${side}Thumb1_2" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+        <plugin name="${side}Thumb2" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
             <joint>${side}Hand</joint>
-            <mimicJoint>${side}Thumb1_2</mimicJoint>
+            <mimicJoint>${side}Thumb2</mimicJoint>
             <multiplier>-${PI/4}</multiplier>
             <offset>${PI/4}</offset>
         </plugin>
@@ -249,49 +249,49 @@
         <turnGravityOff>false</turnGravityOff>
     </gazebo>
 -->
-    <gazebo reference="LFinger11">
+    <gazebo reference="LFinger11_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="LFinger12">
+    <gazebo reference="LFinger12_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="LFinger13">
+    <gazebo reference="LFinger13_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="LFinger21">
+    <gazebo reference="LFinger21_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="LFinger22">
+    <gazebo reference="LFinger22_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="LFinger23">
+    <gazebo reference="LFinger23_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="LThumb1">
+    <gazebo reference="LThumb1_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="LThumb2">
+    <gazebo reference="LThumb2_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
@@ -422,49 +422,49 @@
     <minDepth>0.003</minDepth>
   </gazebo>
 
-    <gazebo reference="RFinger11">
+    <gazebo reference="RFinger11_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="RFinger12">
+    <gazebo reference="RFinger12_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="RFinger13">
+    <gazebo reference="RFinger13_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="RFinger21">
+    <gazebo reference="RFinger21_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="RFinger22">
+    <gazebo reference="RFinger22_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="RFinger23">
+    <gazebo reference="RFinger23_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="RThumb1">
+    <gazebo reference="RThumb1_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
-    <gazebo reference="RThumb2">
+    <gazebo reference="RThumb2_link">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
