@@ -4,11 +4,11 @@
  *********************************************************************-->
 <robot name="naoH25V50" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<link name="RFinger13_link">
-	    <xacro:insert_visu_RFinger13_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
+		<xacro:insert_visu_RFinger13_link/>
 	</link>
 	<joint name="RFinger13" type="continuous">
 		<parent link="RFinger12_link"/>
@@ -18,11 +18,11 @@
 		<mimic joint="RHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="RFinger12_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_RFinger12_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="RFinger12" type="continuous">
 		<parent link="RFinger11_link"/>
@@ -32,11 +32,11 @@
 		<mimic joint="RHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="LFinger21_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_LFinger21_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="LFinger21" type="continuous">
 		<parent link="l_wrist"/>
@@ -46,11 +46,11 @@
 		<mimic joint="LHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="LFinger13_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_LFinger13_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="LFinger13" type="continuous">
 		<parent link="LFinger12_link"/>
@@ -60,11 +60,11 @@
 		<mimic joint="LHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="LFinger11_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_LFinger11_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="LFinger11" type="continuous">
 		<parent link="l_wrist"/>
@@ -74,11 +74,11 @@
 		<mimic joint="LHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="RFinger22_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_RFinger22_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="RFinger22" type="continuous">
 		<parent link="RFinger21_link"/>
@@ -88,11 +88,11 @@
 		<mimic joint="RHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="LFinger22_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_LFinger22_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="LFinger22" type="continuous">
 		<parent link="LFinger21_link"/>
@@ -102,11 +102,11 @@
 		<mimic joint="LHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="RFinger21_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_RFinger21_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="RFinger21" type="continuous">
 		<parent link="r_wrist"/>
@@ -116,11 +116,11 @@
 		<mimic joint="RHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="LFinger12_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_LFinger12_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="LFinger12" type="continuous">
 		<parent link="LFinger11_link"/>
@@ -130,11 +130,11 @@
 		<mimic joint="LHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="RFinger23_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_RFinger23_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="RFinger23" type="continuous">
 		<parent link="RFinger22_link"/>
@@ -144,11 +144,11 @@
 		<mimic joint="RHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="RFinger11_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_RFinger11_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="RFinger11" type="continuous">
 		<parent link="r_wrist"/>
@@ -158,11 +158,11 @@
 		<mimic joint="RHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="LFinger23_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_LFinger23_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="LFinger23" type="continuous">
 		<parent link="LFinger22_link"/>
@@ -172,11 +172,11 @@
 		<mimic joint="LHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="LThumb1_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_LThumb1_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="LThumb1" type="continuous">
 		<parent link="l_wrist"/>
@@ -186,11 +186,11 @@
 		<mimic joint="LHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="RThumb1_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_RThumb1_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="RThumb1" type="continuous">
 		<parent link="r_wrist"/>
@@ -200,11 +200,11 @@
 		<mimic joint="RHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="RThumb2_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_RThumb2_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="RThumb2" type="continuous">
 		<parent link="RThumb1_link"/>
@@ -214,11 +214,11 @@
 		<mimic joint="RHand" multiplier="0.999899" offset="0"/>
 	</joint>
 	<link name="LThumb2_link">
+		<inertial>
+			<mass value="2e-06"/>
+			<inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		</inertial>
 		<xacro:insert_visu_LThumb2_link/>
-            <inertial>
-	        <mass value="2e-06"/>
-	        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-	    </inertial>
 	</link>
 	<joint name="LThumb2" type="continuous">
 		<parent link="LThumb1_link"/>
