@@ -2,8 +2,8 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.6 (2015-02-27)
+------------------
 * Cleanup and rename launch files
 * Contributors: Karsten Knese
 

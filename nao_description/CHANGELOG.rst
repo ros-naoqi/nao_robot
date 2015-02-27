@@ -2,8 +2,8 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.6 (2015-02-27)
+------------------
 * properly fix 535d34474d9f64ddb60f6f163656c10fcdf92774
   The automatic generator was used to generate inertia
 * dirty fix for naoqi_bridge/issues/31
