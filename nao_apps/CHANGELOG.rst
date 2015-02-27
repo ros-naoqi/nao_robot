@@ -2,6 +2,11 @@
 Changelog for package nao_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Cleanup and rename launch files
+* Contributors: Karsten Knese
+
 0.5.5 (2015-02-17)
 ------------------
 

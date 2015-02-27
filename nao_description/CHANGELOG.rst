@@ -2,6 +2,16 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* properly fix 535d34474d9f64ddb60f6f163656c10fcdf92774
+  The automatic generator was used to generate inertia
+* dirty fix for naoqi_bridge/issues/31
+* Minor fix to load RViz config file in display.launch
+* fixing typo
+* Cleanup and rename launch files
+* Contributors: Karsten Knese, Konstantinos Chatzilygeroudis, Mikael Arguedas, Vincent Rabaud
+
 0.5.5 (2015-02-17)
 ------------------
 * update to the latest version of the generation script
