@@ -322,29 +322,6 @@
         <selfCollide>false</selfCollide>
         <turnGravityOff>false</turnGravityOff>
     </gazebo>
-    <gazebo reference="l_ankle">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo>
-<!--    <gazebo reference="LFeet">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo> -->
-<!--
-    <gazebo reference="l_sole">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-        <fdir1>1 0 0</fdir1>
-        <maxVel>0.1</maxVel>
-        <minDepth>0.003</minDepth>
-    </gazebo>
--->
  <gazebo reference="LAnklePitch">
     <mu1>0.5</mu1>
     <mu2>0.5</mu2>
@@ -360,52 +337,30 @@
     <maxVel>0.1</maxVel>
     <minDepth>0.003</minDepth>
   </gazebo>
-    <gazebo reference="RPelvis">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo>
-    <gazebo reference="RHip">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo>
-    <gazebo reference="RThigh">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo>
-    <gazebo reference="RTibia">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo> 
-<!--    <gazebo reference="r_ankle">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo> -->
-<!--    <gazebo reference="RFeet">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo> -->
-<!--    <gazebo reference="r_sole">
-        <mu1>0.5</mu1>
-        <mu2>0.5</mu2>
-        <selfCollide>false</selfCollide>
-        <turnGravityOff>false</turnGravityOff>
-        <fdir1>1 0 0</fdir1>
-        <maxVel>0.1</maxVel>
-        <minDepth>0.003</minDepth>
-    </gazebo>
--->
+  <gazebo reference="RPelvis">
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+      <selfCollide>false</selfCollide>
+      <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  <gazebo reference="RHip">
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+      <selfCollide>false</selfCollide>
+      <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  <gazebo reference="RThigh">
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+      <selfCollide>false</selfCollide>
+      <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  <gazebo reference="RTibia">
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+      <selfCollide>false</selfCollide>
+      <turnGravityOff>false</turnGravityOff>
+  </gazebo>
  <gazebo reference="RAnklePitch">
     <mu1>0.5</mu1>
     <mu2>0.5</mu2>
@@ -475,7 +430,7 @@
         RGB CAMERAS: Working
 -->
 
- <gazebo reference="CameraTop_frame">
+ <gazebo reference="CameraTop_optical_frame">
     <sensor type="camera" name="CameraTop">
         <update_rate>5.0</update_rate>
         <camera name="camera_top">
@@ -502,7 +457,7 @@
             <cameraName>camera/top</cameraName>
             <imageTopicName>image_raw</imageTopicName>
             <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-            <frameName>CameraTop_frame</frameName>
+            <frameName>CameraTop_optical_frame</frameName>
             <hackBaseline>0.07</hackBaseline>
             <distortionK1>-0.0545211</distortionK1>
             <distortionK2>0.06919734</distortionK2>
@@ -524,7 +479,7 @@
                 <format>R8G8B8</format>
             </image>
             <clip>
-                <near>0.3</near>
+                <near>0.05</near>
                 <far>500</far>
             </clip>
             <noise>
