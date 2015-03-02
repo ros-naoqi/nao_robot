@@ -20,6 +20,9 @@
     <arg name="force_python" value="$(arg force_python)" />
   </include>
 
+  <!-- enable walker -->
+  <include file="$(find nao_apps)/launch/walker.launch" />
+
   <!-- launch pose manager -->
   <include file="$(find nao_pose)/launch/pose_manager.launch" >
     <arg name="nao_ip" value="$(arg nao_ip)" />
