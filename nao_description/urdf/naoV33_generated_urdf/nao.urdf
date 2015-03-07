@@ -286,6 +286,21 @@
       <robotNamespace>/nao_dcm</robotNamespace>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
+    <!--        <plugin filename="libgazebo_ros_imu.so" name="gazebo_ros_imu_controller">
+            <robotNamespace>/nao_dcm</robotNamespace>
+            <topicName>imu_data</topicName>
+            <bodyName>imu</bodyName>
+            <frameId>ImuAccelerometer_frame</frameId>
+            <gaussianNoise>2.89e-08</gaussianNoise>
+            <accelGaussianNoise>2.89e-08 2.89e-08 2.89e-08</accelGaussianNoise>
+            <rateGaussianNoise>2.89e-08 2.89e-08 2.89e-08</rateGaussianNoise>
+            <headingGaussianNoise>2.89e-08 2.89e-08 2.89e-08</headingGaussianNoise>
+            <xyzOffsets>0 0 0</xyzOffsets>
+            <rpyOffsets>0 0 0</rpyOffsets>
+            <updateRate>30.0</updateRate>
+            <alwaysOn>true</alwaysOn>
+        </plugin>
+-->
     <!--        <plugin name="gazebo_ros_imu_controller" filename="${imu_plugin}">
             <robotNamespace>/nao_dcm</robotNamespace>
             <topicName>imu_data</topicName>
@@ -404,55 +419,55 @@
       <multiplier>-0.785398163398</multiplier>
       <offset>0.785398163398</offset>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger11">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger11_link">
       <link>LFinger11_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger12">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger12_link">
       <link>LFinger12_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger13">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger13_link">
       <link>LFinger13_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger21">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger21_link">
       <link>LFinger21_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger22">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger22_link">
       <link>LFinger22_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger23">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LFinger23_link">
       <link>LFinger23_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LThumb1">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LThumb1_link">
       <link>LThumb1_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LThumb2">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="LThumb2_link">
       <link>LThumb2_link</link>
     </plugin>
     <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="l_gripper">
       <link>l_gripper</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger11">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger11_link">
       <link>RFinger11_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger12">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger12_link">
       <link>RFinger12_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger13">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger13_link">
       <link>RFinger13_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger21">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger21_link">
       <link>RFinger21_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger22">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger22_link">
       <link>RFinger22_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger23">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RFinger23_link">
       <link>RFinger23_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RThumb1">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RThumb1_link">
       <link>RThumb1_link</link>
     </plugin>
-    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RThumb2">
+    <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="RThumb2_link">
       <link>RThumb2_link</link>
     </plugin>
     <plugin filename="libroboticsgroup_gazebo_disable_link_plugin.so" name="r_gripper">
@@ -728,6 +743,169 @@
     <mu2>0.5</mu2>
     <selfCollide>false</selfCollide>
     <turnGravityOff>true</turnGravityOff>
+  </gazebo>
+  <gazebo reference="CameraTop_optical_frame">
+    <sensor name="CameraTop" type="camera">
+      <update_rate>5.0</update_rate>
+      <camera name="camera_top">
+        <horizontal_fov>1.06290551</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.3</near>
+          <far>500</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin filename="libgazebo_ros_camera.so" name="camera_controller">
+        <robotNamespace>/nao_robot</robotNamespace>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>5.0</updateRate>
+        <cameraName>camera/top</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>CameraTop_optical_frame</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>-0.0545211</distortionK1>
+        <distortionK2>0.06919734</distortionK2>
+        <distortionK3>-0.0241095</distortionK3>
+        <distortionT1>-0.0112245</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <gazebo reference="CameraBottom_frame">
+    <sensor name="CameraBottom" type="camera">
+      <update_rate>5.0</update_rate>
+      <camera name="camera_bottom">
+        <horizontal_fov>1.06290551</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>500</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin filename="libgazebo_ros_camera.so" name="camera_controller">
+        <robotNamespace>/nao_robot</robotNamespace>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>5.0</updateRate>
+        <cameraName>camera_bottom</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>CameraBottom_frame</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>-0.0648764</distortionK1>
+        <distortionK2>0.06125202</distortionK2>
+        <distortionK3>0.00382815</distortionK3>
+        <distortionT1>-0.00551104</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <gazebo reference="LSonar_frame">
+    <sensor name="LSonar" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <update_rate>20</update_rate>
+      <visualize>false</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>5</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.2617993877991494</min_angle>
+            <max_angle>0.2617993877991494</max_angle>
+            <!--
+          <min_angle>-0.10</min_angle>
+          <max_angle>0.10</max_angle> 
+-->
+          </horizontal>
+          <vertical>
+            <samples>5</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.13</min_angle>
+            <max_angle>0.13</max_angle>
+            <!--
+          <min_angle>-0.2617993877991494</min_angle>
+          <max_angle>0.2617993877991494</max_angle> 
+-->
+          </vertical>
+        </scan>
+        <range>
+          <min>0.025</min>
+          <max>2.55</max>
+          <resolution>1</resolution>
+        </range>
+      </ray>
+      <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
+        <robotNamespace>/nao_robot</robotNamespace>
+        <gaussianNoise>0.05</gaussianNoise>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>20</updateRate>
+        <topicName>/sonar_left</topicName>
+        <frameName>LSonar_frame</frameName>
+        <minRange>0.025</minRange>
+        <maxRange>2.55</maxRange>
+        <fov>0.5235987755982988</fov>
+        <!--      <fov>0.1</fov> -->
+        <radiation>ultrasound</radiation>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <gazebo reference="RSonar_frame">
+    <sensor name="RSonar" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <update_rate>20</update_rate>
+      <visualize>false</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>5</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.2617993877991494</min_angle>
+            <max_angle>0.2617993877991494</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>5</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.13</min_angle>
+            <max_angle>0.13</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.025</min>
+          <max>2.55</max>
+          <resolution>1</resolution>
+        </range>
+      </ray>
+      <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
+        <robotNamespace>/nao_robot</robotNamespace>
+        <gaussianNoise>0.05</gaussianNoise>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>20</updateRate>
+        <topicName>/sonar_right</topicName>
+        <frameName>RSonar_frame</frameName>
+        <minRange>0.025</minRange>
+        <maxRange>2.55</maxRange>
+        <fov>0.5235987755982988</fov>
+        <radiation>ultrasound</radiation>
+      </plugin>
+    </sensor>
   </gazebo>
   <joint name="HeadYaw" type="revolute">
     <parent link="torso"/>
@@ -1416,6 +1594,12 @@
     <origin rpy="0 0 0" xyz="-0.03025 0.0191 -0.04511"/>
     <axis xyz="0 0 0"/>
   </joint>
+  <link name="CameraBottom_optical_frame"/>
+  <joint name="CameraBottom_optical_frame_joint" type="fixed">
+    <parent link="CameraBottom_frame"/>
+    <child link="CameraBottom_optical_frame"/>
+    <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
+  </joint>
   <link name="RFsrRR_frame"/>
   <joint name="RFoot/FSR/RearRight_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
@@ -1472,13 +1656,6 @@
     <origin rpy="0 0 0" xyz="-0.02965 -0.0191 -0.04511"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="LSonar_frame"/>
-  <joint name="Sonar/Right_sensor_fixedjoint" type="fixed">
-    <parent link="torso"/>
-    <child link="LSonar_frame"/>
-    <origin rpy="0.00478508 0.0436497 -0.392441" xyz="0.00558253 -0.0192068 0.0623853"/>
-    <axis xyz="0 0 0"/>
-  </joint>
   <link name="HeadTouchFront_frame"/>
   <joint name="Head/Touch/Front_sensor_fixedjoint" type="fixed">
     <parent link="Head"/>
@@ -1528,6 +1705,13 @@
     <origin rpy="0 0 0" xyz="0.07025 0.0231 -0.04511"/>
     <axis xyz="0 0 0"/>
   </joint>
+  <link name="LSonar_frame"/>
+  <joint name="Sonar/Left_sensor_fixedjoint" type="fixed">
+    <parent link="torso"/>
+    <child link="LSonar_frame"/>
+    <origin rpy="-0.00478508 0.0436497 0.392441" xyz="0.00558253 0.0192068 0.0623853"/>
+    <axis xyz="0 0 0"/>
+  </joint>
   <link name="MicroSurroundRight_frame"/>
   <joint name="MicroRight_sensor_fixedjoint" type="fixed">
     <parent link="Head"/>
@@ -1550,10 +1734,10 @@
     <axis xyz="0 0 0"/>
   </joint>
   <link name="RSonar_frame"/>
-  <joint name="Sonar/Left_sensor_fixedjoint" type="fixed">
+  <joint name="Sonar/Right_sensor_fixedjoint" type="fixed">
     <parent link="torso"/>
     <child link="RSonar_frame"/>
-    <origin rpy="-0.00478508 0.0436497 0.392441" xyz="0.00558253 0.0192068 0.0623853"/>
+    <origin rpy="0.00478508 0.0436497 -0.392441" xyz="0.00558253 -0.0192068 0.0623853"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="RHandTouchLeft_frame"/>
@@ -1576,6 +1760,12 @@
     <child link="CameraTop_frame"/>
     <origin rpy="0 0 0" xyz="0.0539 0 0.0679"/>
     <axis xyz="0 0 0"/>
+  </joint>
+  <link name="CameraTop_optical_frame"/>
+  <joint name="CameraTop_optical_frame_joint" type="fixed">
+    <parent link="CameraTop_frame"/>
+    <child link="CameraTop_optical_frame"/>
+    <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
   </joint>
   <link name="LInfraRed_frame"/>
   <joint name="InfraredL_sensor_fixedjoint" type="fixed">
