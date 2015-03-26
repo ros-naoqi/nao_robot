@@ -11,15 +11,9 @@ catkin_python_setup()
 catkin_package( )
 
 #And this will install python nodes
-install(DIRECTORY nodes/
+catkin_install_python(PROGRAMS ./nodes/pose_controller.py ./nodes/pose_manager.py ./scripts/execute_pose.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-    USE_SOURCE_PERMISSIONS)
-
-
-#And this will install python nodes
-install(DIRECTORY scripts/
-    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-    USE_SOURCE_PERMISSIONS)
+)
 
 # Instructions to install launch files
 install(DIRECTORY launch/

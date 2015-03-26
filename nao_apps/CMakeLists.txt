@@ -10,7 +10,8 @@ catkin_python_setup()
 catkin_package(
 )
 
-install(DIRECTORY nodes/
+catkin_install_python(PROGRAMS ./nodes/nao_alife.py ./nodes/nao_behaviors.py ./nodes/nao_diagnostic_updater.py
+    ./nodes/nao_footsteps.py ./nodes/nao_leds.py ./nodes/nao_speech.py ./nodes/nao_tactile.py ./nodes/nao_walker.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
