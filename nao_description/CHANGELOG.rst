@@ -2,8 +2,8 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.7 (2015-03-27)
+------------------
 * update full .urdf file using xacro
 * fixed ankle drift
 * Contributors: Mikael Arguedas, Vincent Rabaud

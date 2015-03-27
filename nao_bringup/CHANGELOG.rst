@@ -2,8 +2,8 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.7 (2015-03-27)
+------------------
 * remove legacy sonar node
 * set nao walker by default
 * Contributors: Karsten Knese

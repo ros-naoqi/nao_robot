@@ -2,8 +2,8 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.7 (2015-03-27)
+------------------
 * properly install Python scripts
   This fixes `#19 <https://github.com/ros-naoqi/nao_robot/issues/19>`_
 * Contributors: Vincent Rabaud
