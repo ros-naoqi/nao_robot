@@ -24,7 +24,7 @@
   <include file="$(find nao_apps)/launch/walker.launch" />
 
   <!-- launch pose manager -->
-  <include file="$(find nao_pose)/launch/pose_manager.launch" >
+  <include file="$(find naoqi_pose)/launch/pose_manager.launch" >
     <arg name="nao_ip" value="$(arg nao_ip)" />
     <arg name="nao_port" value="$(arg nao_port)" />
   </include>
