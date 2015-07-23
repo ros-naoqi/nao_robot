@@ -43,7 +43,7 @@ from naoqi import (ALBroker, ALProxy, ALModule)
 
 from std_msgs.msg import( String )
 from std_srvs.srv import( Empty, EmptyResponse )
-from naoqi_msgs.msg import(
+from naoqi_bridge_msgs.msg import(
     WordRecognized,
     SetSpeechVocabularyGoal,
     SetSpeechVocabularyResult,

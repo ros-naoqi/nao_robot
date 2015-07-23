@@ -38,9 +38,9 @@ import actionlib
 
 from naoqi_driver.naoqi_node import NaoqiNode
 
-from naoqi_msgs.msg import RunBehaviorAction
+from naoqi_bridge_msgs.msg import RunBehaviorAction
 
-from naoqi_msgs.srv import (
+from naoqi_bridge_msgs.srv import (
     GetInstalledBehaviors,
     GetInstalledBehaviorsResponse,
     )

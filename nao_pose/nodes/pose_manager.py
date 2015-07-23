@@ -38,8 +38,8 @@ from rospy.rostime import Duration
 
 import actionlib
 from actionlib_msgs.msg import GoalStatus
-import naoqi_msgs.msg
-from naoqi_msgs.msg import JointTrajectoryGoal, JointTrajectoryAction, BodyPoseAction, BodyPoseGoal
+import naoqi_bridge_msgs.msg
+from naoqi_bridge_msgs.msg import JointTrajectoryGoal, JointTrajectoryAction, BodyPoseAction, BodyPoseGoal
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 from sensor_msgs.msg import JointState

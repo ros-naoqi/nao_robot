@@ -1,0 +1,57 @@
+<launch>
+
+  <arg name="nao_ip"          default="$(optenv NAO_IP 127.0.0.1)" />
+  <arg name="nao_port"        default="$(optenv NAO_PORT 9559)" />
+
+  <node pkg="diagnostic_aggregator" type="aggregator_node" name="diag_agg" clear_params="true">
+    <rosparam command="load"  file="$(find nao_bringup)/config/nao_analysers.yaml" />
+  </node>
+
+  <!-- upload nao robot model V40 by default-->
+  <include file="$(find nao_description)/launch/robot_state_publisher.launch" >
+    <arg name="version"       value="V40" />
+  </include>
+
+  <!-- publish joint states and basic actuators -->
+  <include file="$(find naoqi_driver_py)/launch/naoqi_driver.launch">
+    <arg name="nao_ip"        value="$(arg nao_ip)" />
+  </include>
+
+  <!-- enable walker -->
+  <include file="$(find nao_apps)/launch/walker.launch" >
+    <arg name="nao_ip"        value="$(arg nao_ip)" />
+  </include>
+
+  <!-- launch pose manager -->
+  <include file="$(find naoqi_pose)/launch/pose_manager.launch" >
+    <arg name="nao_ip"        value="$(arg nao_ip)" />
+    <arg name="nao_port"      value="$(arg nao_port)" />
+  </include>
+
+  <!-- Specify here all dependent settings (default top) -->
+  <include file="$(find naoqi_sensors_py)/launch/camera.launch" ns="nao_robot/camera/top" >
+    <arg name="nao_ip"        value="$(arg nao_ip)" />
+  </include>
+  <include file="$(find naoqi_sensors_py)/launch/camera.launch" ns="nao_robot/camera/bottom" >
+    <arg name="nao_ip"        value="$(arg nao_ip)" />
+    <arg name="source"        value="1" />
+  </include>
+
+  <!-- Load left and right sonar -->
+  <include file="$(find naoqi_sensors_py)/launch/sonar.launch" ns="nao_robot/sonar/left" >
+    <arg name="nao_ip"        value="$(arg nao_ip)" />
+    <arg name="memory_key"    value="Device/SubDeviceList/US/Left/Sensor/Value" />
+    <arg name="frame_id"      value="LSonar_frame" />
+  </include>
+  <include file="$(find naoqi_sensors_py)/launch/sonar.launch" ns="nao_robot/sonar/right" >
+    <arg name="nao_ip"        value="$(arg nao_ip)" />
+    <arg name="memory_key"    value="Device/SubDeviceList/US/Right/Sensor/Value" />
+    <arg name="frame_id"      value="RSonar_frame" />
+  </include>
+
+  <!-- Specify here all dependent settings (default top) -->
+  <include file="$(find naoqi_sensors_py)/launch/microphone.launch" ns="nao_robot/microphone" >
+    <arg name="nao_ip"        value="$(arg nao_ip)" />
+  </include>
+
+</launch>

@@ -36,12 +36,12 @@ nosetests.xml
 .pydevproject
 
 #Specific ignores for nao_robot
-naoqi_msgs/src
+naoqi_bridge_msgs/src
 msg_gen
 srv_gen
 # Actionlib:
-naoqi_msgs/msg/*Action.msg
-naoqi_msgs/msg/*Feedback.msg
-naoqi_msgs/msg/*Goal.msg
-naoqi_msgs/msg/*Result.msg
+naoqi_bridge_msgs/msg/*Action.msg
+naoqi_bridge_msgs/msg/*Feedback.msg
+naoqi_bridge_msgs/msg/*Goal.msg
+naoqi_bridge_msgs/msg/*Result.msg
 

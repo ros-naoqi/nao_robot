@@ -1,51 +1,22 @@
 <launch>
 
-  <arg name="nao_ip" default="$(optenv NAO_IP 127.0.0.1)" />
-  <arg name="nao_port" default="$(optenv NAO_PORT 9559)" />
+  <arg name="nao_ip"              default="$(optenv NAO_IP 127.0.0.1)" />
+  <arg name="nao_port"            default="$(optenv NAO_PORT 9559)" />
 
-  <!-- Use CPP node by default for naoqi_sensors -->
-  <arg name="force_python" default="false" />
+  <arg name="roscore_ip"          default="127.0.0.1" />
+  <arg name="network_interface"   default="eth0" />
 
-  <node pkg="diagnostic_aggregator" type="aggregator_node" name="diag_agg" clear_params="true">
-    <rosparam command="load" file="$(find nao_bringup)/config/nao_analysers.yaml" />
-  </node>
-
-  <!-- upload nao robot model V40 by default-->
-  <include file="$(find nao_description)/launch/robot_state_publisher.launch" >
-    <arg name="version" value="V40" />
+  <!-- naoqi driver -->
+  <include file="$(find naoqi_rosbridge)/launch/naoqi_driver.launch" >
+    <arg name="nao_ip"            value="$(arg nao_ip)" />
+    <arg name="roscore_ip"        value="$(arg roscore_ip)" />
+    <arg name="network_interface" value="$(arg network_interface)" />
   </include>
-
-  <!-- publish joint states and basic actuators -->
-  <include file="$(find naoqi_driver)/launch/naoqi_driver.launch">
-    <arg name="force_python" value="$(arg force_python)" />
-  </include>
-
-  <!-- enable walker -->
-  <include file="$(find nao_apps)/launch/walker.launch" />
 
   <!-- launch pose manager -->
   <include file="$(find naoqi_pose)/launch/pose_manager.launch" >
-    <arg name="nao_ip" value="$(arg nao_ip)" />
-    <arg name="nao_port" value="$(arg nao_port)" />
+    <arg name="nao_ip"            value="$(arg nao_ip)" />
+    <arg name="nao_port"          value="$(arg nao_port)" />
   </include>
-
-  <!-- Specify here all dependent settings (default top) -->
-  <include file="$(find naoqi_sensors)/launch/camera.launch" ns="nao_robot/camera/top" />
-  <include file="$(find naoqi_sensors)/launch/camera.launch" ns="nao_robot/camera/bottom" >
-    <arg name="source" value="1" />
-  </include>
-
-  <!-- Load left and right sonar -->
-  <include file="$(find naoqi_sensors)/launch/sonar.launch" ns="nao_robot/sonar/left" >
-    <arg name="memory_key" value="Device/SubDeviceList/US/Left/Sensor/Value" />
-    <arg name="frame_id" value="LSonar_frame" />
-  </include>
-  <include file="$(find naoqi_sensors)/launch/sonar.launch" ns="nao_robot/sonar/right" >
-    <arg name="memory_key" value="Device/SubDeviceList/US/Right/Sensor/Value" />
-    <arg name="frame_id" value="RSonar_frame" />
-  </include>
-
-  <!-- Specify here all dependent settings (default top) -->
-  <include file="$(find naoqi_sensors)/launch/microphone.launch" ns="nao_robot/microphone" />
 
 </launch>

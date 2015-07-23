@@ -40,7 +40,7 @@ import copy
 
 from naoqi_driver.naoqi_node import NaoqiNode
 
-from naoqi_msgs.msg import(
+from naoqi_bridge_msgs.msg import(
     BlinkAction,
     BlinkResult,
     BlinkFeedback,

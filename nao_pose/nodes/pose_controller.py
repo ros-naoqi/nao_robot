@@ -36,7 +36,7 @@
 
 import rospy
 import actionlib
-from naoqi_msgs.msg import(
+from naoqi_bridge_msgs.msg import(
     JointTrajectoryResult,
     JointTrajectoryAction,
     JointAnglesWithSpeed,
