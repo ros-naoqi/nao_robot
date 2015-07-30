@@ -2,6 +2,11 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix correct package dep
+* Contributors: Karsten Knese
+
 0.5.8 (2015-07-30)
 ------------------
 * rename naoqi_driver
