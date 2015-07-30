@@ -7,7 +7,7 @@
   <arg name="network_interface"   default="eth0" />
 
   <!-- naoqi driver -->
-  <include file="$(find naoqi_rosbridge)/launch/naoqi_driver.launch" >
+  <include file="$(find naoqi_driver)/launch/naoqi_driver.launch" >
     <arg name="nao_ip"            value="$(arg nao_ip)" />
     <arg name="roscore_ip"        value="$(arg roscore_ip)" />
     <arg name="network_interface" value="$(arg network_interface)" />
