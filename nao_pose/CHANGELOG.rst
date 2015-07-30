@@ -2,6 +2,11 @@
 Changelog for package nao_pose
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* transfer to naoqi_py
+* Contributors: Karsten Knese
+
 0.5.7 (2015-03-27)
 ------------------
 * properly install Python scripts

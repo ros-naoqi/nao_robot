@@ -2,6 +2,13 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* rename naoqi_driver
+* transfer to naoqi_py
+* use naoqi_pose instead of nao_pose
+* Contributors: Karsten Knese, Kei Okada
+
 0.5.7 (2015-03-27)
 ------------------
 * remove legacy sonar node
