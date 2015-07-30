@@ -2,8 +2,8 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.8 (2015-07-30)
+------------------
 * rename naoqi_driver
 * transfer to naoqi_py
 * use naoqi_pose instead of nao_pose
