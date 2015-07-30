@@ -2,8 +2,8 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.9 (2015-07-30)
+------------------
 * fix correct package dep
 * Contributors: Karsten Knese
 
