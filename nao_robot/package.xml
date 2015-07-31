@@ -23,6 +23,5 @@
   <run_depend>nao_apps</run_depend>
   <run_depend>nao_bringup</run_depend>
   <run_depend>nao_description</run_depend>
-  <run_depend>nao_pose</run_depend>
 
 </package>
