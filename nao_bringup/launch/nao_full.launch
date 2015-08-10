@@ -6,15 +6,17 @@
   <arg name="roscore_ip"          default="127.0.0.1" />
   <arg name="network_interface"   default="eth0" />
 
+  <arg name="namespace"           default="nao_robot" />
+
   <!-- naoqi driver -->
-  <include file="$(find naoqi_driver)/launch/naoqi_driver.launch" >
+  <include file="$(find naoqi_driver)/launch/naoqi_driver.launch" ns="$(arg namespace)" >
     <arg name="nao_ip"            value="$(arg nao_ip)" />
     <arg name="roscore_ip"        value="$(arg roscore_ip)" />
     <arg name="network_interface" value="$(arg network_interface)" />
   </include>
 
   <!-- launch pose manager -->
-  <include file="$(find naoqi_pose)/launch/pose_manager.launch" >
+  <include file="$(find naoqi_pose)/launch/pose_manager.launch" ns="$(arg namespace)/pose">
     <arg name="nao_ip"            value="$(arg nao_ip)" />
     <arg name="nao_port"          value="$(arg nao_port)" />
   </include>
