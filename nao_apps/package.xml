@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>nao_apps</name>
-  <version>0.5.10</version>
+  <version>0.5.11</version>
   <description>Applications for NAO using the NAOqi API</description>
 
   <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
