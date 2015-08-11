@@ -2,6 +2,9 @@
 Changelog for package nao_robot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.10 (2015-07-31)
 -------------------
 * remove nao_pose

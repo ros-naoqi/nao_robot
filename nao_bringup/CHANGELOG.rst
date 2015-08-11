@@ -2,6 +2,11 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* introduce namespace for nao_bringup
+* Contributors: Karsten Knese
+
 0.5.10 (2015-07-31)
 -------------------
 
