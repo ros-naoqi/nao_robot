@@ -26,7 +26,7 @@
 		<joint name="HeadPitch">
             <hardwareInterface>PositionJointInterface</hardwareInterface>
         </joint>
-		<actuator name="HeadPitch_Motor"> -->
+		<actuator name="HeadPitch_Motor">
 			<!-- Dummy Values -->
 			<hardwareInterface>PositionJointInterface</hardwareInterface>
 			<mechanicalReduction>${speed_red_type3B}</mechanicalReduction>

@@ -2016,8 +2016,6 @@ libgazebo_ros_bumper.so bugged right now, waiting for new release
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="HeadPitch_Motor">
-       --&gt;
-			
       <!-- Dummy Values -->
       <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>173.22</mechanicalReduction>
