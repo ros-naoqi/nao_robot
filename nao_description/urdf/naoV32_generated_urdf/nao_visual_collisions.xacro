@@ -5,448 +5,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:property name="PI_2" value="1.57079632679"/>
 	<xacro:property name="meshes_installed" value="false"/>
-	<xacro:macro name="xacro:insert_visu_RFinger13_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RFinger13.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RFinger13_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RThigh">
-		<xacro:unless value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<cylinder length="0.1" radius="0.015"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
-				<material name="LightGrey"/>
-			</visual>
-			<collision>
-				<geometry>
-					<cylinder length="0.1" radius="0.015"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
-			</collision>
-		</xacro:unless>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RHipPitch.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RHipPitch_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RFinger12_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RFinger12.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RFinger12_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LFinger21_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger21.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger21_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LFinger13_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger13.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger13_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LThumb1_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LThumb1.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LThumb1_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LFinger11_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger11.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger11_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RFinger22_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RFinger22.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RFinger22_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_r_wrist">
-		<xacro:unless value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<cylinder length="0.058" radius="0.015"/>
-				</geometry>
-				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.029 0 0"/>
-				<material name="LightGrey"/>
-			</visual>
-			<collision>
-				<geometry>
-					<cylinder length="0.058" radius="0.015"/>
-				</geometry>
-				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.029 0 0"/>
-			</collision>
-		</xacro:unless>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RWristYaw.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RWristYaw_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_Head">
-		<xacro:unless value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<cylinder length="0.14" radius="0.04"/>
-				</geometry>
-				<origin rpy="1.57079632679 0 0" xyz="0 0 0.058"/>
-				<material name="LightGrey"/>
-			</visual>
-			<collision>
-				<geometry>
-					<cylinder length="0.14" radius="0.04"/>
-				</geometry>
-				<origin rpy="1.57079632679 0 0" xyz="0 0 0.058"/>
-			</collision>
-		</xacro:unless>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/HeadPitch.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/HeadPitch_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LFinger22_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger22.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger22_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RFinger21_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RFinger21.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RFinger21_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LBicep">
-		<xacro:unless value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<cylinder length="0.09" radius="0.015"/>
-				</geometry>
-				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.045 0 0"/>
-				<material name="LightGrey"/>
-			</visual>
-			<collision>
-				<geometry>
-					<cylinder length="0.09" radius="0.015"/>
-				</geometry>
-				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.045 0 0"/>
-			</collision>
-		</xacro:unless>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LShoulderRoll.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LShoulderRoll_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RThumb1_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RThumb1.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RThumb1_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RThumb2_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RThumb2.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RThumb2_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LForeArm">
-		<xacro:unless value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<cylinder length="0.05065" radius="0.015"/>
-				</geometry>
-				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.025325 0 0"/>
-				<material name="LightGrey"/>
-			</visual>
-			<collision>
-				<geometry>
-					<cylinder length="0.05065" radius="0.015"/>
-				</geometry>
-				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.025325 0 0"/>
-			</collision>
-		</xacro:unless>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LElbowRoll.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LElbowRoll_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LThumb2_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LThumb2.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LThumb2_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LFinger12_link">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger12.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LFinger12_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RTibia">
-		<xacro:unless value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<cylinder length="0.1" radius="0.015"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
-				<material name="LightGrey"/>
-			</visual>
-			<collision>
-				<geometry>
-					<cylinder length="0.1" radius="0.015"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
-			</collision>
-		</xacro:unless>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RKneePitch.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RKneePitch_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RShoulder">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RShoulderPitch.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RShoulderPitch_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LHip">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LHipRoll.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/LHipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RFinger23_link">
+	<xacro:macro name="insert_visu_RFinger23_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -463,7 +22,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LThigh">
+	<xacro:macro name="insert_visu_LThigh">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -494,7 +53,465 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_l_wrist">
+	<xacro:macro name="insert_visu_RFinger13_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RFinger13.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RFinger13_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RThigh">
+		<xacro:unless value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<cylinder length="0.1" radius="0.015"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
+				<material name="LightGrey"/>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length="0.1" radius="0.015"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
+			</collision>
+		</xacro:unless>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RHipPitch.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RHipPitch_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RFinger12_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RFinger12.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RFinger12_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LFinger21_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger21.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger21_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LFinger13_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger13.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger13_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LThumb1_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LThumb1.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LThumb1_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LFinger11_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger11.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger11_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RFinger22_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RFinger22.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RFinger22_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_Head">
+		<xacro:unless value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<cylinder length="0.14" radius="0.04"/>
+				</geometry>
+				<origin rpy="1.57079632679 0 0" xyz="0 0 0.058"/>
+				<material name="LightGrey"/>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length="0.14" radius="0.04"/>
+				</geometry>
+				<origin rpy="1.57079632679 0 0" xyz="0 0 0.058"/>
+			</collision>
+		</xacro:unless>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/HeadPitch.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/HeadPitch_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LFinger22_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger22.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger22_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RFinger21_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RFinger21.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RFinger21_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LBicep">
+		<xacro:unless value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<cylinder length="0.09" radius="0.015"/>
+				</geometry>
+				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.045 0 0"/>
+				<material name="LightGrey"/>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length="0.09" radius="0.015"/>
+				</geometry>
+				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.045 0 0"/>
+			</collision>
+		</xacro:unless>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LShoulderRoll.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LShoulderRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RThumb1_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RThumb1.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RThumb1_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RThumb2_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RThumb2.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RThumb2_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_r_wrist">
+		<xacro:unless value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<cylinder length="0.058" radius="0.015"/>
+				</geometry>
+				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.029 0 0"/>
+				<material name="LightGrey"/>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length="0.058" radius="0.015"/>
+				</geometry>
+				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.029 0 0"/>
+			</collision>
+		</xacro:unless>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RWristYaw.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RWristYaw_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LForeArm">
+		<xacro:unless value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<cylinder length="0.05065" radius="0.015"/>
+				</geometry>
+				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.025325 0 0"/>
+				<material name="LightGrey"/>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length="0.05065" radius="0.015"/>
+				</geometry>
+				<origin rpy="1.57079632679 0 1.57079632679" xyz="0.025325 0 0"/>
+			</collision>
+		</xacro:unless>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LElbowRoll.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LElbowRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RHip">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RHipRoll.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RHipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LThumb2_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LThumb2.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LThumb2_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LFinger12_link">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger12.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LFinger12_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RTibia">
+		<xacro:unless value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<cylinder length="0.1" radius="0.015"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
+				<material name="LightGrey"/>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length="0.1" radius="0.015"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
+			</collision>
+		</xacro:unless>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RKneePitch.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RKneePitch_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_RShoulder">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RShoulderPitch.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/RShoulderPitch_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_LHip">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LHipRoll.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V32/LHipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="insert_visu_l_wrist">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -525,7 +542,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RBicep">
+	<xacro:macro name="insert_visu_RBicep">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -556,7 +573,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RFinger11_link">
+	<xacro:macro name="insert_visu_RFinger11_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -573,7 +590,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LFinger23_link">
+	<xacro:macro name="insert_visu_LFinger23_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -590,7 +607,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LTibia">
+	<xacro:macro name="insert_visu_LTibia">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -621,7 +638,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_Neck">
+	<xacro:macro name="insert_visu_Neck">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -638,7 +655,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LAnklePitch">
+	<xacro:macro name="insert_visu_LAnklePitch">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -655,7 +672,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RPelvis">
+	<xacro:macro name="insert_visu_RPelvis">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -672,7 +689,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RAnklePitch">
+	<xacro:macro name="insert_visu_RAnklePitch">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -689,7 +706,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_torso">
+	<xacro:macro name="insert_visu_torso">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -720,7 +737,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_r_ankle">
+	<xacro:macro name="insert_visu_r_ankle">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -751,7 +768,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_l_ankle">
+	<xacro:macro name="insert_visu_l_ankle">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -782,24 +799,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RHip">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RHipRoll.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V32/RHipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_RForeArm">
+	<xacro:macro name="insert_visu_RForeArm">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -830,7 +830,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LShoulder">
+	<xacro:macro name="insert_visu_LShoulder">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -847,7 +847,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="xacro:insert_visu_LPelvis">
+	<xacro:macro name="insert_visu_LPelvis">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
