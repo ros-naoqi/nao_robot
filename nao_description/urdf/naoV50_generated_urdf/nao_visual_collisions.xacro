@@ -5,38 +5,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:property name="PI_2" value="1.57079632679"/>
 	<xacro:property name="meshes_installed" value="true"/>
-	<xacro:macro name="insert_visu_LThigh">
-		<xacro:unless value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<cylinder length="0.1" radius="0.015"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
-				<material name="LightGrey"/>
-			</visual>
-			<collision>
-				<geometry>
-					<cylinder length="0.1" radius="0.015"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
-			</collision>
-		</xacro:unless>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V40/LHipPitch.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V40/LHipPitch_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="insert_visu_RFinger13_link">
+	<xacro:macro name="xacro:insert_visu_RFinger13_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -53,7 +22,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RThigh">
+	<xacro:macro name="xacro:insert_visu_RThigh">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -84,7 +53,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RFinger12_link">
+	<xacro:macro name="xacro:insert_visu_RFinger12_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -101,7 +70,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LFinger21_link">
+	<xacro:macro name="xacro:insert_visu_LFinger21_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -118,7 +87,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LFinger13_link">
+	<xacro:macro name="xacro:insert_visu_LFinger13_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -135,7 +104,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LThumb1_link">
+	<xacro:macro name="xacro:insert_visu_LThumb1_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -152,7 +121,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LFinger11_link">
+	<xacro:macro name="xacro:insert_visu_LFinger11_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -169,7 +138,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RFinger22_link">
+	<xacro:macro name="xacro:insert_visu_RFinger22_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -186,7 +155,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_Head">
+	<xacro:macro name="xacro:insert_visu_Head">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -217,7 +186,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LFinger22_link">
+	<xacro:macro name="xacro:insert_visu_LFinger22_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -234,7 +203,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RFinger21_link">
+	<xacro:macro name="xacro:insert_visu_RFinger21_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -251,7 +220,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LBicep">
+	<xacro:macro name="xacro:insert_visu_LBicep">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -282,7 +251,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RThumb1_link">
+	<xacro:macro name="xacro:insert_visu_RThumb1_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -299,7 +268,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RThumb2_link">
+	<xacro:macro name="xacro:insert_visu_RThumb2_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -316,7 +285,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_r_wrist">
+	<xacro:macro name="xacro:insert_visu_r_wrist">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -347,7 +316,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LForeArm">
+	<xacro:macro name="xacro:insert_visu_LForeArm">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -378,24 +347,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RHip">
-		<xacro:unless value="${meshes_installed}"/>
-		<xacro:if value="${meshes_installed}">
-			<visual>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V40/RHipRoll.dae" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="package://nao_meshes/meshes/V40/RHipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
-				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</collision>
-		</xacro:if>
-	</xacro:macro>
-	<xacro:macro name="insert_visu_LThumb2_link">
+	<xacro:macro name="xacro:insert_visu_LThumb2_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -412,7 +364,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LFinger12_link">
+	<xacro:macro name="xacro:insert_visu_LFinger12_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -429,7 +381,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RTibia">
+	<xacro:macro name="xacro:insert_visu_RTibia">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -460,7 +412,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RShoulder">
+	<xacro:macro name="xacro:insert_visu_RShoulder">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -477,7 +429,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LHip">
+	<xacro:macro name="xacro:insert_visu_LHip">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -494,7 +446,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RFinger23_link">
+	<xacro:macro name="xacro:insert_visu_RFinger23_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -511,7 +463,38 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_l_wrist">
+	<xacro:macro name="xacro:insert_visu_LThigh">
+		<xacro:unless value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<cylinder length="0.1" radius="0.015"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
+				<material name="LightGrey"/>
+			</visual>
+			<collision>
+				<geometry>
+					<cylinder length="0.1" radius="0.015"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 -0.05"/>
+			</collision>
+		</xacro:unless>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V40/LHipPitch.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V40/LHipPitch_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="xacro:insert_visu_l_wrist">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -542,7 +525,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RBicep">
+	<xacro:macro name="xacro:insert_visu_RBicep">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -573,7 +556,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RFinger11_link">
+	<xacro:macro name="xacro:insert_visu_RFinger11_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -590,7 +573,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LFinger23_link">
+	<xacro:macro name="xacro:insert_visu_LFinger23_link">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -607,7 +590,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LTibia">
+	<xacro:macro name="xacro:insert_visu_LTibia">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -638,7 +621,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_Neck">
+	<xacro:macro name="xacro:insert_visu_Neck">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -655,7 +638,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LAnklePitch">
+	<xacro:macro name="xacro:insert_visu_LAnklePitch">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -672,7 +655,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RPelvis">
+	<xacro:macro name="xacro:insert_visu_RPelvis">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -689,7 +672,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RAnklePitch">
+	<xacro:macro name="xacro:insert_visu_RAnklePitch">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -706,7 +689,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_torso">
+	<xacro:macro name="xacro:insert_visu_torso">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -737,7 +720,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_r_ankle">
+	<xacro:macro name="xacro:insert_visu_r_ankle">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -768,7 +751,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_l_ankle">
+	<xacro:macro name="xacro:insert_visu_l_ankle">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -799,7 +782,24 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_RForeArm">
+	<xacro:macro name="xacro:insert_visu_RHip">
+		<xacro:unless value="${meshes_installed}"/>
+		<xacro:if value="${meshes_installed}">
+			<visual>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V40/RHipRoll.dae" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://nao_meshes/meshes/V40/RHipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+				</geometry>
+				<origin rpy="0 0 0" xyz="0 0 0"/>
+			</collision>
+		</xacro:if>
+	</xacro:macro>
+	<xacro:macro name="xacro:insert_visu_RForeArm">
 		<xacro:unless value="${meshes_installed}">
 			<visual>
 				<geometry>
@@ -830,7 +830,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LShoulder">
+	<xacro:macro name="xacro:insert_visu_LShoulder">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
@@ -847,7 +847,7 @@
 			</collision>
 		</xacro:if>
 	</xacro:macro>
-	<xacro:macro name="insert_visu_LPelvis">
+	<xacro:macro name="xacro:insert_visu_LPelvis">
 		<xacro:unless value="${meshes_installed}"/>
 		<xacro:if value="${meshes_installed}">
 			<visual>
