@@ -37,7 +37,7 @@ import actionlib
 
 from dynamic_reconfigure.server import Server as ReConfServer
 import dynamic_reconfigure.client
-from naoqi_driver.cfg import NaoqiSpeechConfig as NodeConfig
+from naoqi_driver_py.cfg import NaoqiSpeechConfig as NodeConfig
 from naoqi_driver.naoqi_node import NaoqiNode
 from naoqi import (ALBroker, ALProxy, ALModule)
 
