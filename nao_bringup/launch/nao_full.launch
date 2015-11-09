@@ -11,6 +11,7 @@
   <!-- naoqi driver -->
   <include file="$(find naoqi_driver)/launch/naoqi_driver.launch" ns="$(arg namespace)" >
     <arg name="nao_ip"            value="$(arg nao_ip)" />
+    <arg name="nao_port"          value="$(arg nao_port)" />
     <arg name="roscore_ip"        value="$(arg roscore_ip)" />
     <arg name="network_interface" value="$(arg network_interface)" />
   </include>
