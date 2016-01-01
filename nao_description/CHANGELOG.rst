@@ -2,8 +2,8 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.12 (2016-01-01)
+-------------------
 * remove type from naoTransmission
 * update the Gazebo .xacro and the corresponding .urdf
 * update the .xacro / .urdf to the latest version of naoqi_tools

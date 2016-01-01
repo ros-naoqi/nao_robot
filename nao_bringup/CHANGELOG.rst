@@ -2,8 +2,8 @@
 Changelog for package nao_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.12 (2016-01-01)
+-------------------
 * launch/nao_full.launch : support nao_port in launch/naoqi_driver.launch https://github.com/ros-naoqi/naoqi_driver/pull/52
 * Contributors: Kei Okada
 
