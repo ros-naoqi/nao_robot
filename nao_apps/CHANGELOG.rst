@@ -2,6 +2,11 @@
 Changelog for package nao_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* change from naoqi_driver.cfg to naoqi_driver_py.cfg
+* Contributors: Kanae Kochigami
+
 0.5.11 (2015-08-11)
 -------------------
 
