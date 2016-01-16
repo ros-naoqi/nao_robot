@@ -1,6 +1,6 @@
 <package>
   <name>nao_description</name>
-  <version>0.5.12</version>
+  <version>0.5.13</version>
   
   <description>
     Description of the Nao robot model that can be used with robot_state_publisher to display the robot's state of joint angles.

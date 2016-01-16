@@ -2,8 +2,8 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.13 (2016-01-16)
+-------------------
 * Fix bad arm values.
   This fixes `#25 <https://github.com/ros-naoqi/nao_robot/issues/25>`_.
 * Contributors: Vincent Rabaud
