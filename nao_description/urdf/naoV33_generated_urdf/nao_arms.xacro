@@ -167,7 +167,7 @@
 	<joint name="RHand" type="revolute">
 		<parent link="r_wrist"/>
 		<child link="r_gripper"/>
-		<origin rpy="0 0 0" xyz="0.05775 0 -0.01213"/>
+		<origin rpy="0 0 0" xyz="0.05775 0 -0.01231"/>
 		<axis xyz="1.0 0 0"/>
 		<limit effort="0.292" lower="0" upper="1.0" velocity="8.33"/>
 	</joint>
