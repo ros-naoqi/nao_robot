@@ -73,7 +73,7 @@
     <gazebo>
 
         <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
-            <robotNamespace>/nao_dcm</robotNamespace>
+            <robotNamespace></robotNamespace>
             <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
         </plugin>
 
