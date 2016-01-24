@@ -2,6 +2,12 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.13 (2016-01-16)
+-------------------
+* Fix bad arm values.
+  This fixes `#25 <https://github.com/ros-naoqi/nao_robot/issues/25>`_.
+* Contributors: Vincent Rabaud
+
 0.5.12 (2016-01-01)
 -------------------
 * remove type from naoTransmission
