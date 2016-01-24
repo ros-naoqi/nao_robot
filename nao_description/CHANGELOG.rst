@@ -2,6 +2,12 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* removed nao_dcm namespace to match changes made to nao_control
+* added gui:=true to match pepper_description display.launch
+* Contributors: Mikael Arguedas
+
 0.5.13 (2016-01-16)
 -------------------
 * Fix bad arm values.
