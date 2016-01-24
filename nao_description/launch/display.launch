@@ -4,7 +4,7 @@
     <arg name="version" value="$(arg version)" />
   </include>
 
-  <arg name="gui" default="False" />
+  <arg name="gui" default="true" />
   <param name="use_gui" value="$(arg gui)"/>
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
 
