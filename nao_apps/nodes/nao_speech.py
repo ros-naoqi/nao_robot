@@ -114,7 +114,7 @@ class NaoSpeech(ALModule, NaoqiNode):
         # Start reconfigure server
         self.reconf_server = ReConfServer(NodeConfig, self.reconfigure)
         # Client for receiving the new information
-        self.reconf_client = dynamic_reconfigure.client.Client(Constants.NODE_NAME)
+        self.reconf_client = dynamic_reconfigure.client.Client(rospy.get_name())
 
         #Subscribe to speech topic
         self.sub = rospy.Subscriber("speech", String, self.say )
