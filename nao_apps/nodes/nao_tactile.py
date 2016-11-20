@@ -35,7 +35,7 @@
 import rospy
 
 import naoqi
-from naoqi_bridge_msgs.msg import TactileTouch, Bumper
+from naoqi_bridge_msgs.msg import HeadTouch, Bumper
 from std_msgs.msg import Bool
 from naoqi_driver.naoqi_node import NaoqiNode
 from naoqi import ( ALModule, ALBroker, ALProxy )
@@ -83,9 +83,9 @@ class NaoTactile(ALModule):
         rospy.init_node('nao_tactile')
 
         # init. messages:
-        self.tactile = TactileTouch()
+        self.tactile = HeadTouch()
         self.bumper = Bumper()
-        self.tactilePub = rospy.Publisher("tactile_touch", TactileTouch, queue_size=10)
+        self.tactilePub = rospy.Publisher("tactile_touch", HeadTouch, queue_size=10)
         self.bumperPub = rospy.Publisher("bumper", Bumper, queue_size=10)
 
         try:
@@ -101,12 +101,12 @@ class NaoTactile(ALModule):
             self.footContactPub = rospy.Publisher("foot_contact", Bool, latch=True, queue_size=10)
             self.footContactPub.publish(footContact > 0.0)
 
-        # constants in TactileTouch and Bumper will not be available in callback functions
+        # constants in HeadTouch and Bumper will not be available in callback functions
         # as they are executed in the parent broker context (i.e. on robot),
         # so they have to be copied to member variables
-        self.tactileTouchFrontButton = TactileTouch.buttonFront;
-        self.tactileTouchMiddleButton = TactileTouch.buttonMiddle;
-        self.tactileTouchRearButton = TactileTouch.buttonRear;
+        self.tactileTouchFrontButton = HeadTouch.buttonFront;
+        self.tactileTouchMiddleButton = HeadTouch.buttonMiddle;
+        self.tactileTouchRearButton = HeadTouch.buttonRear;
         self.bumperRightButton = Bumper.right;
         self.bumperLeftButton = Bumper.left;
 
