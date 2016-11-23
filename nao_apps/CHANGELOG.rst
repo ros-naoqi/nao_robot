@@ -2,8 +2,8 @@
 Changelog for package nao_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.15 (2016-11-23)
+-------------------
 * add missing dependencies
 * renamed tacticle to tactile
 * [nao_apps] Fixing bug generated when renaming in naoqi_bridge_msgs TactileTouch to HeadTouch
