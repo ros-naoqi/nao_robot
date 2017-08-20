@@ -26,11 +26,11 @@
         </plugin>
         <plugin name="${side}Thumb2_link" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
             <link>${side}Thumb2_link</link>
-        </plugin> 
+        </plugin>
         <plugin name="${side_small}_gripper" filename="libroboticsgroup_gazebo_disable_link_plugin.so">
             <link>${side_small}_gripper</link>
         </plugin>
-    </xacro:macro> 
+    </xacro:macro>
     <!-- MACROS FOR MIMIC JOINTS -->
     <!-- Fingers -->
     <xacro:macro name="FingerMimics" params="side num">
@@ -52,7 +52,7 @@
             <multiplier>-${PI/4}</multiplier>
             <offset>${PI/4}</offset>
         </plugin>
-    </xacro:macro> 
+    </xacro:macro>
     <!-- Thumbs -->
     <xacro:macro name="ThumbMimics" params="side">
         <plugin name="${side}Thumb1" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
@@ -67,7 +67,7 @@
             <multiplier>-${PI/4}</multiplier>
             <offset>${PI/4}</offset>
         </plugin>
-    </xacro:macro> 
+    </xacro:macro>
     <!-- GAZEBO ROS CONTROL AND IMU PLUGIN -->
 
     <gazebo>
@@ -123,7 +123,7 @@
         <xacro:ThumbMimics side="R"/>
 
         <xacro:DisabledLinks side="L" side_small="l"/>
-        <xacro:DisabledLinks side="R" side_small="r"/> 
+        <xacro:DisabledLinks side="R" side_small="r"/>
     </gazebo>
     <!-- END OF GAZEBO ROS CONTROL PLUGIN -->
     <!-- GAZEBO MATERIALS -->
@@ -151,19 +151,19 @@
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>false</turnGravityOff>
-    </gazebo> 
+    </gazebo>
 <!--    <gazebo reference="LShoulderDummy">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>false</turnGravityOff>
-    </gazebo> 
+    </gazebo>
     <gazebo reference="RShoulderDummy">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>false</turnGravityOff>
-    </gazebo> --> 
+    </gazebo> -->
 
 
 <!-- ARMS -->
@@ -190,7 +190,7 @@
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>false</turnGravityOff>
-    </gazebo> 
+    </gazebo>
     <gazebo reference="l_wrist">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
@@ -202,7 +202,7 @@
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
-    </gazebo> 
+    </gazebo>
     <gazebo reference="RShoulder">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
@@ -227,7 +227,7 @@
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>false</turnGravityOff>
-    </gazebo> 
+    </gazebo>
     <gazebo reference="r_wrist">
         <mu1>0.5</mu1>
         <mu2>0.5</mu2>
@@ -239,7 +239,7 @@
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
-    </gazebo>   
+    </gazebo>
 
 
 <!--    <gazebo reference="LElbowDummy">
@@ -296,7 +296,7 @@
         <mu2>0.5</mu2>
         <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
-    </gazebo> 
+    </gazebo>
 
     <gazebo reference="LPelvis">
         <mu1>0.5</mu1>
@@ -512,15 +512,15 @@
         CameraDepth : not displayed at the right spot
 
 <gazebo reference="CameraDepth3_frame">
-    <sensor type="depth" name="openni_camera_camera2">       
+    <sensor type="depth" name="openni_camera_camera2">
         <always_on>1</always_on>
-        <visualize>true</visualize>             
+        <visualize>true</visualize>
         <camera>
-            <horizontal_fov>1.01229</horizontal_fov>  
+            <horizontal_fov>1.01229</horizontal_fov>
             <image>
                 <width>320</width>
                 <height>240</height>
-                <format>R8G8B8</format> 
+                <format>R8G8B8</format>
             </image>
             <depth_camera>
 
@@ -530,7 +530,7 @@
                 <far>100</far>
             </clip>
         </camera>
-        <plugin name="depth_cam_controller2" filename="libgazebo_ros_openni_kinect.so"> 
+        <plugin name="depth_cam_controller2" filename="libgazebo_ros_openni_kinect.so">
             <baseline>0.2</baseline>
             <alwaysOn>true</alwaysOn>
             <updateRate>0.1</updateRate>
@@ -558,7 +558,7 @@
 -->
 
 
-<!-- 
+<!--
     BUMPERS + FSR
 libgazebo_ros_bumper.so bugged right now, waiting for new release
 
@@ -692,7 +692,7 @@ libgazebo_ros_bumper.so bugged right now, waiting for new release
       <robotNamespace>nao_robot</robotNamespace>
       <alwaysOn>true</alwaysOn>
       <bumperTopicName>FSR/LFoot/FrontLeft</bumperTopicName>
-      <frameName>RFsrFL_frame</frameName>
+      <frameName>LFsrFL_frame</frameName>
     </plugin>
   </sensor>
 </gazebo>
@@ -783,11 +783,11 @@ libgazebo_ros_bumper.so bugged right now, waiting for new release
           <resolution>1</resolution>
 
           <min_angle>-0.2617993877991494</min_angle>
-          <max_angle>0.2617993877991494</max_angle> 
+          <max_angle>0.2617993877991494</max_angle>
 
 <!--
           <min_angle>-0.10</min_angle>
-          <max_angle>0.10</max_angle> 
+          <max_angle>0.10</max_angle>
 -->
         </horizontal>
         <vertical>
@@ -795,11 +795,11 @@ libgazebo_ros_bumper.so bugged right now, waiting for new release
           <resolution>1</resolution>
 
           <min_angle>-0.13</min_angle>
-          <max_angle>0.13</max_angle> 
+          <max_angle>0.13</max_angle>
 
 <!--
           <min_angle>-0.2617993877991494</min_angle>
-          <max_angle>0.2617993877991494</max_angle> 
+          <max_angle>0.2617993877991494</max_angle>
 -->
         </vertical>
       </scan>
@@ -818,12 +818,12 @@ libgazebo_ros_bumper.so bugged right now, waiting for new release
       <frameName>LSonar_frame</frameName>
       <minRange>0.025</minRange>
       <maxRange>2.55</maxRange>
-      <fov>0.5235987755982988</fov> 
+      <fov>0.5235987755982988</fov>
 <!--      <fov>0.1</fov> -->
       <radiation>ultrasound</radiation>
     </plugin>
   </sensor>
-</gazebo> 
+</gazebo>
 
 <gazebo reference="RSonar_frame">
   <sensor type="ray" name="RSonar">
@@ -836,7 +836,7 @@ libgazebo_ros_bumper.so bugged right now, waiting for new release
           <samples>5</samples>
           <resolution>1</resolution>
           <min_angle>-0.2617993877991494</min_angle>
-          <max_angle>0.2617993877991494</max_angle> 
+          <max_angle>0.2617993877991494</max_angle>
         </horizontal>
         <vertical>
           <samples>5</samples>
@@ -847,7 +847,7 @@ libgazebo_ros_bumper.so bugged right now, waiting for new release
       </scan>
       <range>
         <min>0.025</min>
-        <max>2.55</max> 
+        <max>2.55</max>
         <resolution>1</resolution>
       </range>
     </ray>
@@ -864,7 +864,6 @@ libgazebo_ros_bumper.so bugged right now, waiting for new release
       <radiation>ultrasound</radiation>
     </plugin>
   </sensor>
-</gazebo> 
+</gazebo>
 
 </robot>
-
