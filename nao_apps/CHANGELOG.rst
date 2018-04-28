@@ -2,6 +2,14 @@
 Changelog for package nao_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.15 (2016-11-23)
+-------------------
+* add missing dependencies
+* renamed tacticle to tactile
+* [nao_apps] Fixing bug generated when renaming in naoqi_bridge_msgs TactileTouch to HeadTouch
+* Fix hard-coded node name in dynamic_reconfigure.client, closes `#26 <https://github.com/ros-naoqi/nao_robot/issues/26>`_
+* Contributors: Felip Marti, Mikael Arguedas, Stefan Osswald
+
 0.5.14 (2016-01-23)
 -------------------
 

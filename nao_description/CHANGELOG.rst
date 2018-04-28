@@ -2,6 +2,9 @@
 Changelog for package nao_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.15 (2016-11-23)
+-------------------
+
 0.5.14 (2016-01-23)
 -------------------
 * removed nao_dcm namespace to match changes made to nao_control

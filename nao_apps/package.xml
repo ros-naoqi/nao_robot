@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>nao_apps</name>
-  <version>0.5.14</version>
+  <version>0.5.15</version>
   <description>Applications for NAO using the NAOqi API</description>
 
   <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
@@ -9,5 +9,21 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>actionlib</run_depend>
+  <run_depend>diagnostic_msgs</run_depend>
+  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>humanoid_nav_msgs</run_depend>
+  <run_depend>naoqi_bridge</run_depend>
+  <run_depend>naoqi_bridge_msgs</run_depend>
+  <run_depend>naoqi_driver</run_depend>
+  <run_depend>naoqi_driver_py</run_depend>
+  <run_depend>naoqi_pose</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>std_srvs</run_depend>
+
+  <test_depend>trajectory_msgs</test_depend>
 
 </package>
