@@ -53,6 +53,8 @@ class NaoALife(NaoqiNode):
 
         #Proxy to interface with LEDs
         self.proxy = self.get_proxy( "ALAutonomousLife" )
+        if self.proxy is None:
+            exit(1)
 
         # Register ROS services
         self.disabled_srv = rospy.Service("~disabled", Empty, self.disabled )
