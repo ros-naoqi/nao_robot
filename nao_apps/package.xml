@@ -15,7 +15,10 @@
   <run_depend>dynamic_reconfigure</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>humanoid_nav_msgs</run_depend>
-  <run_depend>naoqi_bridge</run_depend>
+  <run_depend>naoqi_apps</run_depend>
+  <run_depend>naoqi_navigation</run_depend>
+  <run_depend>naoqi_sensors_py</run_depend>
+  <run_depend>naoqi_tools</run_depend>
   <run_depend>naoqi_bridge_msgs</run_depend>
   <run_depend>naoqi_driver</run_depend>
   <run_depend>naoqi_driver_py</run_depend>
