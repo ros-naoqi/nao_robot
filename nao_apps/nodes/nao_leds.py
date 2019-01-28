@@ -58,6 +58,8 @@ class NaoLeds(NaoqiNode):
 
         #Proxy to interface with LEDs
         self.proxy = self.get_proxy( "ALLeds" )
+        if self.proxy is None:
+            exit(1)
 
         #Seed python's random number generator
         random.seed( rospy.Time.now().to_nsec() )

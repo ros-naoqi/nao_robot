@@ -60,6 +60,8 @@ class NaoBehaviors(NaoqiNode):
 
         #Proxy for listingBehaviors and stopping them
         self.behaviorProxy = self.get_proxy( "ALBehaviorManager" )
+        if self.behaviorProxy is None:
+            exit(1)
 
         # Register ROS services
         self.getInstalledBehaviorsService = rospy.Service(
